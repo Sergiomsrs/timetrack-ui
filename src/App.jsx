@@ -1,16 +1,15 @@
-import { useContext } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { AppContext } from './context/AppContext'
+import { Body } from "./sections/Body"
+import { Footer } from "./sections/Footer"
+import { Header } from "./sections/Header"
 
 function App() {
-  const {count, setCount} = useContext(AppContext)
 
   return (
-    <div>
-      <h1>Hola Mundo timeTrack</h1>
-    </div>
+    <div className="flex flex-col min-h-screen">
+    <Header />
+    <Body/>
+    <Footer />
+  </div>
   )
 }
 
