@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -7,10 +8,10 @@ export const Header = () => {
     <header className="bg-white">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
+          <Link to="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img className="h-8 w-auto" src="src\assets\logo.png" alt="Logo" />
-          </a>
+            <img className="h-8 w-auto" src="src/assets/logo.png" alt="Logo" />
+          </Link>
         </div>
 
         {/* Botón del menú hamburguesa en móviles */}
@@ -30,9 +31,9 @@ export const Header = () => {
 
         {/* Menú en pantallas grandes */}
         <div className="hidden lg:flex lg:gap-x-12">
-          <a href="#" className="text-sm font-semibold text-gray-900">Features</a>
-          <a href="#" className="text-sm font-semibold text-gray-900">Marketplace</a>
-          <a href="#" className="text-sm font-semibold text-gray-900">Company</a>
+          <Link to="/" className="text-sm font-semibold text-gray-900">Inicio</Link>
+          <Link to="/usuarios" className="text-sm font-semibold text-gray-900">Usuarios</Link>
+          <Link to="/fichajes" className="text-sm font-semibold text-gray-900">Fichajes</Link>
         </div>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -48,9 +49,9 @@ export const Header = () => {
             ✖
           </button>
           <nav className="mt-6 space-y-4">
-            <a href="#" className="block text-lg font-semibold text-gray-900">Features</a>
-            <a href="#" className="block text-lg font-semibold text-gray-900">Marketplace</a>
-            <a href="#" className="block text-lg font-semibold text-gray-900">Company</a>
+            <Link to="/" className="block text-lg font-semibold text-gray-900">Inicio</Link>
+            <Link to="/usuarios" className="block text-lg font-semibold text-gray-900">Usuarios</Link>
+            <Link to="/fichajes" className="block text-lg font-semibold text-gray-900">Fichajes</Link>
             <a href="#" className="block text-lg font-semibold text-gray-900">Log in</a>
           </nav>
         </div>
