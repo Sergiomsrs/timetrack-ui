@@ -58,6 +58,7 @@ export const Tabla = () => {
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Nombre</th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Apellido</th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Dni</th>
+                                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700"></th>
                             </tr>
                         </thead>
@@ -68,6 +69,7 @@ export const Tabla = () => {
                                     <td className="px-4 py-2">{employee.name || "N/A"}</td>
                                     <td className="px-4 py-2">{employee.lastName || "N/A"}</td>
                                     <td className="px-4 py-2">{employee.dni}</td>
+                                    <td className="px-4 py-2">{employee.email}</td>
                                     <td className="px-4 py-2">
                                         <button
 

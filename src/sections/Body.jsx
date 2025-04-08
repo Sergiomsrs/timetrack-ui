@@ -3,9 +3,9 @@
 
 export const Body = ({ children }) => {
     return (
-        <div className="">
+        <main className="flex-1">
         {children}
-      </div>
+      </main>
     );
   };
   

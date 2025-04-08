@@ -4,13 +4,43 @@ import { useState } from 'react'
 import { Tabla } from './Tabla'
 
 export default function UserForm() {
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '' })
+  const [formData, setFormData] = useState({ name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '' })
 
 
-  const handleSubmit = (e) => {
-
-    e.preventDefault() // evita recargar la página
-    console.log(formData)
+  const handleSubmit = async (e) => {
+    e.preventDefault() 
+    console.log('formData', formData)
+    try {
+     
+      const response = await fetch('http://localhost:8081/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          name: formData.name,
+          lastName: formData.lastName, 
+          secondLastName: formData.secondLastName, 
+          email: formData.email, 
+          dni: formData.dni, 
+          password: formData.password, 
+          accesLevel: formData.accesLevel }),
+      })
+  
+      if (!response.ok) {
+        throw new Error('Error en el fichaje')
+      }
+      // Guardar la respuesta en una variable
+      const data = await response.json()
+      
+      console.log('Usuario guardado con exito:', data)
+      alert('Usuario guardado con exito')
+      setFormData({ name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '' }) // Limpiar el formulario
+      
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Hubo un problema al guardar el usuario')
+    }
   }
   
 
@@ -28,13 +58,13 @@ export default function UserForm() {
             </label>
             <div className="mt-2.5">
               <input
-                id="firstName"
-                name="firstName"
+                id="name"
+                name="name"
                 type="text"
                 autoComplete="given-name"
                 className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
           </div>
