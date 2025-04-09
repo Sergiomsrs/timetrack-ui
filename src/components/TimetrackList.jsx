@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import { Modal } from './Modal';
+import { processTimeStamps } from '../utilities/timeManagement';
 
 export const TimetrackList = () => {
-    const [employees, setEmployees] = useState([]);
-    const [dailyRecords, setDailyRecords] = useState([]);
+    
+    
+    const [employees, setEmployees] = useState([]); // Guarda los empleados tras recibirlos de la api
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState(null); // Id del empleado seleccionado en el dropdown
+    const [records, setRecords] = useState([]); // Registros recibidos de la api por id
+    const [dailyRecords, setDailyRecords] = useState([]); // Registros ya formateados por día. Contiene todos los dias
+    const [selectedDayRecords, setSelectedDayRecords] = useState(null); // Registros ya formateados por día. Contiene solo el dia seleccionado
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+
+    console.log("dailyRecords", dailyRecords)
+    console.log("selectedDayRecords", selectedDayRecords)
+
 
     // Cargar lista de empleados
     useEffect(() => {
@@ -16,71 +29,9 @@ export const TimetrackList = () => {
             .finally(() => setIsLoading(false));
     }, []);
 
-    // Procesar timestamps incluyendo registros impares
-    const processTimeStamps = (timestamps) => {
-        const daysMap = new Map();
-
-        // 1. Agrupar registros por día y ordenar por hora
-        timestamps.forEach(stamp => {
-            const date = new Date(stamp.timestamp);
-            const dayKey = date.toLocaleDateString('es-ES');
-            
-            if (!daysMap.has(dayKey)) {
-                daysMap.set(dayKey, []);
-            }
-            daysMap.get(dayKey).push(date);
-        });
-
-        // 2. Procesar cada día
-        return Array.from(daysMap.entries()).map(([day, times]) => {
-            times.sort((a, b) => a - b); // Ordenar cronológicamente
-            
-            let totalWorkedMs = 0;
-            const periods = [];
-            let warning = null;
-            
-            // 3. Calcular períodos de trabajo
-            for (let i = 0; i < times.length; i += 2) {
-                const entry = times[i];
-                let exit, periodMs;
-                
-                if (i + 1 < times.length) {
-                    // Par completo (entrada-salida)
-                    exit = times[i + 1];
-                    periodMs = exit - entry;
-                    totalWorkedMs += periodMs;
-                } else {
-                    // Registro impar (falta salida)
-                    exit = null;
-                    periodMs = 0;
-                    warning = "⚠ Falta registro de salida";
-                }
-                
-                periods.push({
-                    entry: entry.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-                    exit: exit?.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-                    durationMs: periodMs,
-                    isComplete: exit !== null
-                });
-            }
-            
-            // 4. Formatear horas totales
-            const totalHours = Math.floor(totalWorkedMs / (1000 * 60 * 60));
-            const totalMinutes = Math.floor((totalWorkedMs % (1000 * 60 * 60)) / (1000 * 60));
-            const totalWorked = totalWorkedMs > 0 ? `${totalHours}h ${totalMinutes}m` : "--";
-
-            return {
-                day,
-                periods,
-                totalWorked,
-                recordsCount: times.length,
-                warning
-            };
-        });
-    };
-
     const handleEmployeeSelect = async (e) => {
         const selectedId = e.target.value;
+        setSelectedEmployeeId(selectedId);
         if (!selectedId) {
             setDailyRecords([]);
             return;
@@ -88,10 +39,11 @@ export const TimetrackList = () => {
 
         setIsLoading(true);
         setError(null);
-        
+
         try {
             const response = await fetch(`http://localhost:8081/apis/timestamp/employee/${selectedId}`);
             const data = await response.json();
+            setRecords(data);
             setDailyRecords(processTimeStamps(data));
         } catch (error) {
             setError("Error al cargar registros");
@@ -99,6 +51,13 @@ export const TimetrackList = () => {
             setIsLoading(false);
         }
     };
+
+    const handleOpenModal = (dayRecords) => {
+        setSelectedDayRecords(dayRecords);
+        setIsOpen(true);
+    };
+
+    const handleSaveEdit = ()=>{}
 
     return (
         <div className="w-11/12 md:w-3/4 mx-auto p-4">
@@ -142,6 +101,7 @@ export const TimetrackList = () => {
                                 <th className="py-3 px-4 text-left">Turnos</th>
                                 <th className="py-3 px-4 text-center">Horas Totales</th>
                                 <th className="py-3 px-4 text-center">Registros</th>
+                                <th className="py-3 px-4 text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -155,8 +115,8 @@ export const TimetrackList = () => {
                                     </td>
                                     <td className="py-3 px-4">
                                         {record.periods.map((period, i) => (
-                                            <div 
-                                                key={i} 
+                                            <div
+                                                key={i}
                                                 className={`mb-1 last:mb-0 ${!period.isComplete ? 'text-amber-600' : ''}`}
                                             >
                                                 <span className="font-medium">{period.entry}</span>
@@ -179,6 +139,14 @@ export const TimetrackList = () => {
                                     <td className="py-3 px-4 text-center text-sm text-gray-500">
                                         {record.recordsCount}
                                     </td>
+                                    <td className="py-3 px-4 text-center">
+                                        <button
+                                            onClick={() => handleOpenModal(record)}
+                                            className="rounded-md cursor-pointer bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                                        >
+                                            Ver Detalles
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -188,13 +156,24 @@ export const TimetrackList = () => {
                 !isLoading && !error && (
                     <div className="text-center py-8 bg-gray-50 rounded-lg">
                         <p className="text-gray-500">
-                            {employees.length > 0 
-                                ? "Seleccione un empleado para ver sus registros" 
+                            {employees.length > 0
+                                ? "Seleccione un empleado para ver sus registros"
                                 : "No hay empleados disponibles"}
                         </p>
                     </div>
                 )
             )}
+
+            {/* Modal para mostrar detalles */}
+            <Modal
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                employeeId={selectedEmployeeId}
+                dayRecords={selectedDayRecords}
+                employees={employees}
+                onSave={handleSaveEdit}
+                records={records}
+            />
         </div>
     );
 };
