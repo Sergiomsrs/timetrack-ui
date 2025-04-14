@@ -1,6 +1,6 @@
 
 
-export const processTimeStamps = (timestamps) => {
+export const processTimeStamps = (timestamps, id) => {
     const daysMap = new Map();
 
     // 1. Agrupar registros por día y ordenar por hora
@@ -52,12 +52,14 @@ export const processTimeStamps = (timestamps) => {
         const totalMinutes = Math.floor((totalWorkedMs % (1000 * 60 * 60)) / (1000 * 60));
         const totalWorked = totalWorkedMs > 0 ? `${totalHours}h ${totalMinutes}m` : "--";
 
-        return {
-            day,
-            periods,
-            totalWorked,
-            recordsCount: times.length,
-            warning
-        };
+        return  {
+            id,
+            data: {
+                day,
+                periods,
+                totalWorked,
+                recordsCount: times.length,
+                warning
+            }}
     });
 };

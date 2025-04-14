@@ -3,8 +3,8 @@ import { Modal } from './Modal';
 import { processTimeStamps } from '../utilities/timeManagement';
 
 export const TimetrackList = () => {
-    
-    
+
+
     const [employees, setEmployees] = useState([]); // Guarda los empleados tras recibirlos de la api
     const [selectedEmployeeId, setSelectedEmployeeId] = useState(null); // Id del empleado seleccionado en el dropdown
     const [records, setRecords] = useState([]); // Registros recibidos de la api por id
@@ -44,7 +44,7 @@ export const TimetrackList = () => {
             const response = await fetch(`http://localhost:8081/apis/timestamp/employee/${selectedId}`);
             const data = await response.json();
             setRecords(data);
-            setDailyRecords(processTimeStamps(data));
+            setDailyRecords(processTimeStamps(data, selectedId));
         } catch (error) {
             setError("Error al cargar registros");
         } finally {
@@ -57,7 +57,8 @@ export const TimetrackList = () => {
         setIsOpen(true);
     };
 
-    const handleSaveEdit = ()=>{}
+    const handleSaveEdit = () => { }
+    console.log("rec", records)
 
     return (
         <div className="w-11/12 md:w-3/4 mx-auto p-4">
@@ -92,7 +93,7 @@ export const TimetrackList = () => {
             )}
 
             {/* Tabla de resultados */}
-            {dailyRecords.length > 0 ? (
+            {dailyRecords && dailyRecords.length > 0 ? (
                 <div className="overflow-x-auto shadow-md rounded-lg">
                     <table className="min-w-full bg-white">
                         <thead className="bg-gray-50">
@@ -108,13 +109,13 @@ export const TimetrackList = () => {
                             {dailyRecords.map((record, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="py-3 px-4 whitespace-nowrap">
-                                        {record.day}
-                                        {record.warning && (
-                                            <span className="block text-xs text-yellow-600 mt-1">{record.warning}</span>
+                                        {record.data.day}
+                                        {record.data.warning && (
+                                            <span className="block text-xs text-yellow-600 mt-1">{record.data.warning}</span>
                                         )}
                                     </td>
                                     <td className="py-3 px-4">
-                                        {record.periods.map((period, i) => (
+                                        {record.data.periods.map((period, i) => (
                                             <div
                                                 key={i}
                                                 className={`mb-1 last:mb-0 ${!period.isComplete ? 'text-amber-600' : ''}`}
@@ -134,10 +135,10 @@ export const TimetrackList = () => {
                                         ))}
                                     </td>
                                     <td className="py-3 px-4 text-center font-medium">
-                                        {record.totalWorked}
+                                        {record.data.totalWorked}
                                     </td>
                                     <td className="py-3 px-4 text-center text-sm text-gray-500">
-                                        {record.recordsCount}
+                                        {record.data.recordsCount}
                                     </td>
                                     <td className="py-3 px-4 text-center">
                                         <button
@@ -164,15 +165,18 @@ export const TimetrackList = () => {
                 )
             )}
 
+
             {/* Modal para mostrar detalles */}
             <Modal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                employeeId={selectedEmployeeId}
-                dayRecords={selectedDayRecords}
-                employees={employees}
                 onSave={handleSaveEdit}
+
+
+                employeeId={selectedEmployeeId}
                 records={records}
+                dayRecords={selectedDayRecords?.data}
+                employees={employees}
             />
         </div>
     );

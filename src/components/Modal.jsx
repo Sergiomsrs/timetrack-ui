@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, records }) => {
   const [editedRecords, setEditedRecords] = useState([]);
+  console.log(dayRecords);
 
   // Filtrar registros del día seleccionado solo cuando `isOpen` cambie
   useEffect(() => {
@@ -30,32 +31,48 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
 
   // Actualizar la hora editada
   const handleTimeChange = (index, newTime) => {
-    const updated = [...editedRecords];
-    updated[index].time = newTime;
-
-    // Actualizar timestamp combinando la fecha con la nueva hora
-    const newTimestamp = new Date(`${updated[index].dateStr}T${newTime}:00`).toISOString();
-    updated[index].timestamp = newTimestamp;
-
-    setEditedRecords(updated);
+    const updatedRecords = [...editedRecords];
+    const record = updatedRecords[index];
+    
+    // Actualizamos solo la hora (manteniendo la fecha original)
+    const [year, month, day] = record.dateStr.split('-');
+    const [hours, minutes] = newTime.split(':');
+    
+    // Creamos nuevo timestamp sin zona horaria
+    const newTimestamp = `${record.dateStr}T${hours}:${minutes}:00.000`;
+    
+    updatedRecords[index] = {
+      ...record,
+      timestamp: newTimestamp,
+      time: newTime
+    };
+    
+    setEditedRecords(updatedRecords);
   };
 
   // Añadir nuevo registro
   const handleAddRecord = () => {
     const [d, m, y] = dayRecords.day.split('/').map(Number);
-    const dateObj = new Date(y, m - 1, d + 1);
-    const dateStr = dateObj.toISOString().slice(0, 10); // yyyy-mm-dd
     const now = new Date();
-    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
+    
+    // Crear fecha sin conversión UTC (tratarla como hora local pura)
+    const localDate = new Date(y, m - 1, d, now.getHours(), now.getMinutes(), 0);
+    
+    // Formatear para mostrar (sin conversión de zona horaria)
+    const dateStr = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+    const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    // Crear timestamp SIN zona horaria (formato ISO sin la Z)
+    const timestamp = `${dateStr}T${time}:00.000`; // Ejemplo: "2025-04-09T12:50:00.000"
+    
     const newRecord = {
       id: null,
       employeeId: employeeId,
-      timestamp: `${dateStr}T${time}:00`,
-      dateStr,
-      time,
+      timestamp: timestamp, // Guardamos sin información de zona horaria
+      dateStr: dateStr,
+      time: time,
     };
-
+    
     setEditedRecords([...editedRecords, newRecord]);
   };
 
@@ -63,6 +80,53 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
 
   const selectedEmployee = employees.find(emp => emp.id === employeeId);
 
+  const handeladdEdited = async (id) => {
+    try {
+      const editedRecord = editedRecords.find(record => record.id === id);
+      
+      if (!editedRecord) {
+        console.error("Registro no encontrado para editar.");
+        return;
+      }
+  
+      const response = await fetch(`http://localhost:8081/apis/timestamp/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          timestamp: editedRecord.timestamp
+        })
+      });
+  
+      // Leemos la respuesta como texto primero
+      const responseText = await response.text();
+  
+      if (!response.ok) {
+        throw new Error(responseText || `Error HTTP: ${response.status}`);
+      }
+  
+      console.log("Respuesta del servidor:", responseText);
+      
+      // Actualizamos el estado local de todos modos (optimistic update)
+      setEditedRecords(prev => 
+        prev.map(record => 
+          record.id === id ? { ...record, synced: true } : record
+        )
+      );
+      
+      // Opcional: Mostrar mensaje de éxito al usuario
+      alert(responseText); // O usa tu sistema de notificaciones
+      
+    } catch (error) {
+      console.error("Error al actualizar el registro:", error);
+      // Opcional: Mostrar mensaje de error al usuario
+      alert(error.message);
+      
+      // Revertir cambios si falla (pessimistic update)
+      setEditedRecords(prev => [...prev]);
+    }
+  };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
@@ -138,19 +202,25 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
             {/* Registros del día */}
             <h4 className="text-lg font-medium mt-6">Registros del día:</h4>
             <div className="space-y-2">
-              {editedRecords.map((record, index) => (
-                <div key={index} className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-2 rounded">
-                  <div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">Fecha: {record.dateStr}</div>
-                    <input
-                      type="time"
-                      value={record.time}
-                      onChange={e => handleTimeChange(index, e.target.value)}
-                      className="mt-1 border p-1 rounded"
-                    />
-                  </div>
-                </div>
-              ))}
+            {editedRecords.map((record, index) => {
+  // Extraer hora directamente del string (asumiendo formato "HH:mm" en record.time)
+  return (
+    <div key={index} className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-2 rounded">
+      <div>
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          Fecha: {record.dateStr}
+        </div>
+        <input
+          type="time"
+          value={record.time} // Usamos directamente el valor sin conversión
+          onChange={e => handleTimeChange(index, e.target.value)}
+          className="mt-1 border p-1 rounded"
+        />
+        <button onClick={() => handeladdEdited(record.id)}>Editar</button>
+      </div>
+    </div>
+  );
+})}
               <button
                 onClick={handleAddRecord}
                 className="mt-3 text-sm text-blue-600 hover:underline"
