@@ -1,0 +1,97 @@
+dayRecords
+{
+    "day": "4/4/2025",
+    "periods": [
+        {
+            "entry": "08:00",
+            "exit": "15:00",
+            "durationMs": 25200754,
+            "isComplete": true
+        }
+    ],
+    "totalWorked": "7h 0m",
+    "recordsCount": 2,
+    "warning": null
+}
+
+editedRecords
+[
+    {
+        "id": 1,
+        "timestamp": "2025-04-04T08:00:00.104051",
+        "employeeId": 1,
+        "time": "08:00",
+        "dateStr": "2025-04-04"
+    },
+    {
+        "id": 2,
+        "timestamp": "2025-04-04T15:00:00.858239",
+        "employeeId": 1,
+        "time": "15:00",
+        "dateStr": "2025-04-04"
+    }
+]
+
+records
+[
+    {
+        "id": 1,
+        "timestamp": "2025-04-04T08:00:00.104051",
+        "employeeId": 1
+    },
+    {
+        "id": 2,
+        "timestamp": "2025-04-04T15:00:00.858239",
+        "employeeId": 1
+    },
+    {
+        "id": 3,
+        "timestamp": "2025-04-05T08:00:50.581272",
+        "employeeId": 1
+    },
+    {
+        "id": 5,
+        "timestamp": "2025-04-06T08:30:00",
+        "employeeId": 1
+    },
+    {
+        "id": 6,
+        "timestamp": "2025-04-06T15:00:20.665656",
+        "employeeId": 1
+    },
+    {
+        "id": 8,
+        "timestamp": "2025-04-05T15:00:28.656993",
+        "employeeId": 1
+    },
+    {
+        "id": 10,
+        "timestamp": "2025-04-08T08:31:09.170354",
+        "employeeId": 1
+    },
+    {
+        "id": 11,
+        "timestamp": "2025-04-08T14:33:36.442354",
+        "employeeId": 1
+    },
+    {
+        "id": 12,
+        "timestamp": "2025-04-08T17:32:31.821782",
+        "employeeId": 1
+    },
+    {
+        "id": 13,
+        "timestamp": "2025-04-08T22:38:13.004661",
+        "employeeId": 1
+    },
+    {
+        "id": 14,
+        "timestamp": "2025-04-08T22:50:13.294442",
+        "employeeId": 1
+    },
+    {
+        "id": 15,
+        "timestamp": "2025-04-09T13:50:00",
+        "employeeId": 1
+    }
+]
