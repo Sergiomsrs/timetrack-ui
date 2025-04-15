@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from './Modal';
-import { processTimeStamps } from '../utilities/timeManagement';
+import { formatMillisecondsToTime, processTimeStamps } from '../utilities/timeManagement';
 
 export const TimetrackList = () => {
 
@@ -14,12 +14,7 @@ export const TimetrackList = () => {
     const [error, setError] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
 
-
-    console.log("dailyRecords", dailyRecords)
-    console.log("selectedDayRecords", selectedDayRecords)
-
-
-    // Cargar lista de empleados
+    // Cargar lista de empleados --> employees
     useEffect(() => {
         setIsLoading(true);
         fetch('http://localhost:8081/api/findall')
@@ -29,9 +24,13 @@ export const TimetrackList = () => {
             .finally(() => setIsLoading(false));
     }, []);
 
+    /* Cargar registros de empleados --> records
+       selectedEmployeeId
+       Si hay empleado seleccionado se cargan los registros de ese empleado tanto formateados (dailyRecords) y sin formatear (records)*/
     const handleEmployeeSelect = async (e) => {
         const selectedId = e.target.value;
         setSelectedEmployeeId(selectedId);
+        // Si no hay empleado seleccionado, no se cargan registros
         if (!selectedId) {
             setDailyRecords([]);
             return;
@@ -39,6 +38,8 @@ export const TimetrackList = () => {
 
         setIsLoading(true);
         setError(null);
+        // Si hay empleado seleccionado, se cargan registros
+        // Se hace la llamada a la api para obtener los registros del empleado seleccionado
 
         try {
             const response = await fetch(`http://localhost:8081/apis/timestamp/employee/${selectedId}`);
@@ -52,13 +53,13 @@ export const TimetrackList = () => {
         }
     };
 
+
+    /* Abre el modal y asigan a los registros del dia seleccionado (setSelectedDayRecords)
+       Se le pasa el objeto completo del dia seleccionado (record) para que el modal lo procese y lo muestre */
     const handleOpenModal = (dayRecords) => {
         setSelectedDayRecords(dayRecords);
         setIsOpen(true);
     };
-
-    const handleSaveEdit = () => { }
-    console.log("rec", records)
 
     return (
         <div className="w-11/12 md:w-3/4 mx-auto p-4">
@@ -102,7 +103,7 @@ export const TimetrackList = () => {
                                 <th className="py-3 px-4 text-left">Turnos</th>
                                 <th className="py-3 px-4 text-center">Horas Totales</th>
                                 <th className="py-3 px-4 text-center">Registros</th>
-                                <th className="py-3 px-4 text-center">Acciones</th>
+                                <th className="py-3 px-4 text-center"></th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -125,7 +126,7 @@ export const TimetrackList = () => {
                                                     <>
                                                         → <span className="font-medium"> {period.exit}</span>
                                                         <span className="text-sm text-gray-500 ml-2">
-                                                            ({Math.floor(period.durationMs / 3600000)}h {Math.floor((period.durationMs % 3600000) / 60000)}m)
+                                                            ({formatMillisecondsToTime(period.durationMs)})
                                                         </span>
                                                     </>
                                                 ) : (
@@ -170,7 +171,6 @@ export const TimetrackList = () => {
             <Modal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                onSave={handleSaveEdit}
 
 
                 employeeId={selectedEmployeeId}

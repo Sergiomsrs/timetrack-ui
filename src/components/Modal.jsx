@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 
 export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, records }) => {
   const [editedRecords, setEditedRecords] = useState([]);
-  console.log(dayRecords);
+
+  console.log(dayRecords)
+  console.log(records)
 
   // Filtrar registros del día seleccionado solo cuando `isOpen` cambie
   useEffect(() => {
