@@ -1,0 +1,21 @@
+@startuml TimeTrack Api
+actor Usuario
+participant "React App" as Frontend
+participant "Spring Boot API" as Backend
+participant Controlador
+participant Servicio
+participant Repositorio
+database "Base de Datos" as DB
+
+Usuario -> Frontend : click / acción
+Frontend -> Backend : fetch("/api/endpoint")
+Backend -> Controlador : recibe petición
+Controlador -> Servicio : lógica de negocio
+Servicio -> Repositorio : consulta datos
+Repositorio -> DB : SELECT / INSERT / UPDATE
+DB --> Repositorio : datos
+Repositorio --> Servicio : devuelve datos
+Servicio --> Controlador : datos procesados
+Controlador --> Frontend : JSON response
+Frontend -> Frontend : actualiza UI
+@enduml

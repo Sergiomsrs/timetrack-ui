@@ -1,0 +1,31 @@
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor Black
+}
+
+rectangle "SPA" {
+  
+  rectangle "Header" {
+    
+      rectangle "Logo"
+      rectangle "Barra de Navegación" {
+        [Inicio]
+        [Usuarios]
+        [Fichajes]
+        [Login]
+     
+    }
+  }
+
+  rectangle "Body" {
+    rectangle "Página: / " {
+      rectangle "Título: Time Track"
+      rectangle "Renderizado condicional"
+    }
+  }
+
+ rectangle "Footer\n© 2025 Proyecto Integrado"
+}
+@enduml

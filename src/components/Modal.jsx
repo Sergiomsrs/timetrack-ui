@@ -90,7 +90,7 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
         return;
       }
 
-      const response = await fetch(`http://localhost:8081/apis/timestamp/${id}`, {
+      const response = await fetch(`http://localhost:8080/api/timestamp/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

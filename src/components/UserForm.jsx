@@ -1,56 +1,92 @@
-'use client'
+import { useEffect, useState } from 'react'
+import { useEmployees } from '../context/EmployeesContext'
 
-import { useState } from 'react'
-import { Tabla } from './Tabla'
+const initialValues = { name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '' }
+
 
 export default function UserForm() {
-  const [formData, setFormData] = useState({ name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '' })
+  const [formData, setFormData] = useState(initialValues)
+  
+  const { refreshEmployees, editedEmployee, setEditedEmployee } = useEmployees();
 
+  const resetForm = () => {
+    setFormData(initialValues);
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault() 
-    console.log('formData', formData)
+    e.preventDefault();
     try {
-     
-      const response = await fetch('http://localhost:8081/api/users', {
-        method: 'POST',
+      const method = editedEmployee ? 'PUT' : 'POST'; // Usar PUT si estamos editando, POST si estamos creando
+      const url = editedEmployee
+        ? `http://localhost:8080/api/user/${editedEmployee.id}` // Ruta para actualizar
+        : 'http://localhost:8080/api/user'; // Ruta para crear
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           name: formData.name,
-          lastName: formData.lastName, 
-          secondLastName: formData.secondLastName, 
-          email: formData.email, 
-          dni: formData.dni, 
-          password: formData.password, 
-          accesLevel: formData.accesLevel }),
-      })
-  
+          lastName: formData.lastName,
+          secondLastName: formData.secondLastName,
+          email: formData.email,
+          dni: formData.dni,
+          password: formData.password, // Se debe manejar con cuidado
+          accessLevel: formData.accesLevel,
+        }),
+      });
+
       if (!response.ok) {
-        throw new Error('Error en el fichaje')
+        throw new Error('Error al guardar el usuario');
       }
-      // Guardar la respuesta en una variable
-      const data = await response.json()
-      
-      console.log('Usuario guardado con exito:', data)
-      alert('Usuario guardado con exito')
-      setFormData({ name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '' }) // Limpiar el formulario
-      
+
+      const data = await response.json();
+      alert(editedEmployee ? 'Usuario actualizado con éxito' : 'Usuario guardado con éxito');
+
+      // Limpiar el formulario después de la acción
+      setFormData({
+        name: '',
+        lastName: '',
+        secondLastName: '',
+        email: '',
+        dni: '',
+        password: '',
+        accesLevel: '',
+      });
+
+      refreshEmployees(); // Actualizar la lista de empleados después de guardar
+
+      // Si es una edición, limpiar el estado de empleado editado
+      setEditedEmployee(null);
     } catch (error) {
-      console.error('Error:', error)
-      alert('Hubo un problema al guardar el usuario')
+      console.error('Error:', error);
+      alert('Hubo un problema al guardar el usuario');
     }
-  }
+  };
+
+  useEffect(() => {
+    if (editedEmployee) {
+      setFormData({
+        name: editedEmployee.name || '',
+        lastName: editedEmployee.lastName || '',
+        secondLastName: editedEmployee.secondLastName || '',
+        email: editedEmployee.email || '',
+        dni: editedEmployee.dni || '',
+        password: editedEmployee.password || '',
+        accesLevel: editedEmployee.accesLevel || ''
+      });
+    }
+  }, [editedEmployee]);
   
 
   return (
-    <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
-      <div className="mx-auto max-w-2xl text-center">
+    <div className="flex flex-col justify-center items-center mb-4" >
+      <div className=" flex flex-col justify-center items-center">
         <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">Registrar Nuevo Usuario</h2>
         <p className="mt-2 text-lg text-gray-600">Completar todos los campos</p>
       </div>
-      <form action="#" method="POST" className="mx-auto mt-16 max-w-xl sm:mt-20">
+      <form onSubmit={handleSubmit} className="mt-16 max-w-xl sm:mt-20">
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div>
             <label htmlFor="first-name" className="block text-sm font-semibold text-gray-900">
@@ -174,18 +210,22 @@ export default function UserForm() {
  
 
         </div>
-        <div className="mt-10">
+        <div className="flex flex-col gap-2 w-1/2     mt-10">
           <button
             type="submit"
-            onClick={handleSubmit}
             className="w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
           >
-            Guardar
+            {formData == initialValues ? 'Registrar Usuario' : 'Actualizar Usuario'}
+          </button>
+          <button
+            onClick={() => resetForm()}
+            type="button"
+            className="w-full rounded-md bg-red-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          >
+            Resetear Formulario
           </button>
         </div>
       </form>
-
-      <Tabla/>
     </div>
   )
 }

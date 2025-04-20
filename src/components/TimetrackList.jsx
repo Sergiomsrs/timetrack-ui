@@ -17,7 +17,7 @@ export const TimetrackList = () => {
     // Cargar lista de empleados --> employees
     useEffect(() => {
         setIsLoading(true);
-        fetch('http://localhost:8081/api/findall')
+        fetch('http://localhost:8080/api/user')
             .then(response => response.json())
             .then(data => setEmployees(data))
             .catch(error => setError(error.message))
@@ -42,7 +42,7 @@ export const TimetrackList = () => {
         // Se hace la llamada a la api para obtener los registros del empleado seleccionado
 
         try {
-            const response = await fetch(`http://localhost:8081/apis/timestamp/employee/${selectedId}`);
+            const response = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedId}`);
             const data = await response.json();
             setRecords(data);
             setDailyRecords(processTimeStamps(data, selectedId));
