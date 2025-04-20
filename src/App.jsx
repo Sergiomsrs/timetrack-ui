@@ -7,6 +7,7 @@ import { Body } from "./sections/Body"
 import { TimetrackList } from "./components/TimetrackList"
 import { EmployeesProvider } from "./context/EmployeesContext"
 import { User } from "./pages/User"
+import { Login } from "./pages/Login"
 
 function App() {
   return (
@@ -15,7 +16,6 @@ function App() {
     <BrowserRouter>
             <EmployeesProvider>
       <div className="flex flex-col min-h-screen relative overflow-hidden">
-        {/* Background decorativo */}
         <div className="absolute top-0 -z-10 h-full w-full bg-white">
           <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(200%_150%_at_50%_10%,#fff_40%,#63e_100%)]"></div>
         </div>
@@ -28,6 +28,7 @@ function App() {
                 <User />
               } />
             <Route path="/fichajes" element={<TimetrackList />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </Body>
         <Footer />

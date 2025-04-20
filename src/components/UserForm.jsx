@@ -4,10 +4,10 @@ import { useEmployees } from '../context/EmployeesContext'
 const initialValues = { name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '' }
 
 
-export default function UserForm() {
+export default function UserForm({setActiveTab}) {
   const [formData, setFormData] = useState(initialValues)
   
-  const { refreshEmployees, editedEmployee, setEditedEmployee } = useEmployees();
+  const {editedEmployee, setEditedEmployee, fetchEmployees } = useEmployees();
 
   const resetForm = () => {
     setFormData(initialValues);
@@ -16,10 +16,10 @@ export default function UserForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const method = editedEmployee ? 'PUT' : 'POST'; // Usar PUT si estamos editando, POST si estamos creando
+      const method = editedEmployee ? 'PUT' : 'POST'; 
       const url = editedEmployee
-        ? `http://localhost:8080/api/user/${editedEmployee.id}` // Ruta para actualizar
-        : 'http://localhost:8080/api/user'; // Ruta para crear
+        ? `http://localhost:8080/api/user/${editedEmployee.id}` 
+        : 'http://localhost:8080/api/user'; 
 
       const response = await fetch(url, {
         method: method,
@@ -32,7 +32,7 @@ export default function UserForm() {
           secondLastName: formData.secondLastName,
           email: formData.email,
           dni: formData.dni,
-          password: formData.password, // Se debe manejar con cuidado
+          password: formData.password, 
           accessLevel: formData.accesLevel,
         }),
       });
@@ -40,11 +40,12 @@ export default function UserForm() {
       if (!response.ok) {
         throw new Error('Error al guardar el usuario');
       }
-
       const data = await response.json();
       alert(editedEmployee ? 'Usuario actualizado con éxito' : 'Usuario guardado con éxito');
+      fetchEmployees();
+      setActiveTab("list") 
 
-      // Limpiar el formulario después de la acción
+     
       setFormData({
         name: '',
         lastName: '',
@@ -55,9 +56,8 @@ export default function UserForm() {
         accesLevel: '',
       });
 
-      refreshEmployees(); // Actualizar la lista de empleados después de guardar
-
-      // Si es una edición, limpiar el estado de empleado editado
+     
+      
       setEditedEmployee(null);
     } catch (error) {
       console.error('Error:', error);

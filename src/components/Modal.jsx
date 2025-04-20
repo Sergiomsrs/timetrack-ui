@@ -4,9 +4,6 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
 
   const [editedRecords, setEditedRecords] = useState([]);
 
-
-
-  // Generar el array para editedRecords
   useEffect(() => {
     if (isOpen && records && dayRecords?.day) {
 
@@ -29,20 +26,20 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
 
       setEditedRecords(mapped);
     }
-  }, [isOpen, records, dayRecords]); // Dependemos de `isOpen`, `records`, y `dayRecords`
+  }, [isOpen, records, dayRecords]); 
 
   if (!isOpen || !dayRecords) return null;
 
-  // Actualizar la hora editada
+
   const handleTimeChange = (index, newTime) => {
     const updatedRecords = [...editedRecords];
     const record = updatedRecords[index];
 
-    // Actualizamos solo la hora (manteniendo la fecha original)
+  
     const [year, month, day] = record.dateStr.split('-');
     const [hours, minutes] = newTime.split(':');
 
-    // Creamos nuevo timestamp sin zona horaria
+ 
     const newTimestamp = `${record.dateStr}T${hours}:${minutes}:00.000`;
 
     updatedRecords[index] = {
@@ -54,25 +51,25 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
     setEditedRecords(updatedRecords);
   };
 
-  // Añadir nuevo registro
+  
   const handleAddRecord = () => {
     const [d, m, y] = dayRecords.day.split('/').map(Number);
     const now = new Date();
 
-    // Crear fecha sin conversión UTC (tratarla como hora local pura)
+   
     const localDate = new Date(y, m - 1, d, now.getHours(), now.getMinutes(), 0);
 
-    // Formatear para mostrar (sin conversión de zona horaria)
+    
     const dateStr = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
     const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
-    // Crear timestamp SIN zona horaria (formato ISO sin la Z)
-    const timestamp = `${dateStr}T${time}:00.000`; // Ejemplo: "2025-04-09T12:50:00.000"
+   
+    const timestamp = `${dateStr}T${time}:00.000`;
 
     const newRecord = {
       id: null,
       employeeId: employeeId,
-      timestamp: timestamp, // Guardamos sin información de zona horaria
+      timestamp: timestamp, 
       dateStr: dateStr,
       time: time,
     };
@@ -100,7 +97,7 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
         })
       });
 
-      // Leemos la respuesta como texto primero
+      
       const responseText = await response.text();
 
       if (!response.ok) {
@@ -109,22 +106,22 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
 
       console.log("Respuesta del servidor:", responseText);
 
-      // Actualizamos el estado local de todos modos (optimistic update)
+     
       setEditedRecords(prev =>
         prev.map(record =>
           record.id === id ? { ...record, synced: true } : record
         )
       );
 
-      // Opcional: Mostrar mensaje de éxito al usuario
-      alert(responseText); // O usa tu sistema de notificaciones
+      
+      alert(responseText); 
 
     } catch (error) {
       console.error("Error al actualizar el registro:", error);
-      // Opcional: Mostrar mensaje de error al usuario
+     
       alert(error.message);
 
-      // Revertir cambios si falla (pessimistic update)
+     
       setEditedRecords(prev => [...prev]);
     }
   };
@@ -205,7 +202,7 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
             <h4 className="text-lg font-medium mt-6">Registros del día:</h4>
             <div className="space-y-2">
               {editedRecords.map((record, index) => {
-                // Extraer hora directamente del string (asumiendo formato "HH:mm" en record.time)
+                
                 return (
                   <div key={index} className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-2 rounded">
                     <div>

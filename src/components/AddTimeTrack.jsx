@@ -7,10 +7,10 @@ export default function () {
     
 
     const handleSubmit = async (e) => {
-        e.preventDefault() // evita recargar la página
+        e.preventDefault() 
       
         try {
-          const response = await fetch('http://localhost:8081/apis/timestamp/fichar', {
+          const response = await fetch('http://localhost:8080/api/timestamp/fichar', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -24,12 +24,12 @@ export default function () {
           if (!response.ok) {
             throw new Error('Error en el fichaje')
           }
-          // Guardar la respuesta en una variable
+          
           const data = await response.json()
           
           console.log('Fichaje exitoso:', data)
           alert('Fichaje exitoso')
-          setFormData({ dni: '', pin: '' }) // Limpiar el formulario
+          setFormData({ dni: '', pin: '' })
           
         } catch (error) {
           console.error('Error:', error)

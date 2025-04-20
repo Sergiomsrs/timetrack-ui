@@ -4,7 +4,7 @@ import { UserList } from '../components/UserList';
 import { ActiveTab } from '../components/ActiveTab';
 
 export const User = () => {
-  const [activeTab, setActiveTab] = useState("form");
+  const [activeTab, setActiveTab] = useState("list");
 
   return (
     <div class="flex w-full">
@@ -15,11 +15,11 @@ export const User = () => {
       </div>
       <div class="w-4/8 ">
 
-{activeTab === "form" && (<UserForm />)}
-{activeTab === "list" && (<UserList setActiveTab={setActiveTab} />)}
+        {activeTab === "form" && (<UserForm setActiveTab={setActiveTab} />)}
+        {activeTab === "list" && (<UserList setActiveTab={setActiveTab} />)}
 
-</div>
-      <div className='w-2/8 flex justify-center'> 
+      </div>
+      <div className='w-2/8 flex justify-center'>
       </div>
     </div>
 
