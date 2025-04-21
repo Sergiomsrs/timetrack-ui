@@ -10,7 +10,7 @@ export const Header = () => {
         <div className="flex lg:flex-1">
           <Link to="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img className="h-12 w-auto" src="src/assets/logon.svg" alt="Logo" />
+            <img className="h-12 w-auto" src="public\Logo.svg" alt="Logo" />
           </Link>
         </div>
 

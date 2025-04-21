@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Modal } from './Modal';
+
 import { formatMillisecondsToTime, processTimeStamps } from '../utilities/timeManagement';
+import { Modal } from '../components/Modal';
 
 export const TimetrackList = () => {
 
