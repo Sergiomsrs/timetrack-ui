@@ -119,3 +119,26 @@ export const formatMillisecondsToTime = (ms, emptySymbol = "--") => {
   
     return `${totalHours}h ${totalMinutes}m`;
   };
+
+
+  export const filterAndMapRecords = (records, day) => {
+    if (!records || !day) return [];
+  
+    const [d, m, y] = day.split('/').map(Number);
+  
+    const filtered = records.filter(record => {
+      const date = new Date(record.timestamp);
+      return (
+        date.getDate() === d &&
+        date.getMonth() === m - 1 &&
+        date.getFullYear() === y
+      );
+    });
+  
+    return filtered.map(r => {
+      const date = new Date(r.timestamp);
+      const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const dateStr = date.toISOString().slice(0, 10); // yyyy-mm-dd
+      return { ...r, time, dateStr };
+    });
+  };

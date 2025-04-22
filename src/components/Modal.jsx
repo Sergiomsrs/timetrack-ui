@@ -1,130 +1,124 @@
 import React, { useEffect, useState } from 'react';
+import { filterAndMapRecords } from '../utilities/timeManagement';
 
 export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, records }) => {
 
-  const [editedRecords, setEditedRecords] = useState([]);
+  // Arreglo con los registros para editar la hora o crear nuevos
+  const [editableRecords, setEditableRecords] = useState([]);
 
+  // Filtra los registros para mostrar solo los del día seleccionado
   useEffect(() => {
     if (isOpen && records && dayRecords?.day) {
-
-      const [d, m, y] = dayRecords.day.split('/').map(Number);
-      const filtered = records.filter(record => {
-        const date = new Date(record.timestamp);
-        return (
-          date.getDate() === d &&
-          date.getMonth() === m - 1 &&
-          date.getFullYear() === y
-        );
-      });
-
-      const mapped = filtered.map(r => {
-        const date = new Date(r.timestamp);
-        const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const dateStr = date.toISOString().slice(0, 10); // yyyy-mm-dd
-        return { ...r, time, dateStr };
-      });
-
-      setEditedRecords(mapped);
+      setEditableRecords(filterAndMapRecords(records, dayRecords.day))
     }
-  }, [isOpen, records, dayRecords]); 
+  }, [isOpen, records, dayRecords]);
 
+  // evita renderizar el modal si no está abierto o no hay registros del día
   if (!isOpen || !dayRecords) return null;
 
-
+  // Modifica editableRecords en funcion del imput tipo time de los registros del dia
   const handleTimeChange = (index, newTime) => {
-    const updatedRecords = [...editedRecords];
+    const updatedRecords = [...editableRecords];
     const record = updatedRecords[index];
+   // const [year, month, day] = record.dateStr.split('-');
 
-  
-    const [year, month, day] = record.dateStr.split('-');
+   // Extrae las horas y minutos del nuevo tiempo
     const [hours, minutes] = newTime.split(':');
 
- 
+    // Genera un nuevo timestamp
     const newTimestamp = `${record.dateStr}T${hours}:${minutes}:00.000`;
-
+    // Actualiza el registro con el nuevo timestamp y tiempo
     updatedRecords[index] = {
       ...record,
       timestamp: newTimestamp,
       time: newTime
     };
-
-    setEditedRecords(updatedRecords);
+    // Actualiza el estado con los registros editados
+    setEditableRecords(updatedRecords);
   };
-
-  
+  // Añade un nuevo campo de registro al formulario
   const handleAddRecord = () => {
     const [d, m, y] = dayRecords.day.split('/').map(Number);
     const now = new Date();
-
-   
     const localDate = new Date(y, m - 1, d, now.getHours(), now.getMinutes(), 0);
-
-    
-    const dateStr = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
-    const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-   
+    const dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     const timestamp = `${dateStr}T${time}:00.000`;
 
+    const tempId = `temp-${Date.now()}`;
+
     const newRecord = {
-      id: null,
+      id: `temp-${timestamp}`, // ID temporal que siempre es un string
       employeeId: employeeId,
       timestamp: timestamp, 
       dateStr: dateStr,
       time: time,
     };
 
-    setEditedRecords([...editedRecords, newRecord]);
+    setEditableRecords([...editableRecords, newRecord]);
   };
+  console.log(editableRecords)
 
-
-  const handeladdEdited = async (id) => {
+  const handleSaveRecord = async (recordId) => {
+    const recordToSave = editableRecords.find(record => record.id === recordId);
+  
+    if (!recordToSave) {
+      alert("No se encontró el registro para guardar.");
+      return;
+    }
+  
     try {
-      const editedRecord = editedRecords.find(record => record.id === id);
-
-      if (!editedRecord) {
-        console.error("Registro no encontrado para editar.");
-        return;
-      }
-
-      const response = await fetch(`http://localhost:8080/api/timestamp/${id}`, {
-        method: 'PATCH',
+      // Determinar si es creación (POST) o actualización (PATCH)
+      const isNewRecord = recordId.startsWith('temp');
+      const url = isNewRecord 
+        ? 'http://localhost:8080/api/timestamp/timestamp'
+        : `http://localhost:8080/api/timestamp/${recordId}`;
+  
+      const method = isNewRecord ? 'POST' : 'PATCH';
+  
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          timestamp: editedRecord.timestamp
+          employeeId: recordToSave.employeeId,
+          timestamp: recordToSave.timestamp
         })
       });
-
-      
-      const responseText = await response.text();
-
+  
+      // Manejar la respuesta
       if (!response.ok) {
-        throw new Error(responseText || `Error HTTP: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Error HTTP: ${response.status}`);
       }
-
-      console.log("Respuesta del servidor:", responseText);
-
-     
-      setEditedRecords(prev =>
+  
+      const responseData = await response.json();
+  
+      // Actualizar el estado
+      setEditableRecords(prev =>
         prev.map(record =>
-          record.id === id ? { ...record, synced: true } : record
+          record.id === recordId
+            ? {
+                ...record,
+                id: isNewRecord ? responseData.id : record.id,
+                synced: true
+              }
+            : record
         )
       );
-
-      
-      alert(responseText); 
-
+  
+      alert(isNewRecord 
+        ? "Registro guardado correctamente." 
+        : "Registro actualizado correctamente.");
+  
     } catch (error) {
-      console.error("Error al actualizar el registro:", error);
-     
+      console.error(`Error al ${recordId.startsWith('temp') ? 'guardar' : 'actualizar'} el registro:`, error);
       alert(error.message);
-
-     
-      setEditedRecords(prev => [...prev]);
     }
   };
+
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -201,8 +195,8 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
             {/* Registros del día */}
             <h4 className="text-lg font-medium mt-6">Registros del día:</h4>
             <div className="space-y-2">
-              {editedRecords.map((record, index) => {
-                
+              {editableRecords.map((record, index) => {
+
                 return (
                   <div key={index} className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-2 rounded">
                     <div>
@@ -220,7 +214,10 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, dayRecords, employees, re
 
                         <button
                           className='bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-full'
-                          onClick={() => handeladdEdited(record.id)}>Editar</button>
+                          onClick={() => handleSaveRecord(record.id)}
+                        >
+                          {String(record.id).startsWith('temp') ? 'Guardar' : 'Enviar'}
+                        </button>
                       </div>
                     </div>
                   </div>

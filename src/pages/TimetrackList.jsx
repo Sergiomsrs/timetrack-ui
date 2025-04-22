@@ -15,6 +15,7 @@ export const TimetrackList = () => {
     const [error, setError] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
 
+
     // Cargar lista de empleados --> employees
     useEffect(() => {
         setIsLoading(true);
@@ -172,6 +173,7 @@ export const TimetrackList = () => {
             <Modal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
+                dailyRecords={dailyRecords}
 
 
                 employeeId={selectedEmployeeId}
