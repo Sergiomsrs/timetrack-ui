@@ -7,13 +7,14 @@ export const TimetrackList = () => {
 
 
     const [employees, setEmployees] = useState([]); // Guarda los empleados tras recibirlos de la api
-    const [selectedEmployeeId, setSelectedEmployeeId] = useState(null); // Id del empleado seleccionado en el dropdown
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState(1); // Id del empleado seleccionado en el dropdown
     const [records, setRecords] = useState([]); // Registros recibidos de la api por id
     const [dailyRecords, setDailyRecords] = useState([]); // Registros ya formateados por día. Contiene todos los dias
     const [selectedDayRecords, setSelectedDayRecords] = useState(null); // Registros ya formateados por día. Contiene solo el dia seleccionado
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
+     // Registros del dia seleccionado. Se pasa al modal para mostrar los detalles
 
 
     // Cargar lista de empleados --> employees
@@ -26,9 +27,17 @@ export const TimetrackList = () => {
             .finally(() => setIsLoading(false));
     }, []);
 
+    // Actualiza el estado con el id del empleado seleccionado en el dropdown
+    useEffect(() => {
+        if (selectedEmployeeId) {
+            handleEmployeeSelect({ target: { value: selectedEmployeeId } });
+        }
+    }, []);
+
     /* Cargar registros de empleados --> records
        selectedEmployeeId
        Si hay empleado seleccionado se cargan los registros de ese empleado tanto formateados (dailyRecords) y sin formatear (records)*/
+       // Se dispara con el dropdown
     const handleEmployeeSelect = async (e) => {
         const selectedId = e.target.value;
         setSelectedEmployeeId(selectedId);
@@ -55,6 +64,8 @@ export const TimetrackList = () => {
         }
     };
 
+    console.log("selecttedDayRecords", selectedDayRecords); 
+
 
     /* Abre el modal y asigan a los registros del dia seleccionado (setSelectedDayRecords)
        Se le pasa el objeto completo del dia seleccionado (record) para que el modal lo procese y lo muestre */
@@ -62,6 +73,7 @@ export const TimetrackList = () => {
         setSelectedDayRecords(dayRecords);
         setIsOpen(true);
     };
+
 
     return (
         <div className="w-11/12 md:w-3/4 mx-auto p-4">
@@ -72,6 +84,8 @@ export const TimetrackList = () => {
                 </label>
                 <select
                     id="employee-select"
+                    value={selectedEmployeeId}
+                    
                     onChange={handleEmployeeSelect}
                     disabled={isLoading}
                     className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -79,6 +93,7 @@ export const TimetrackList = () => {
                     <option value="">-- Seleccione un empleado --</option>
                     {employees.map(employee => (
                         <option key={employee.id} value={employee.id}>
+
                             {employee.name} {employee.lastName}
                         </option>
                     ))}
@@ -174,8 +189,11 @@ export const TimetrackList = () => {
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 dailyRecords={dailyRecords}
+                setRecords={setRecords}
+                selectedDayRecords={selectedDayRecords}
+                
 
-
+                setSelectedDayRecords={setSelectedDayRecords}
                 employeeId={selectedEmployeeId}
                 records={records}
                 dayRecords={selectedDayRecords?.data}
