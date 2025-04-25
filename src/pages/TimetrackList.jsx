@@ -16,6 +16,8 @@ export const TimetrackList = () => {
     const [isOpen, setIsOpen] = useState(false);
      // Registros del dia seleccionado. Se pasa al modal para mostrar los detalles
 
+     console.log(records)
+
 
     // Cargar lista de empleados --> employees
     useEffect(() => {
@@ -74,6 +76,8 @@ export const TimetrackList = () => {
         setIsOpen(true);
     };
 
+    const hola = processTimeStamps(records, selectedEmployeeId)
+
 
     return (
         <div className="w-11/12 md:w-3/4 mx-auto p-4">
@@ -111,7 +115,7 @@ export const TimetrackList = () => {
             )}
 
             {/* Tabla de resultados */}
-            {dailyRecords && dailyRecords.length > 0 ? (
+            {hola && hola.length > 0 ? (
                 <div className="overflow-x-auto shadow-md rounded-lg">
                     <table className="min-w-full bg-white">
                         <thead className="bg-gray-50">
@@ -124,7 +128,7 @@ export const TimetrackList = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {dailyRecords.map((record, index) => (
+                            {hola.map((record, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="py-3 px-4 whitespace-nowrap">
                                         {record.data.day}

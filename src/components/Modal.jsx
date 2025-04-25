@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { filterAndMapRecords } from '../utilities/timeManagement';
+import { filterAndMapRecords, processTimeStamps } from '../utilities/timeManagement';
 
 export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,selectedDayRecords, employees, records, setRecords }) => {
   
@@ -18,6 +18,7 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
   }, [isOpen, dayRecords, records, selectedDayRecords?.data]);
 
   
+
 
 
   if (!isOpen || !dayRecords) return null;
