@@ -17,8 +17,6 @@ export const TimetrackList = () => {
     const [isOpen, setIsOpen] = useState(false);
      // Registros del dia seleccionado. Se pasa al modal para mostrar los detalles
 
-     console.log(records)
-
 
     // Cargar lista de empleados --> employees
     useEffect(() => {
@@ -66,18 +64,19 @@ export const TimetrackList = () => {
         }
     };
 
-    console.log("selecttedDayRecords", selectedDayRecords); 
+    
 
 
     /* Abre el modal y asigan a los registros del dia seleccionado (setSelectedDayRecords)
        Se le pasa el objeto completo del dia seleccionado (record) para que el modal lo procese y lo muestre */
     const handleOpenModal = (dayRecords) => {
-        setSelectedDayRecords(dayRecords);
+        setSelectedDayRecords(dayRecords.data?.day);
         setIsOpen(true);
     };
 
     const processRecord = processTimeStamps(records, selectedEmployeeId)
-    console.log("processRecord", processRecord); // Registros procesados por día y ordenados por hora
+    console.log("pr",  processRecord)
+    
 
 
     return (

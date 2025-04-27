@@ -40,10 +40,11 @@
  */
 
 export const processTimeStamps = (timestamps, id) => {
+   
     
     const daysMap = new Map();
 
-    // 1. Agrupar registros por día y ordenar por hora
+    // 1. Agrupar registros por día, manteniendo fecha + id
     timestamps.forEach(stamp => {
         const date = new Date(stamp.timestamp);
         const dayKey = date.toLocaleDateString('es-ES');
@@ -52,46 +53,53 @@ export const processTimeStamps = (timestamps, id) => {
             daysMap.set(dayKey, []);
         }
 
-        daysMap.get(dayKey).push(date);
+        // Guardar tanto la fecha como el id
+        daysMap.get(dayKey).push({
+            date,
+            recordId: stamp.id
+        });
     });
 
     // 2. Procesar cada día
     return Array.from(daysMap.entries()).map(([day, times]) => {
-        times.sort((a, b) => a - b); // Ordenar cronológicamente
+        // Ahora times es un array de objetos { date, recordId }
 
-        let totalWorkedMs = 0; // Acumulador de tiempo trabajado en milisegundos
-        const periods = []; // Array para almacenar cada período de trabajo
-        let warning = null; // Para registrar problemas como registros impares
+        // Ordenar por fecha
+        times.sort((a, b) => a.date - b.date);
 
-        // 3. Calcular períodos de trabajo
+        let totalWorkedMs = 0;
+        const periods = [];
+        let warning = null;
+
+        // 3. Calcular períodos
         for (let i = 0; i < times.length; i += 2) {
             const entry = times[i];
             let exit, periodMs;
 
             if (i + 1 < times.length) {
-                // Par completo (entrada-salida)
                 exit = times[i + 1];
-                periodMs = exit - entry;
+                periodMs = exit.date - entry.date;
                 totalWorkedMs += periodMs;
             } else {
-                // Registro impar (falta salida)
                 exit = null;
                 periodMs = 0;
                 warning = "⚠ Falta registro de salida";
             }
 
             periods.push({
-                entry: entry.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-                exit: exit?.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+                entry: entry.date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+                entryID: entry.recordId, // ID de la entrada
+                exit: exit?.date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+                exitID: exit?.recordId || "", // ID de la salida (si existe)
                 durationMs: periodMs,
-                isComplete: exit !== null
+                isComplete: exit !== null,
+                recordId: entry.recordId // Usar el id correcto de la entrada
             });
         }
 
-        // 4. Formatear horas totales
         const totalWorked = formatMillisecondsToTime(totalWorkedMs);
 
-        return  {
+        return {
             id,
             data: {
                 day,
@@ -99,9 +107,11 @@ export const processTimeStamps = (timestamps, id) => {
                 totalWorked,
                 recordsCount: times.length,
                 warning
-            }}
+            }
+        };
     });
 };
+
 
 
 
@@ -141,4 +151,28 @@ export const formatMillisecondsToTime = (ms, emptySymbol = "--") => {
       const dateStr = date.toISOString().slice(0, 10); // yyyy-mm-dd
       return { ...r, time, dateStr };
     });
+  };
+
+  // utils/dateHelpers.js
+export const formatTimeForInput = (timestamp) => {
+    if (!timestamp) return '00:00'; // Fallback for invalid dates
+    
+    try {
+      const date = new Date(timestamp);
+      if (isNaN(date.getTime())) return '00:00'; // Check if date is invalid
+      
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    } catch {
+      return '00:00'; // Fallback if any error occurs
+    }
+  };
+  
+  export const parseTimeInput = (timeString) => {
+    if (!timeString || !/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/.test(timeString)) {
+      return { hours: 0, minutes: 0 };
+    }
+    const [hours, minutes] = timeString.split(':').map(Number);
+    return { hours, minutes };
   };

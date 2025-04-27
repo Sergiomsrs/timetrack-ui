@@ -1,67 +1,71 @@
-import React, { useEffect, useState } from 'react';
-import { filterAndMapRecords, processTimeStamps } from '../utilities/timeManagement';
+import React, { useEffect, useMemo, useState } from 'react';
+import { filterAndMapRecords, parseTimeInput, processTimeStamps } from '../utilities/timeManagement';
 
-export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,selectedDayRecords, employees, records, setRecords }) => {
-  
-  const [editableRecords, setEditableRecords] = useState([]);
-  const [dayRecords, setDayRecords] = useState([null]);
+export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, records, setRecords }) => {
+
+
+  const [editedRecord, setEditedRecord] = useState(null); // Estado para el registro editado
+
+
+
+  const processRecord = processTimeStamps(records, employeeId)
+  const data = processRecord.find(record => record.data.day === selectedDayRecords);
+
+  const dayRecords = filterAndMapRecords(records, selectedDayRecords);
+  console.log("dayRecords", dayRecords);
+
+  console.log("data", data);
+  console.log("records", records);
+
 
   useEffect(() => {
     if (isOpen && records?.length) {
-      const filtered = filterAndMapRecords(records, dayRecords.day);
-      setEditableRecords(filtered);
-  
-      if (!dayRecords?.day) {  // Solo se actualiza si no tiene valor
-        setDayRecords(selectedDayRecords?.data);
-      }
+      setEditedRecord(data?.data);
     }
-  }, [isOpen, dayRecords, records, selectedDayRecords?.data]);
+  }, [isOpen, records]);
 
-  
-
-
-
-  if (!isOpen || !dayRecords) return null;
-
-  const handleTimeChange = (index, newTime) => {
-    const updatedRecords = [...editableRecords];
-    const record = updatedRecords[index];
-
-    if (!newTime.match(/^\d{2}:\d{2}$/)) return;
-
-    const [hours, minutes] = newTime.split(':');
-    const newTimestamp = `${record.dateStr}T${hours}:${minutes}:00.000`; 
+  console.log("editedRecord", editedRecord);
 
 
-    updatedRecords[index] = {
-      ...record,
-      timestamp: newTimestamp,
-      time: newTime,
-    };
+  if (!isOpen) return null;
 
-    setEditableRecords(updatedRecords);
+  // In your component:
+  const handleTimeChange = (recordId, newTime, field) => {
+    setEditedRecord(prev => {
+      if (!prev) return null;
+      
+      return {
+        ...prev,
+        periods: prev.periods.map(period => {
+          if (period.recordId !== recordId) return period;
+          
+          // Actualizar el campo correspondiente (entry o exit)
+          const updatedPeriod = { ...period, [field]: newTime };
+          
+          // Si actualizamos ambos campos, calcular la duración
+          if (updatedPeriod.entry && updatedPeriod.exit) {
+            const entryDate = new Date(`${prev.day} ${updatedPeriod.entry}`);
+            const exitDate = new Date(`${prev.day} ${updatedPeriod.exit}`);
+            
+            // Validar que la salida sea después de la entrada
+            if (exitDate > entryDate) {
+              updatedPeriod.durationMs = exitDate - entryDate;
+              updatedPeriod.isComplete = true;
+            } else {
+              updatedPeriod.durationMs = 0;
+              updatedPeriod.isComplete = false;
+            }
+          } else {
+            updatedPeriod.durationMs = 0;
+            updatedPeriod.isComplete = false;
+          }
+          
+          return updatedPeriod;
+        })
+      };
+    });
   };
-
-  console.log("Editable Records:", editableRecords);
-
-  const handleAddRecord = () => {
-    const [day, month, year] = dayRecords.day.split('/').map(Number);
-    const now = new Date();
-    const date = new Date(year, month - 1, day, now.getHours(), now.getMinutes(), 0);
-    const dateStr = date.toISOString().slice(0, 10);
-    const time = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-    const timestamp = `${dateStr}T${time}:00.000`;
-
-    const newRecord = {
-      id: `temp-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
-      employeeId,
-      timestamp,
-      dateStr,
-      time,
-    };
-
-    setEditableRecords(prev => [...prev, newRecord]);
-  };
+  const handleAddRecord = () => {};
 
   const handleSaveRecord = async (recordId) => {
     const recordToSave = editableRecords.find(r => r.id === recordId);
@@ -91,7 +95,7 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
       const newRecord = {
         employeeId: recordToSave.employeeId,
         timestamp: recordToSave.timestamp,
-        id:""
+        id: ""
       }
 
 
@@ -111,27 +115,18 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
         }),
       }));
 
-      
- 
 
-    
+
+
+
       alert(isNew ? "Registro guardado." : "Registro actualizado.");
     } catch (err) {
       console.error("Error al guardar:", err);
       alert(err.message);
     }
   };
-
   const handleDeleteRecord = async (recordId) => {
-    const record = editableRecords.find(r => r.id === recordId);
-    if (!record) return alert("Registro no encontrado.");
-
-    // Si es nuevo (temporal), elimínalo directamente del estado
-    if (String(recordId).startsWith('temp')) {
-      setEditableRecords(prev => prev.filter(r => r.id !== recordId));
-      return;
-    }
-
+    
     try {
       const res = await fetch(`http://localhost:8080/api/timestamp/${recordId}`, {
         method: 'DELETE',
@@ -143,12 +138,13 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
         throw new Error(errData.message || `Error HTTP: ${res.status}`);
       }
 
-      setEditableRecords(prev => prev.filter(r => r.id !== recordId));
+      //setEditableRecords(prev => prev.filter(r => r.id !== recordId));
       alert("Registro eliminado.");
     } catch (err) {
       console.error("Error al eliminar:", err);
       alert(err.message);
     }
+    
   };
 
   return (
@@ -176,18 +172,18 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Fecha:</p>
-                <p className="text-base font-semibold">{dayRecords?.day}</p>
+                <p className="text-base font-semibold">{data.data.day}</p>
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total trabajado:</p>
-                <p className="text-base font-semibold">{dayRecords?.totalWorked}</p>
+                <p className="text-base font-semibold">{data.data?.totalWorked}</p>
               </div>
             </div>
 
             <h4 className="text-lg font-medium">Turnos:</h4>
             <div className="space-y-3">
-              {dayRecords?.periods?.map((period, index) => (
-                <div key={index} className={`p-3 rounded-lg ${!period.isComplete ? 'bg-amber-50 dark:bg-amber-900/20' : 'bg-gray-50 dark:bg-gray-800'}`}>
+              {data.data?.periods?.map((period, index) => (
+                <div key={index} className={`p-3 rounded-lg ${!period?.isComplete ? 'bg-amber-50 dark:bg-amber-900/20' : 'bg-gray-50 dark:bg-gray-800'}`}>
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Turno {index + 1}</span>
                     {!period.isComplete && (
@@ -207,35 +203,69 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
 
             <h4 className="text-lg font-medium mt-6">Registros del día:</h4>
             <div className="space-y-2">
-              {editableRecords.map((record, index) => (
-                <div key={index} className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-2 rounded">
-                  <div className="w-full">
-                    <div className="text-sm text-gray-500 dark:text-gray-400">Fecha: {record.dateStr}</div>
-                    <div className="flex items-center gap-4 mt-1">
-                      <input
-                        type="time"
-                        value={record.time}
-                        onChange={e => handleTimeChange(index, e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      />
-                      <button
-                        onClick={() => handleSaveRecord(record.id)}
-                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-full"
-                      >
-                        {String(record.id).startsWith('temp') ? 'Guardar' : 'Enviar'}
-                      </button>
-                      <button
-                        onClick={() => handleDeleteRecord(record.id)}
-                        className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full"
-                      >
-                        Eliminar
-                      </button>
+              {editedRecord?.periods.map((record, index) => (
+                <div key={record.recordId}>
+                  <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                    <div className="w-full">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">Fecha: {data.data.day}</div>
+                      <div className="flex items-center gap-4 mt-1">
+                        <input
+                          type="time"
+                          value={record.entry || ''}
+                          onChange={(e) => handleTimeChange(record.recordId, e.target.value, 'entry')}
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        />
+
+                        <button
+                          onClick={() => handleSaveRecord(record.entryID)}
+                          className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-full"
+                        >
+                          {String(record.id).startsWith('temp') ? 'Guardar' : 'Enviar'}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteRecord(record.entryID)}
+                          className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
                     </div>
                   </div>
+                  {(record.exit || record.isBeingEdited) && (
+                    <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                      <div className="w-full">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">Fecha: {data.data.day}</div>
+                        <div className="flex items-center gap-4 mt-1">
+                          <input
+                            type="time"
+                            value={record.exit || ''}
+                            onChange={(e) => handleTimeChange(record.recordId, e.target.value, 'exit')}
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          />
+
+                          <button
+                            onClick={() => handleSaveRecord(record.exitID)}
+                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-full"
+                          >
+                            {String(record.id).startsWith('temp') ? 'Guardar' : 'Enviar'}
+                          </button>
+                          <button
+                            onClick={() => handleDeleteRecord(record.id)}
+                            className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )
+
+                  }
+
                 </div>
+
               ))}
               <button
-                onClick={handleAddRecord}
                 className="mt-3 text-sm text-blue-600 hover:underline"
               >
                 + Añadir nuevo registro
@@ -256,4 +286,3 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
     </div>
   );
 };
-
