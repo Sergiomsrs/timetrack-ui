@@ -74,6 +74,8 @@ export const TimetrackList = () => {
         setIsOpen(true);
     };
 
+    const processRecord = processTimeStamps(records, selectedEmployeeId)
+
 
     return (
         <div className="w-11/12 md:w-3/4 mx-auto p-4">
@@ -111,7 +113,7 @@ export const TimetrackList = () => {
             )}
 
             {/* Tabla de resultados */}
-            {dailyRecords && dailyRecords.length > 0 ? (
+            {processRecord && processRecord.length > 0 ? (
                 <div className="overflow-x-auto shadow-md rounded-lg">
                     <table className="min-w-full bg-white">
                         <thead className="bg-gray-50">
