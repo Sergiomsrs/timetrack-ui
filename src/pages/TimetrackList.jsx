@@ -179,13 +179,10 @@ export const TimetrackList = () => {
             <Modal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                selectedDayRecords={selectedDayRecords}
-                setSelectedDayRecords={setSelectedDayRecords}
                 employeeId={selectedEmployeeId}
+                selectedDayRecords={selectedDayRecords}
                 records={records}
                 setRecords={setRecords}
-                employees={employees}
-                dayRecords={selectedDayRecords?.data}
             />
         </div>
     );

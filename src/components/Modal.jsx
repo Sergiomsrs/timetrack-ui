@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { filterAndMapRecords } from '../utilities/timeManagement';
 
-export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords, selectedDayRecords, employees, records, setRecords }) => {
+export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, records, setRecords }) => {
 
   const [editableRecords, setEditableRecords] = useState([]);
   const [dayRecords, setDayRecords] = useState([null]);
 
-  console.log(dayRecords, "Day Records");
-  
 
- useEffect(() => {
-  if (isOpen && selectedDayRecords?.data) {
-    setDayRecords(selectedDayRecords.data);
-  }
-}, [isOpen, selectedDayRecords?.data]);
+  useEffect(() => {
+    if (isOpen && selectedDayRecords?.data) {
+      setDayRecords(selectedDayRecords.data);
+    }
+  }, [isOpen, selectedDayRecords?.data]);
 
-useEffect(() => {
-  if (isOpen && dayRecords?.day && records?.length) {
-    const filtered = filterAndMapRecords(records, dayRecords.day);
-    setEditableRecords(filtered);
-  }
-}, [isOpen, dayRecords?.day, records]);
-
-
+  useEffect(() => {
+    if (isOpen && dayRecords?.day && records?.length) {
+      const filtered = filterAndMapRecords(records, dayRecords.day);
+      setEditableRecords(filtered);
+    }
+  }, [isOpen, dayRecords?.day, records]);
 
 
   if (!isOpen || !dayRecords) return null;
@@ -55,7 +51,7 @@ useEffect(() => {
     const dateStr = date.toISOString().slice(0, 10);
     const time = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
     const timestamp = `${dateStr}T${time}:00.000`;
-  
+
     const newRecord = {
       id: `temp-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
       employeeId,
@@ -63,22 +59,22 @@ useEffect(() => {
       dateStr,
       time,
     };
-  
+
     setEditableRecords(prev => [...prev, newRecord]);
-    setRecords(prev => [...prev, newRecord]);  // Añadir el nuevo registro a records
+    // No añadir a `records` aquí, solo se añade a `editableRecords`
   };
-  
+
   const handleSaveRecord = async (recordId) => {
     const recordToSave = editableRecords.find(r => r.id === recordId);
     if (!recordToSave) return alert("No se encontró el registro.");
-  
+
     try {
       const isNew = String(recordId).startsWith('temp');
       const url = isNew
         ? 'http://localhost:8080/api/timestamp/timestamp'
         : `http://localhost:8080/api/timestamp/${recordId}`;
       const method = isNew ? 'POST' : 'PATCH';
-  
+
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -87,77 +83,73 @@ useEffect(() => {
           timestamp: recordToSave.timestamp,
         }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || `Error HTTP: ${response.status}`);
       }
-  
+
       const updatedRecord = {
         employeeId: recordToSave.employeeId,
         timestamp: recordToSave.timestamp,
         id: recordId, // Usar el ID del servidor, si es necesario
       };
-  
+
       // Eliminar el registro temporal (si es un nuevo registro)
       setEditableRecords(prev => prev.filter(r => r.id !== recordId));
-  
-      // Añadir el registro guardado en el servidor a records
-      setRecords(prev => {
-        return prev.map(r => r.id === recordId ? updatedRecord : r);
-      });
-  
+
+      // Añadir el registro guardado en el servidor a `records`
+      setRecords(prev => [...prev, updatedRecord]); // Solo añadir a `records` cuando se guarda correctamente
+
       alert(isNew ? "Registro guardado." : "Registro actualizado.");
     } catch (err) {
       console.error("Error al guardar:", err);
       alert(err.message);
     }
-  
+
     setIsOpen(false);
   };
-  
-  console.log("Updated Records:", records);
 
   const handleDeleteRecord = async (recordId) => {
     const record = editableRecords.find(r => r.id === recordId);
     if (!record) return alert("Registro no encontrado.");
-  
+
     // Si es nuevo (temporal), elimínalo directamente del estado
     if (String(recordId).startsWith('temp')) {
       setEditableRecords(prev => {
         const updatedEditableRecords = prev.filter(r => r.id !== recordId);
-        
+
         // Eliminar el registro también de records
         const updatedRecords = records.filter(record => record.id !== recordId);
         setRecords(updatedRecords);
-        
+
         return updatedEditableRecords;
       });
       return;
     }
-  
+
     try {
       const res = await fetch(`http://localhost:8080/api/timestamp/${recordId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });
-  
+
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.message || `Error HTTP: ${res.status}`);
       }
-  
+
       // Eliminar el registro de editableRecords
       setEditableRecords(prev => {
         const updatedEditableRecords = prev.filter(r => r.id !== recordId);
-        
+
         // Eliminar el registro también de records
         const updatedRecords = records.filter(record => record.id !== recordId);
         setRecords(updatedRecords);
-        
+
         return updatedEditableRecords;
       });
-  
+
       alert("Registro eliminado.");
     } catch (err) {
       console.error("Error al eliminar:", err);
@@ -166,7 +158,6 @@ useEffect(() => {
 
     setIsOpen(false);
   };
-  
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -174,6 +165,7 @@ useEffect(() => {
         className="absolute inset-0 bg-gray-900/50 dark:bg-gray-900/80"
         onClick={() => setIsOpen(false)}
       />
+
 
       <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-lg">
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -237,23 +229,21 @@ useEffect(() => {
                       />
                       <button
                         onClick={() => handleSaveRecord(record.id)}
-                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-full"
-                      >
-                        {String(record.id).startsWith('temp') ? 'Guardar' : 'Enviar'}
-                      </button>
+                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-full cursor-pointer"
+                      >Guardar</button>
+
                       <button
                         onClick={() => handleDeleteRecord(record.id)}
-                        className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full"
-                      >
-                        Eliminar
-                      </button>
+                        className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full cursor-pointer"
+                      >Eliminar</button>
+
                     </div>
                   </div>
                 </div>
               ))}
               <button
                 onClick={handleAddRecord}
-                className="mt-3 text-sm text-blue-600 hover:underline"
+                className="mt-3 text-sm text-blue-600 hover:underline cursor-pointer"
               >
                 + Añadir nuevo registro
               </button>
@@ -263,7 +253,7 @@ useEffect(() => {
           <div className="flex items-center justify-between p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"
             >
               Cerrar
             </button>
