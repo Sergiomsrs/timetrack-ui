@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { filterAndMapRecords } from '../utilities/timeManagement';
 
-export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,selectedDayRecords, employees, records, setRecords }) => {
-  
+export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords, selectedDayRecords, employees, records, setRecords }) => {
+
   const [editableRecords, setEditableRecords] = useState([]);
   const [dayRecords, setDayRecords] = useState([null]);
 
-  useEffect(() => {
-    if (isOpen && records?.length) {
-      const filtered = filterAndMapRecords(records, dayRecords.day);
-      setEditableRecords(filtered);
+  console.log(dayRecords, "Day Records");
   
-      if (!dayRecords?.day) {  // Solo se actualiza si no tiene valor
-        setDayRecords(selectedDayRecords?.data);
-      }
-    }
-  }, [isOpen, dayRecords, records, selectedDayRecords?.data]);
 
-  
+ useEffect(() => {
+  if (isOpen && selectedDayRecords?.data) {
+    setDayRecords(selectedDayRecords.data);
+  }
+}, [isOpen, selectedDayRecords?.data]);
+
+useEffect(() => {
+  if (isOpen && dayRecords?.day && records?.length) {
+    const filtered = filterAndMapRecords(records, dayRecords.day);
+    setEditableRecords(filtered);
+  }
+}, [isOpen, dayRecords?.day, records]);
+
+
 
 
   if (!isOpen || !dayRecords) return null;
@@ -29,7 +34,7 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
     if (!newTime.match(/^\d{2}:\d{2}$/)) return;
 
     const [hours, minutes] = newTime.split(':');
-    const newTimestamp = `${record.dateStr}T${hours}:${minutes}:00.000`; 
+    const newTimestamp = `${record.dateStr}T${hours}:${minutes}:00.000`;
 
 
     updatedRecords[index] = {
@@ -50,7 +55,7 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
     const dateStr = date.toISOString().slice(0, 10);
     const time = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
     const timestamp = `${dateStr}T${time}:00.000`;
-
+  
     const newRecord = {
       id: `temp-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
       employeeId,
@@ -58,21 +63,22 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
       dateStr,
       time,
     };
-
+  
     setEditableRecords(prev => [...prev, newRecord]);
+    setRecords(prev => [...prev, newRecord]);  // Añadir el nuevo registro a records
   };
-
+  
   const handleSaveRecord = async (recordId) => {
     const recordToSave = editableRecords.find(r => r.id === recordId);
     if (!recordToSave) return alert("No se encontró el registro.");
-
+  
     try {
       const isNew = String(recordId).startsWith('temp');
       const url = isNew
         ? 'http://localhost:8080/api/timestamp/timestamp'
         : `http://localhost:8080/api/timestamp/${recordId}`;
       const method = isNew ? 'POST' : 'PATCH';
-
+  
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -81,74 +87,86 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, setSelectedDayRecords,sel
           timestamp: recordToSave.timestamp,
         }),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || `Error HTTP: ${response.status}`);
       }
-
-      const newRecord = {
+  
+      const updatedRecord = {
         employeeId: recordToSave.employeeId,
         timestamp: recordToSave.timestamp,
-        id:""
-      }
-
-
-      setDayRecords(prev => ({
-        ...prev,
-        periods: prev.periods.map((period, index) => {
-          if (index === recordToSave.index) {
-            return {
-              ...period,
-              entry: recordToSave.time,
-              exit: recordToSave.time,
-              durationMs: 0,
-              isComplete: false,
-            };
-          }
-          return period;
-        }),
-      }));
-
-      
- 
-
-    
+        id: recordId, // Usar el ID del servidor, si es necesario
+      };
+  
+      // Eliminar el registro temporal (si es un nuevo registro)
+      setEditableRecords(prev => prev.filter(r => r.id !== recordId));
+  
+      // Añadir el registro guardado en el servidor a records
+      setRecords(prev => {
+        return prev.map(r => r.id === recordId ? updatedRecord : r);
+      });
+  
       alert(isNew ? "Registro guardado." : "Registro actualizado.");
     } catch (err) {
       console.error("Error al guardar:", err);
       alert(err.message);
     }
+  
+    setIsOpen(false);
   };
+  
+  console.log("Updated Records:", records);
 
   const handleDeleteRecord = async (recordId) => {
     const record = editableRecords.find(r => r.id === recordId);
     if (!record) return alert("Registro no encontrado.");
-
+  
     // Si es nuevo (temporal), elimínalo directamente del estado
     if (String(recordId).startsWith('temp')) {
-      setEditableRecords(prev => prev.filter(r => r.id !== recordId));
+      setEditableRecords(prev => {
+        const updatedEditableRecords = prev.filter(r => r.id !== recordId);
+        
+        // Eliminar el registro también de records
+        const updatedRecords = records.filter(record => record.id !== recordId);
+        setRecords(updatedRecords);
+        
+        return updatedEditableRecords;
+      });
       return;
     }
-
+  
     try {
       const res = await fetch(`http://localhost:8080/api/timestamp/${recordId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });
-
+  
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.message || `Error HTTP: ${res.status}`);
       }
-
-      setEditableRecords(prev => prev.filter(r => r.id !== recordId));
+  
+      // Eliminar el registro de editableRecords
+      setEditableRecords(prev => {
+        const updatedEditableRecords = prev.filter(r => r.id !== recordId);
+        
+        // Eliminar el registro también de records
+        const updatedRecords = records.filter(record => record.id !== recordId);
+        setRecords(updatedRecords);
+        
+        return updatedEditableRecords;
+      });
+  
       alert("Registro eliminado.");
     } catch (err) {
       console.error("Error al eliminar:", err);
       alert(err.message);
     }
+
+    setIsOpen(false);
   };
+  
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

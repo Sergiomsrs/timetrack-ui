@@ -1,81 +1,73 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 
 import { formatMillisecondsToTime, processTimeStamps } from '../utilities/timeManagement';
 import { Modal } from '../components/Modal';
 
 export const TimetrackList = () => {
-
-
-    const [employees, setEmployees] = useState([]); // Guarda los empleados tras recibirlos de la api
-    const [selectedEmployeeId, setSelectedEmployeeId] = useState(1); // Id del empleado seleccionado en el dropdown
-    const [records, setRecords] = useState([]); // Registros recibidos de la api por id
-    const [dailyRecords, setDailyRecords] = useState([]); // Registros ya formateados por día. Contiene todos los dias
-    const [selectedDayRecords, setSelectedDayRecords] = useState(null); // Registros ya formateados por día. Contiene solo el dia seleccionado
+    const [employees, setEmployees] = useState([]);
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState(1);
+    const [records, setRecords] = useState([]);
+    const [selectedDayRecords, setSelectedDayRecords] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-     // Registros del dia seleccionado. Se pasa al modal para mostrar los detalles
 
-
-    // Cargar lista de empleados --> employees
+    // Cargar lista de empleados al montar el componente
     useEffect(() => {
-        setIsLoading(true);
-        fetch('http://localhost:8080/api/user')
-            .then(response => response.json())
-            .then(data => setEmployees(data))
-            .catch(error => setError(error.message))
-            .finally(() => setIsLoading(false));
+        const fetchEmployees = async () => {
+            setIsLoading(true);
+            try {
+                const response = await fetch('http://localhost:8080/api/user');
+                const data = await response.json();
+                setEmployees(data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchEmployees();
     }, []);
 
-    // Actualiza el estado con el id del empleado seleccionado en el dropdown
+    // Cargar registros del empleado seleccionado
     useEffect(() => {
-        if (selectedEmployeeId) {
-            handleEmployeeSelect({ target: { value: selectedEmployeeId } });
-        }
-    }, []);
+        const fetchRecords = async () => {
+            if (!selectedEmployeeId) {
+                setRecords([]);
+                return;
+            }
+            setIsLoading(true);
+            setError(null);
+            try {
+                const response = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}`);
+                const data = await response.json();
+                setRecords(data);
+            } catch (error) {
+                setError("Error al cargar registros");
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-    /* Cargar registros de empleados --> records
-       selectedEmployeeId
-       Si hay empleado seleccionado se cargan los registros de ese empleado tanto formateados (dailyRecords) y sin formatear (records)*/
-       // Se dispara con el dropdown
-    const handleEmployeeSelect = async (e) => {
-        const selectedId = e.target.value;
-        setSelectedEmployeeId(selectedId);
-        // Si no hay empleado seleccionado, no se cargan registros
-        if (!selectedId) {
-            setDailyRecords([]);
-            return;
-        }
+        fetchRecords();
+    }, [selectedEmployeeId]);
 
-        setIsLoading(true);
-        setError(null);
-        // Si hay empleado seleccionado, se cargan registros
-        // Se hace la llamada a la api para obtener los registros del empleado seleccionado
+    // Procesar los registros para el renderizado
+    const processedRecords = useMemo(() => {
+        return processTimeStamps(records, selectedEmployeeId);
+    }, [records, selectedEmployeeId]);
 
-        try {
-            const response = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedId}`);
-            const data = await response.json();
-            setRecords(data);
-            setDailyRecords(processTimeStamps(data, selectedId));
-        } catch (error) {
-            setError("Error al cargar registros");
-        } finally {
-            setIsLoading(false);
-        }
+    // Manejar el cambio en el dropdown de empleados
+    const handleDropdownChange = (e) => {
+        setSelectedEmployeeId(e.target.value);
     };
 
-    console.log("selecttedDayRecords", selectedDayRecords); 
-
-
-    /* Abre el modal y asigan a los registros del dia seleccionado (setSelectedDayRecords)
-       Se le pasa el objeto completo del dia seleccionado (record) para que el modal lo procese y lo muestre */
+    // Abrir el modal con los registros de un día seleccionado
     const handleOpenModal = (dayRecords) => {
         setSelectedDayRecords(dayRecords);
         setIsOpen(true);
     };
-
-    const processRecord = processTimeStamps(records, selectedEmployeeId)
-
 
     return (
         <div className="w-11/12 md:w-3/4 mx-auto p-4">
@@ -87,15 +79,13 @@ export const TimetrackList = () => {
                 <select
                     id="employee-select"
                     value={selectedEmployeeId}
-                    
-                    onChange={handleEmployeeSelect}
+                    onChange={handleDropdownChange}
                     disabled={isLoading}
                     className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 >
                     <option value="">-- Seleccione un empleado --</option>
                     {employees.map(employee => (
                         <option key={employee.id} value={employee.id}>
-
                             {employee.name} {employee.lastName}
                         </option>
                     ))}
@@ -113,7 +103,7 @@ export const TimetrackList = () => {
             )}
 
             {/* Tabla de resultados */}
-            {processRecord && processRecord.length > 0 ? (
+            {processedRecords && processedRecords.length > 0 ? (
                 <div className="overflow-x-auto shadow-md rounded-lg">
                     <table className="min-w-full bg-white">
                         <thead className="bg-gray-50">
@@ -126,7 +116,7 @@ export const TimetrackList = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {dailyRecords.map((record, index) => (
+                            {processedRecords.map((record, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="py-3 px-4 whitespace-nowrap">
                                         {record.data.day}
@@ -185,21 +175,17 @@ export const TimetrackList = () => {
                 )
             )}
 
-
             {/* Modal para mostrar detalles */}
             <Modal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                dailyRecords={dailyRecords}
-                setRecords={setRecords}
                 selectedDayRecords={selectedDayRecords}
-                
-
                 setSelectedDayRecords={setSelectedDayRecords}
                 employeeId={selectedEmployeeId}
                 records={records}
-                dayRecords={selectedDayRecords?.data}
+                setRecords={setRecords}
                 employees={employees}
+                dayRecords={selectedDayRecords?.data}
             />
         </div>
     );
