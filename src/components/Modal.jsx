@@ -65,6 +65,10 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, recor
   };
 
   const handleSaveRecord = async (recordId) => {
+
+    const userConfirmed = window.confirm("¿Estás seguro de que deseas guardar este registro?");
+    if (!userConfirmed) return;
+
     const recordToSave = editableRecords.find(r => r.id === recordId);
     if (!recordToSave) return alert("No se encontró el registro.");
 
@@ -101,7 +105,7 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, recor
       // Añadir el registro guardado en el servidor a `records`
       setRecords(prev => [...prev, updatedRecord]); // Solo añadir a `records` cuando se guarda correctamente
 
-      alert(isNew ? "Registro guardado." : "Registro actualizado.");
+      
     } catch (err) {
       console.error("Error al guardar:", err);
       alert(err.message);
@@ -111,53 +115,47 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, recor
   };
 
   const handleDeleteRecord = async (recordId) => {
+    const userConfirmed = window.confirm("¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.");
+    if (!userConfirmed) return;
+
     const record = editableRecords.find(r => r.id === recordId);
     if (!record) return alert("Registro no encontrado.");
 
     // Si es nuevo (temporal), elimínalo directamente del estado
     if (String(recordId).startsWith('temp')) {
-      setEditableRecords(prev => {
-        const updatedEditableRecords = prev.filter(r => r.id !== recordId);
-
-        // Eliminar el registro también de records
-        const updatedRecords = records.filter(record => record.id !== recordId);
-        setRecords(updatedRecords);
-
-        return updatedEditableRecords;
-      });
-      return;
+        setEditableRecords(prev => {
+            const updatedEditableRecords = prev.filter(r => r.id !== recordId);
+            const updatedRecords = records.filter(record => record.id !== recordId);
+            setRecords(updatedRecords);
+            return updatedEditableRecords;
+        });
+        setIsOpen(false); // Cerrar modal si es un registro temporal
+        return;
     }
 
     try {
-      const res = await fetch(`http://localhost:8080/api/timestamp/${recordId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-      });
+        const res = await fetch(`http://localhost:8080/api/timestamp/${recordId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+        });
 
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.message || `Error HTTP: ${res.status}`);
-      }
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || `Error HTTP: ${res.status}`);
+        }
 
-      // Eliminar el registro de editableRecords
-      setEditableRecords(prev => {
-        const updatedEditableRecords = prev.filter(r => r.id !== recordId);
-
-        // Eliminar el registro también de records
-        const updatedRecords = records.filter(record => record.id !== recordId);
-        setRecords(updatedRecords);
-
-        return updatedEditableRecords;
-      });
-
-      alert("Registro eliminado.");
+        // Eliminar el registro de los estados
+        setEditableRecords(prev => prev.filter(r => r.id !== recordId));
+        setRecords(prev => prev.filter(r => r.id !== recordId));
+        
+        alert("Registro eliminado.");
+        setIsOpen(false); // <-- Cerrar modal SOLO si la eliminación fue exitosa
     } catch (err) {
-      console.error("Error al eliminar:", err);
-      alert(err.message);
+        console.error("Error al eliminar:", err);
+        alert(err.message);
+        // No cerramos el modal aquí para que el usuario vea el error
     }
-
-    setIsOpen(false);
-  };
+};
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
