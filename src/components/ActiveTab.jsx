@@ -5,7 +5,7 @@ export const ActiveTab = ({activeTab, setActiveTab}) => {
   
   
   return (
-    <div className="rounded-lg border border-violet-200 bg-white p-1 sm:flex-row gap-1 w-fit h-fit py-4 mx-4">
+    <div className="rounded-lg border border-violet-200 bg-white p-4 w-fit mx-4 flex flex-col h-fit gap-4">
    
     <div
       onClick={() => setActiveTab("list")}

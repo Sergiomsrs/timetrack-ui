@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { formatMillisecondsToTime, processTimeStamps } from '../utilities/timeManagement';
 import { Modal } from '../components/Modal';
 
-export const TimetrackList = () => {
+export const TimetrackList = ({activeTab}) => {
     const [employees, setEmployees] = useState([]);
     const [selectedEmployeeId, setSelectedEmployeeId] = useState(1);
     const [records, setRecords] = useState([]);
@@ -30,6 +30,9 @@ export const TimetrackList = () => {
         fetchEmployees();
     }, []);
 
+    console.log("activeTab", activeTab.year)
+    console.log("activeTab", activeTab.month)
+
     // Cargar registros del empleado seleccionado en records
     useEffect(() => {
         const fetchRecords = async () => {
@@ -40,7 +43,8 @@ export const TimetrackList = () => {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}`);
+                //const response = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}`);
+                const response = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}/month?year=${activeTab.year}&month=${activeTab.month + 1}`);
                 const data = await response.json();
                 setRecords(data);
             } catch (error) {
@@ -51,7 +55,7 @@ export const TimetrackList = () => {
         };
 
         fetchRecords();
-    }, [selectedEmployeeId]);
+    }, [selectedEmployeeId, activeTab]);
 
     // Procesar los registros para el renderizado
     const processedRecords = processTimeStamps(records, selectedEmployeeId);
@@ -69,7 +73,7 @@ export const TimetrackList = () => {
     };
 
     return (
-        <div className="w-11/12 md:w-3/4 mx-auto p-4">
+        <div className="w-full ">
             {/* Dropdown de empleados */}
             <div className="mb-6">
                 <label htmlFor="employee-select" className="block text-sm font-medium text-gray-700 mb-2">

@@ -57,7 +57,7 @@ export const UserList = ({ setActiveTab }) => {
 
             {/* Input de búsqueda por Nombre */}
             <form onSubmit={handleSearch} className="flex flex-row gap-4 mb-2">  {/* ✅ */}
-  <div className="w-3/4">
+  <div className="w-2/4">
     <label htmlFor="name-search" className="block text-sm font-medium leading-6 mb-2 text-gray-900">
       Buscar por Nombre
     </label>

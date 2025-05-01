@@ -13,13 +13,13 @@ export const User = () => {
         <ActiveTab setActiveTab={setActiveTab} activeTab={activeTab} />
 
       </div>
-      <div className="w-4/8 ">
+      <div className="w-5/8 ">
 
         {activeTab === "form" && (<UserForm setActiveTab={setActiveTab} />)}
         {activeTab === "list" && (<UserList setActiveTab={setActiveTab} />)}
 
       </div>
-      <div className='w-2/8 flex justify-center'>
+      <div className='w-1/8 flex justify-center'>
       </div>
     </div>
 
