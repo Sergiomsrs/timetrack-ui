@@ -75,7 +75,7 @@ export const TimetrackList = ({activeTab}) => {
     return (
         <div className="w-full ">
             {/* Dropdown de empleados */}
-            <div className="mb-6">
+            <div className="mb-6 w-2/4">
                 <label htmlFor="employee-select" className="block text-sm font-medium text-gray-700 mb-2">
                     Seleccionar Empleado
                 </label>

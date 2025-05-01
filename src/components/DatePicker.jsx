@@ -44,6 +44,14 @@ export const DatePicker = ({ activeTab, setActiveTab }) => {
         ))}
       </select>
 
+
+      <button>
+        <span className="text-sm text-violet-600">Añadir registro</span>
+      </button>
+
+      <button>
+        <span className="text-sm text-violet-600">Descargar PDF</span>
+      </button>
       
     </div>
   );
