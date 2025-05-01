@@ -1,16 +1,21 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { formatMillisecondsToTime, processTimeStamps } from '../utilities/timeManagement';
 import { Modal } from '../components/Modal';
+import { ModalAdd } from '../components/ModalAdd';
+import { useEmployees } from '../context/EmployeesContext';
 
-export const TimetrackList = ({activeTab}) => {
+export const TimetrackList = ({activeTab, isModalAddOpen, setIsModalAddOpen, bandera, setBandera}) => {
     const [employees, setEmployees] = useState([]);
-    const [selectedEmployeeId, setSelectedEmployeeId] = useState(1);
     const [records, setRecords] = useState([]);
     const [selectedDayRecords, setSelectedDayRecords] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState(1);
+
+    
+   
 
     // Cargar lista de empleados al montar el componente
     useEffect(() => {
@@ -30,8 +35,7 @@ export const TimetrackList = ({activeTab}) => {
         fetchEmployees();
     }, []);
 
-    console.log("activeTab", activeTab.year)
-    console.log("activeTab", activeTab.month)
+
 
     // Cargar registros del empleado seleccionado en records
     useEffect(() => {
@@ -54,7 +58,7 @@ export const TimetrackList = ({activeTab}) => {
             }
         };
 
-        fetchRecords();
+        fetchRecords(selectedEmployeeId, activeTab );
     }, [selectedEmployeeId, activeTab]);
 
     // Procesar los registros para el renderizado
@@ -72,8 +76,25 @@ export const TimetrackList = ({activeTab}) => {
         setIsOpen(true);
     };
 
+    const handleOpenModalAdd = () => {
+        setIsModalAddOpen(true);
+    }
+
+
     return (
         <div className="w-full ">
+            {isModalAddOpen && 
+            <ModalAdd
+            key={bandera}
+            isModalAddOpen={isModalAddOpen}
+            setIsModalAddOpen={setIsModalAddOpen}
+            selectedEmployeeId={selectedEmployeeId}
+            employees={employees}
+            setRecords={setRecords}
+            setBandera={setBandera}
+            
+            
+            />}
             {/* Dropdown de empleados */}
             <div className="mb-6 w-2/4">
                 <label htmlFor="employee-select" className="block text-sm font-medium text-gray-700 mb-2">

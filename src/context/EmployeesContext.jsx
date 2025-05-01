@@ -10,6 +10,7 @@ export const EmployeesProvider = ({ children }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  
 
   const fetchEmployees = async (search = "") => {
     try {
@@ -42,8 +43,9 @@ export const EmployeesProvider = ({ children }) => {
       totalPages,
       page,
       searchTerm,
+      
+    
       setSearchTerm,
-
       setPage,
       setEmployees,
       setTotalPages,

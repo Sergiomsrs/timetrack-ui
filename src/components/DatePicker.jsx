@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-export const DatePicker = ({ activeTab, setActiveTab }) => {
+export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen }) => {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth(); // 0-11
   const currentYear = currentDate.getFullYear();
@@ -45,11 +45,15 @@ export const DatePicker = ({ activeTab, setActiveTab }) => {
       </select>
 
 
-      <button>
+      <button
+      onClick={() => setIsModalAddOpen(true)}
+      >
         <span className="text-sm text-violet-600">Añadir registro</span>
       </button>
 
-      <button>
+      <button
+      
+      >
         <span className="text-sm text-violet-600">Descargar PDF</span>
       </button>
       
