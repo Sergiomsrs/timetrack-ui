@@ -40,6 +40,7 @@
  */
 
 export const processTimeStamps = (timestamps, id) => {
+
     
     const daysMap = new Map();
 
@@ -57,6 +58,8 @@ export const processTimeStamps = (timestamps, id) => {
 
     // 2. Procesar cada día
     return Array.from(daysMap.entries()).map(([day, times]) => {
+        console.log("day", day)
+        console.log("times", times)
         times.sort((a, b) => a - b); // Ordenar cronológicamente
 
         let totalWorkedMs = 0; // Acumulador de tiempo trabajado en milisegundos

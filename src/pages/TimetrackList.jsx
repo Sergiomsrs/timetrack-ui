@@ -30,7 +30,7 @@ export const TimetrackList = () => {
         fetchEmployees();
     }, []);
 
-    // Cargar registros del empleado seleccionado
+    // Cargar registros del empleado seleccionado en records
     useEffect(() => {
         const fetchRecords = async () => {
             if (!selectedEmployeeId) {
@@ -54,16 +54,15 @@ export const TimetrackList = () => {
     }, [selectedEmployeeId]);
 
     // Procesar los registros para el renderizado
-    const processedRecords = useMemo(() => {
-        return processTimeStamps(records, selectedEmployeeId);
-    }, [records, selectedEmployeeId]);
+    const processedRecords = processTimeStamps(records, selectedEmployeeId);
+    console.log(processedRecords)
 
     // Manejar el cambio en el dropdown de empleados
     const handleDropdownChange = (e) => {
         setSelectedEmployeeId(e.target.value);
     };
 
-    // Abrir el modal con los registros de un día seleccionado
+    // Abrir el modal con los registros de un día seleccionado. Los guarda en selectedDayRecords
     const handleOpenModal = (dayRecords) => {
         setSelectedDayRecords(dayRecords);
         setIsOpen(true);
