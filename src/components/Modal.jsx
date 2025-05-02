@@ -14,6 +14,7 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, recor
       warning: null
     }
   });
+  
 
   // Si selectedDayRecords es null o undefined, no se hace nada
   // Carga la informacion de selectedDayRecords en day records

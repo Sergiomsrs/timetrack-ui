@@ -3,62 +3,47 @@ import React, { useEffect, useState } from 'react';
 import { formatMillisecondsToTime, processTimeStamps } from '../utilities/timeManagement';
 import { Modal } from '../components/Modal';
 import { ModalAdd } from '../components/ModalAdd';
-import { useEmployees } from '../context/EmployeesContext';
+import { useRecord } from '../Hooks/useRecord';
+
 
 export const TimetrackList = ({activeTab, isModalAddOpen, setIsModalAddOpen}) => {
-    const [employees, setEmployees] = useState([]);
-    const [records, setRecords] = useState([]);
-    const [selectedDayRecords, setSelectedDayRecords] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+
+    const { 
+        fetchRecords, 
+        fetchEmployees,
+        
+        records, 
+        employees, 
+        error, 
+        isLoading, 
+        selectedEmployeeId,
+        selectedDayRecords,
+         
+        
+        setRecords, 
+        setEmployees, 
+        setError, 
+        setIsLoading, 
+        setSelectedDayRecords,
+        setSelectedEmployeeId 
+    
+    } = useRecord();
+   
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedEmployeeId, setSelectedEmployeeId] = useState(1);
+    
 
     
-   
 
     // Cargar lista de empleados al montar el componente
     useEffect(() => {
-        const fetchEmployees = async () => {
-            setIsLoading(true);
-            try {
-                const response = await fetch('http://localhost:8080/api/user');
-                const data = await response.json();
-                setEmployees(data);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchEmployees();
     }, []);
 
 
-
     // Cargar registros del empleado seleccionado en records
     useEffect(() => {
-        const fetchRecords = async () => {
-            if (!selectedEmployeeId) {
-                setRecords([]);
-                return;
-            }
-            setIsLoading(true);
-            setError(null);
-            try {
-                //const response = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}`);
-                const response = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}/month?year=${activeTab.year}&month=${activeTab.month + 1}`);
-                const data = await response.json();
-                setRecords(data);
-            } catch (error) {
-                setError("Error al cargar registros");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchRecords(selectedEmployeeId, activeTab );
+       
+        fetchRecords(activeTab);
     }, [selectedEmployeeId, activeTab]);
 
     // Procesar los registros para el renderizado
@@ -74,10 +59,6 @@ export const TimetrackList = ({activeTab, isModalAddOpen, setIsModalAddOpen}) =>
         setSelectedDayRecords(dayRecords);
         setIsOpen(true);
     };
-
-    const handleOpenModalAdd = () => {
-        setIsModalAddOpen(true);
-    }
 
 
     return (
