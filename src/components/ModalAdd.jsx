@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 
-export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, setRecords, setBandera }) => {
+export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, setRecords}) => {
 
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
@@ -39,14 +39,14 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const timestamp = generateTimestamp(date, time);
-
+  
     if (!timestamp || !selectedEmployeeId) {
       console.error("Faltan datos para enviar el fichaje");
       return;
     }
-
+  
     try {
       const response = await fetch('http://localhost:8080/api/timestamp/timestamp', {
         method: 'POST',
@@ -58,20 +58,24 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
           timestamp: timestamp,
         }),
       });
-
-      console.log("response", selectedEmployeeId)
-      console.log("response", timestamp)
+  
       if (!response.ok) {
         throw new Error(`Error al guardar el fichaje: ${response.status}`);
       }
-
+  
+      // Recargar los registros del empleado tras el POST
+      const updatedRecordsResponse = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}`);
+      const updatedRecords = await updatedRecordsResponse.json();
+  
+      setRecords(updatedRecords); // Esto actualizará los datos en TimeTrackList
+  
       console.log("Fichaje enviado correctamente");
-      setIsModalAddOpen(false); // Cierra el modal si todo fue bien
-      setBandera(prev => prev + 1); // Cambia la bandera para que se recarguen los registros
+      setIsModalAddOpen(false); // Cierra el modal
     } catch (error) {
       console.error("Error en la petición:", error);
     }
   };
+  
 
 
 

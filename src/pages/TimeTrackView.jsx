@@ -8,18 +8,13 @@ import { DatePicker } from '../components/DatePicker';
 export const TimeTrackView = () => {
 
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
-  const [bandera, setBandera] = useState(1);  
+  
 
   const [activeTab, setActiveTab] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth(), // 0-11
   });
 
-  useEffect(() => {
-    
-  }, [bandera]);
-
-  console.log(activeTab)
   
     return (
       <div className="flex w-full">
@@ -34,8 +29,6 @@ export const TimeTrackView = () => {
           activeTab={activeTab}
           isModalAddOpen={isModalAddOpen}
           setIsModalAddOpen={setIsModalAddOpen}
-          bandera={bandera}
-          setBandera={setBandera}
           />
   
         </div>

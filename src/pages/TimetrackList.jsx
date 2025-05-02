@@ -5,7 +5,7 @@ import { Modal } from '../components/Modal';
 import { ModalAdd } from '../components/ModalAdd';
 import { useEmployees } from '../context/EmployeesContext';
 
-export const TimetrackList = ({activeTab, isModalAddOpen, setIsModalAddOpen, bandera, setBandera}) => {
+export const TimetrackList = ({activeTab, isModalAddOpen, setIsModalAddOpen}) => {
     const [employees, setEmployees] = useState([]);
     const [records, setRecords] = useState([]);
     const [selectedDayRecords, setSelectedDayRecords] = useState(null);
@@ -63,7 +63,6 @@ export const TimetrackList = ({activeTab, isModalAddOpen, setIsModalAddOpen, ban
 
     // Procesar los registros para el renderizado
     const processedRecords = processTimeStamps(records, selectedEmployeeId);
-    console.log(processedRecords)
 
     // Manejar el cambio en el dropdown de empleados
     const handleDropdownChange = (e) => {
@@ -85,16 +84,13 @@ export const TimetrackList = ({activeTab, isModalAddOpen, setIsModalAddOpen, ban
         <div className="w-full ">
             {isModalAddOpen && 
             <ModalAdd
-            key={bandera}
+            
             isModalAddOpen={isModalAddOpen}
             setIsModalAddOpen={setIsModalAddOpen}
             selectedEmployeeId={selectedEmployeeId}
             employees={employees}
-            setRecords={setRecords}
-            setBandera={setBandera}
-            
-            
-            />}
+            setRecords={setRecords} />}
+
             {/* Dropdown de empleados */}
             <div className="mb-6 w-2/4">
                 <label htmlFor="employee-select" className="block text-sm font-medium text-gray-700 mb-2">
