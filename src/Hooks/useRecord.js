@@ -25,6 +25,8 @@ export const useRecord = () => {
     }
 };
 
+console.log("selectedEmployeeIdDesdeHook", selectedEmployeeId);
+
 const fetchRecords = async (activeTab) => {
     if (!selectedEmployeeId) {
         setRecords([]);

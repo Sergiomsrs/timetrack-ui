@@ -78,14 +78,16 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, recor
   };
 
   // Funcion para guardar o actualizar un registro
-  const handleSaveRecord = async (recordId) => {
+const handleSaveRecord = async (recordId) => {
 
     // Confirmacion antes de guardar
     const userConfirmed = window.confirm("¿Estás seguro de que deseas guardar este registro?");
     if (!userConfirmed) return;
+    
     // Buscamos en editable records el recor que coincida en id con la que le estamos pasando al metodo
     const recordToSave = editableRecords.find(r => r.id === recordId);
     if (!recordToSave) return alert("No se encontró el registro.");
+
     // Hacemos save o update en funcion del id, si es temporal o definitivo
     try {
       const isNew = String(recordId).startsWith('temp');
@@ -119,9 +121,13 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, recor
       // Eliminar el registro temporal (si es un nuevo registro)
       setEditableRecords(prev => prev.filter(r => r.id !== recordId));
 
-      // Añadir el registro guardado en el servidor a `records`
-      setRecords(prev => [...prev, updatedRecord]); // Solo añadir a `records` cuando se guarda correctamente
-
+      // Si el registro es nuevo, lo añadimos
+      if (isNew) {
+        setRecords(prev => [...prev, updatedRecord]);
+      } else {
+        // Si es un registro modificado, actualizamos el existente
+        setRecords(prev => prev.map(r => (r.id === recordId ? updatedRecord : r)));
+      }
 
     } catch (err) {
       console.error("Error al guardar:", err);
@@ -129,7 +135,8 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, recor
     }
 
     setIsOpen(false);
-  };
+};
+
 
   // Funcion para eliminar un registro de la base de datos
   const handleDeleteRecord = async (recordId) => {

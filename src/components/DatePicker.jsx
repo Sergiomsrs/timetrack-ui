@@ -1,9 +1,14 @@
-import React, { useEffect } from 'react';
+import { useRecord } from '../Hooks/useRecord';
 
-export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen }) => {
+export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selectedEmployeeId, employees }) => {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth(); // 0-11
   const currentYear = currentDate.getFullYear();
+
+  
+
+  
+
 
   const months = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -18,6 +23,41 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen }) => {
 
   const handleYearChange = (e) => {
     setActiveTab({ ...activeTab, year: parseInt(e.target.value) });
+  };
+
+  const downloadMonthlyReportPdf = async (employeeId, year, month) => {
+    const emp = employees.find(emp => emp.id == selectedEmployeeId);
+    
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/report/employee/${employeeId}/report/pdf/monthly?year=${year}&month=${month + 1}`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/pdf',
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+  
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+  
+      // Nombre del archivo
+      a.download = `Informe_Jornadas_${emp.name}_${emp.lastName}_${months[month]}_${year}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error al descargar el PDF:', error);
+      alert('No se pudo descargar el PDF');
+    }
   };
 
 
@@ -37,7 +77,7 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen }) => {
       <select
         value={activeTab.month ?? currentMonth}
         onChange={handleMonthChange}
-        className="rounded-md border px-4 py-2 text-sm md:text-base text-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500"
+        className="rounded-md border px-4 py-2 text-sm md:text-base text-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
       >
         {months.map((month, index) => (
           <option key={index} value={index}>{month}</option>
@@ -46,15 +86,17 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen }) => {
 
 
       <button
+      className="text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
       onClick={() => setIsModalAddOpen(true)}
       >
-        <span className="text-sm text-violet-600">Añadir registro</span>
+        Añadir registro
       </button>
 
       <button
-      
+       className="text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
+        onClick={() => downloadMonthlyReportPdf(selectedEmployeeId, activeTab.year, activeTab.month)}
       >
-        <span className="text-sm text-violet-600">Descargar PDF</span>
+      Descargar PDF
       </button>
       
     </div>

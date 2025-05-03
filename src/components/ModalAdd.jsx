@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 
-export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, setRecords}) => {
+export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, setRecords }) => {
 
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
@@ -39,14 +39,14 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const timestamp = generateTimestamp(date, time);
-  
+
     if (!timestamp || !selectedEmployeeId) {
       console.error("Faltan datos para enviar el fichaje");
       return;
     }
-  
+
     try {
       const response = await fetch('http://localhost:8080/api/timestamp/timestamp', {
         method: 'POST',
@@ -58,24 +58,24 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
           timestamp: timestamp,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error al guardar el fichaje: ${response.status}`);
       }
-  
+
       // Recargar los registros del empleado tras el POST
       const updatedRecordsResponse = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}`);
       const updatedRecords = await updatedRecordsResponse.json();
-  
+
       setRecords(updatedRecords); // Esto actualizará los datos en TimeTrackList
-  
+
       console.log("Fichaje enviado correctamente");
       setIsModalAddOpen(false); // Cierra el modal
     } catch (error) {
       console.error("Error en la petición:", error);
     }
   };
-  
+
 
 
 
@@ -97,7 +97,7 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Entrada manual de fichaje</h3>
             <button
               onClick={handleCloseModal}
-              className="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              className="text-gray-400 hover:bg-red-500 hover:text-amber-50 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center "
             >
               <svg className="w-3 h-3" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7l-6 6" />
@@ -153,13 +153,9 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
           {/* Footer */}
 
           <div className="flex items-center justify-between p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+   
             <button
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"
-              onClick={handleCloseModal}
-            >
-              Cerrar
-            </button>
-            <button
               onClick={handleSubmit}
             >Enviar</button>
           </div>

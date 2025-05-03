@@ -4,10 +4,34 @@ import UserForm from '../components/UserForm';
 import { UserList } from '../components/UserList';
 import { TimetrackList } from './TimetrackList';
 import { DatePicker } from '../components/DatePicker';
+import { useRecord } from '../Hooks/useRecord';
 
 export const TimeTrackView = () => {
 
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
+
+  const { 
+          fetchRecords, 
+          fetchEmployees,
+          
+          records, 
+          employees, 
+          error, 
+          isLoading, 
+          selectedEmployeeId,
+          selectedDayRecords,
+           
+          
+          setRecords, 
+          setEmployees, 
+          setError, 
+          setIsLoading, 
+          setSelectedDayRecords,
+          setSelectedEmployeeId 
+      
+      } = useRecord();
+
+
   
 
   const [activeTab, setActiveTab] = useState({
@@ -20,7 +44,13 @@ export const TimeTrackView = () => {
       <div className="flex w-full">
         <div className="w-2/8 flex justify-center  mx-0 px-0">
   
-          <DatePicker setActiveTab={setActiveTab} activeTab={activeTab} setIsModalAddOpen={setIsModalAddOpen} />
+          <DatePicker 
+          employees={employees}
+          setActiveTab={setActiveTab} 
+          activeTab={activeTab} 
+          setIsModalAddOpen={setIsModalAddOpen}
+          selectedEmployeeId={selectedEmployeeId}
+          />
   
         </div>
         <div className="w-5/8  mx-0 px-0 ">
@@ -29,6 +59,23 @@ export const TimeTrackView = () => {
           activeTab={activeTab}
           isModalAddOpen={isModalAddOpen}
           setIsModalAddOpen={setIsModalAddOpen}
+          fetchRecords={fetchRecords}
+          fetchEmployees={fetchEmployees}
+          
+          records={records}
+          employees={employees} 
+          error={error}
+          isLoading={isLoading}
+          selectedEmployeeId={selectedEmployeeId}
+          selectedDayRecords={selectedDayRecords}
+           
+          
+          setRecords={setRecords}
+          setEmployees={setEmployees}
+          setError={setError}
+          setIsLoading={setIsLoading}
+          setSelectedDayRecords={setSelectedDayRecords}
+          setSelectedEmployeeId={setSelectedEmployeeId}
           />
   
         </div>

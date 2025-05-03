@@ -6,30 +6,33 @@ import { ModalAdd } from '../components/ModalAdd';
 import { useRecord } from '../Hooks/useRecord';
 
 
-export const TimetrackList = ({activeTab, isModalAddOpen, setIsModalAddOpen}) => {
+export const TimetrackList = ({
+    activeTab, 
+    isModalAddOpen, 
+    setIsModalAddOpen,
+    fetchRecords, 
+          fetchEmployees,
+          
+          records, 
+          employees, 
+          error, 
+          isLoading, 
+          selectedEmployeeId,
+          selectedDayRecords,
+           
+          
+          setRecords, 
+          setEmployees, 
+          setError, 
+          setIsLoading, 
+          setSelectedDayRecords,
+          setSelectedEmployeeId 
+    }) => {
 
-    const { 
-        fetchRecords, 
-        fetchEmployees,
-        
-        records, 
-        employees, 
-        error, 
-        isLoading, 
-        selectedEmployeeId,
-        selectedDayRecords,
-         
-        
-        setRecords, 
-        setEmployees, 
-        setError, 
-        setIsLoading, 
-        setSelectedDayRecords,
-        setSelectedEmployeeId 
     
-    } = useRecord();
    
     const [isOpen, setIsOpen] = useState(false);
+
     
 
     
@@ -59,6 +62,9 @@ export const TimetrackList = ({activeTab, isModalAddOpen, setIsModalAddOpen}) =>
         setSelectedDayRecords(dayRecords);
         setIsOpen(true);
     };
+
+
+      
 
 
     return (
