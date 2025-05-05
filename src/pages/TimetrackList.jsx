@@ -29,6 +29,10 @@ export const TimetrackList = ({
           setSelectedEmployeeId 
     }) => {
 
+        console.log(records)
+
+        
+
     
    
     const [isOpen, setIsOpen] = useState(false);
@@ -49,9 +53,11 @@ export const TimetrackList = ({
         fetchRecords(activeTab);
     }, [selectedEmployeeId, activeTab]);
 
+    
+
     // Procesar los registros para el renderizado
     const processedRecords = processTimeStamps(records, selectedEmployeeId);
-
+    console.log(processedRecords)
     // Manejar el cambio en el dropdown de empleados
     const handleDropdownChange = (e) => {
         setSelectedEmployeeId(e.target.value);
@@ -71,7 +77,7 @@ export const TimetrackList = ({
         <div className="w-full ">
             {isModalAddOpen && 
             <ModalAdd
-            
+            activeTab={activeTab}
             isModalAddOpen={isModalAddOpen}
             setIsModalAddOpen={setIsModalAddOpen}
             selectedEmployeeId={selectedEmployeeId}
@@ -133,22 +139,39 @@ export const TimetrackList = ({
                                     </td>
                                     <td className="py-3 px-4">
                                         {record.data.periods.map((period, i) => (
-                                            <div
-                                                key={i}
-                                                className={`mb-1 last:mb-0 ${!period.isComplete ? 'text-amber-600' : ''}`}
-                                            >
-                                                <span className="font-medium">{period.entry}</span>
-                                                {period.exit ? (
-                                                    <>
-                                                        → <span className="font-medium"> {period.exit}</span>
-                                                        <span className="text-sm text-gray-500 ml-2">
-                                                            ({formatMillisecondsToTime(period.durationMs)})
-                                                        </span>
-                                                    </>
-                                                ) : (
-                                                    <span className="ml-2 text-sm">(Falta salida)</span>
-                                                )}
-                                            </div>
+                                           <div
+                                           key={i}
+                                           className={`mb-1 last:mb-0 ${!period.isComplete ? 'text-amber-600' : ''}`}
+                                       >
+                                           
+                                             <div className="inline-block min-w-[20px] text-center">
+                                                       <span className={`${period.entryIsMod == "true" ? 'opacity-100' : 'opacity-0'}`}>✏️</span>
+                                                   </div>
+                                           <div className="font-medium inline-block">{period.entry}</div>
+                                           
+                                           
+                                           {period.exit ? (
+                                               <>
+                                                   <div className="inline-block">→</div>
+                                                   
+                                                  
+                                                   <div className="inline-block min-w-[20px] text-center">
+                                                       <span className={`${period.exitIsMod == "true" ? 'opacity-100' : 'opacity-0'}`}>✏️</span>
+                                                   </div>
+                                       
+                                                   <div className={`font-medium inline-block`}>
+                                                       {period.exit}
+                                                   </div>
+                                                   <div className="text-sm text-gray-500 inline-block ml-2">
+                                                       ({formatMillisecondsToTime(period.durationMs)})
+                                                   </div>
+                                               </>
+                                           ) : (
+                                               <div className="ml-2 text-sm inline-block">(Falta salida)</div>
+                                           )}
+                                       </div>
+                                       
+                                        
                                         ))}
                                     </td>
                                     <td className="py-3 px-4 text-center font-medium">

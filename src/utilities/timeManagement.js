@@ -1,99 +1,60 @@
-/**
- * Procesa un array de timestamps de trabajo y los organiza por días, calculando períodos trabajados.
- * @param {Array<Object>} timestamps - Array de objetos con registros de tiempo.
- * @param {number} timestamps[].id - ID único del registro.
- * @param {string} timestamps[].timestamp - Fecha/hora en formato ISO (ej: "2025-04-04T08:00:00").
- * @param {number} timestamps[].employeeId - ID del empleado.
- * @param {number|string} id - ID del empleado o grupo a procesar.
- * @returns {Array<Object>} Array de días procesados con detalles de trabajo.
- * @property {number} id - ID pasado como parámetro.
- * @property {Object} data - Datos procesados del día.
- * @property {string} data.day - Fecha en formato local (ej: "04/04/2025").
- * @property {Array<Object>} data.periods - Períodos de trabajo del día.
- * @property {string} data.periods[].entry - Hora de entrada (ej: "08:00").
- * @property {string|null} data.periods[].exit - Hora de salida (o null si falta).
- * @property {number} data.periods[].durationMs - Duración en milisegundos.
- * @property {boolean} data.periods[].isComplete - Si el período tiene entrada y salida.
- * @property {string} data.totalWorked - Tiempo total trabajado (ej: "7h 30m" o "--").
- * @property {number} data.recordsCount - Número de registros para el día.
- * @property {string|null} data.warning - Mensaje de advertencia (ej: registros impares).
- * @throws {TypeError} Si timestamps no es un array o los objetos no tienen timestamp.
- * @example
- * // Uso básico
- * const registros = [
- *   { id: 1, timestamp: "2025-04-04T08:00:00", employeeId: 1 },
- *   { id: 2, timestamp: "2025-04-04T15:00:00", employeeId: 1 }
- * ];
- * const resultado = processTimeStamps(registros, 101);
- * // resultado: [
- * //   {
- * //     id: 101,
- * //     data: {
- * //       day: "04/04/2025",
- * //       periods: [{ entry: "08:00", exit: "15:00", ... }],
- * //       totalWorked: "7h 0m",
- * //       recordsCount: 2,
- * //       warning: null
- * //     }
- * //   }
- * // ]
- */
-
 export const processTimeStamps = (timestamps, id) => {
-
-    
     const daysMap = new Map();
 
-    // 1. Agrupar registros por día y ordenar por hora
+    // 1. Agrupar registros por día y conservar isMod
     timestamps.forEach(stamp => {
         const date = new Date(stamp.timestamp);
+        const enrichedStamp = {
+            timestamp: date,
+            isMod: stamp.isMod
+        };
+
         const dayKey = date.toLocaleDateString('es-ES');
 
         if (!daysMap.has(dayKey)) {
             daysMap.set(dayKey, []);
         }
 
-        daysMap.get(dayKey).push(date);
+        daysMap.get(dayKey).push(enrichedStamp);
     });
 
     // 2. Procesar cada día
     return Array.from(daysMap.entries()).map(([day, times]) => {
-  
-        times.sort((a, b) => a - b); // Ordenar cronológicamente
+        times.sort((a, b) => a.timestamp - b.timestamp); // Ordenar cronológicamente
 
-        let totalWorkedMs = 0; // Acumulador de tiempo trabajado en milisegundos
-        const periods = []; // Array para almacenar cada período de trabajo
-        let warning = null; // Para registrar problemas como registros impares
+        let totalWorkedMs = 0;
+        const periods = [];
+        let warning = null;
 
-        // 3. Calcular períodos de trabajo
         for (let i = 0; i < times.length; i += 2) {
             const entry = times[i];
             let exit, periodMs;
 
             if (i + 1 < times.length) {
-                // Par completo (entrada-salida)
                 exit = times[i + 1];
-                periodMs = exit - entry;
+                periodMs = exit.timestamp - entry.timestamp;
                 totalWorkedMs += periodMs;
             } else {
-                // Registro impar (falta salida)
                 exit = null;
                 periodMs = 0;
                 warning = "⚠ Falta registro de salida";
             }
 
             periods.push({
-                entry: entry.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-                exit: exit?.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+                entry: entry.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+                entryIsMod: entry.isMod,
+
+                exit: exit?.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+                exitIsMod: exit?.isMod,
+
                 durationMs: periodMs,
                 isComplete: exit !== null
             });
         }
 
-        // 4. Formatear horas totales
         const totalWorked = formatMillisecondsToTime(totalWorkedMs);
 
-        return  {
+        return {
             id,
             data: {
                 day,
@@ -101,9 +62,11 @@ export const processTimeStamps = (timestamps, id) => {
                 totalWorked,
                 recordsCount: times.length,
                 warning
-            }}
+            }
+        };
     });
 };
+
 
 
 

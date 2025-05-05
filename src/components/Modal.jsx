@@ -71,7 +71,7 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, recor
       employeeId,
       timestamp,
       dateStr,
-      time,
+      time // Cambiar a false si no es un nuevo registro
     };
     // Se añade el nuevo registro a editableRecords
     setEditableRecords(prev => [...prev, newRecord]);
@@ -102,6 +102,7 @@ const handleSaveRecord = async (recordId) => {
         body: JSON.stringify({
           employeeId: isNew ? recordToSave.employeeId : "",
           timestamp: recordToSave.timestamp,
+          isMod: "true", // Cambiar a false si no es un nuevo registro
         }),
       });
 
@@ -116,6 +117,7 @@ const handleSaveRecord = async (recordId) => {
         employeeId: recordToSave.employeeId,
         timestamp: recordToSave.timestamp,
         id: recordId, // Usar el ID del servidor, si es necesario
+        isMod: "true",
       };
 
       // Eliminar el registro temporal (si es un nuevo registro)

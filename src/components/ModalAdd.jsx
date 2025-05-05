@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 
-export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, setRecords }) => {
+export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, setRecords, activeTab }) => {
 
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
@@ -56,6 +56,7 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
         body: JSON.stringify({
           employeeId: selectedEmployeeId,
           timestamp: timestamp,
+          isMod:true
         }),
       });
 
@@ -64,7 +65,7 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
       }
 
       // Recargar los registros del empleado tras el POST
-      const updatedRecordsResponse = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}`);
+      const updatedRecordsResponse = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}/month?year=${activeTab.year}&month=${activeTab.month + 1}`);
       const updatedRecords = await updatedRecordsResponse.json();
 
       setRecords(updatedRecords); // Esto actualizará los datos en TimeTrackList
