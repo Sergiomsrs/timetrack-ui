@@ -7,39 +7,39 @@ import { useRecord } from '../Hooks/useRecord';
 
 
 export const TimetrackList = ({
-    activeTab, 
-    isModalAddOpen, 
+    activeTab,
+    isModalAddOpen,
     setIsModalAddOpen,
-    fetchRecords, 
-          fetchEmployees,
-          
-          records, 
-          employees, 
-          error, 
-          isLoading, 
-          selectedEmployeeId,
-          selectedDayRecords,
-           
-          
-          setRecords, 
-          setEmployees, 
-          setError, 
-          setIsLoading, 
-          setSelectedDayRecords,
-          setSelectedEmployeeId 
-    }) => {
+    fetchRecords,
+    fetchEmployees,
 
-        console.log(records)
+    records,
+    employees,
+    error,
+    isLoading,
+    selectedEmployeeId,
+    selectedDayRecords,
 
-        
 
-    
-   
+    setRecords,
+    setEmployees,
+    setError,
+    setIsLoading,
+    setSelectedDayRecords,
+    setSelectedEmployeeId
+}) => {
+
+    console.log(records)
+
+
+
+
+
     const [isOpen, setIsOpen] = useState(false);
 
-    
 
-    
+
+
 
     // Cargar lista de empleados al montar el componente
     useEffect(() => {
@@ -49,11 +49,11 @@ export const TimetrackList = ({
 
     // Cargar registros del empleado seleccionado en records
     useEffect(() => {
-       
+
         fetchRecords(activeTab);
     }, [selectedEmployeeId, activeTab]);
 
-    
+
 
     // Procesar los registros para el renderizado
     const processedRecords = processTimeStamps(records, selectedEmployeeId);
@@ -70,19 +70,19 @@ export const TimetrackList = ({
     };
 
 
-      
+
 
 
     return (
         <div className="w-full ">
-            {isModalAddOpen && 
-            <ModalAdd
-            activeTab={activeTab}
-            isModalAddOpen={isModalAddOpen}
-            setIsModalAddOpen={setIsModalAddOpen}
-            selectedEmployeeId={selectedEmployeeId}
-            employees={employees}
-            setRecords={setRecords} />}
+            {isModalAddOpen &&
+                <ModalAdd
+                    activeTab={activeTab}
+                    isModalAddOpen={isModalAddOpen}
+                    setIsModalAddOpen={setIsModalAddOpen}
+                    selectedEmployeeId={selectedEmployeeId}
+                    employees={employees}
+                    setRecords={setRecords} />}
 
             {/* Dropdown de empleados */}
             <div className="mb-6 w-2/4">
@@ -139,41 +139,52 @@ export const TimetrackList = ({
                                     </td>
                                     <td className="py-3 px-4">
                                         {record.data.periods.map((period, i) => (
-                                           <div
-                                           key={i}
-                                           className={`mb-1 last:mb-0 ${!period.isComplete ? 'text-amber-600' : ''}`}
-                                       >
-                                           
-                                             <div className="inline-block min-w-[20px] text-center">
-                                                       <span className={`${period.entryIsMod == "true" ? 'opacity-100' : 'opacity-0'}`}>✏️</span>
-                                                   </div>
-                                           <div className="font-medium inline-block">{period.entry}</div>
-                                           
-                                           
-                                           {period.exit ? (
-                                               <>
-                                                   <div className="inline-block">→</div>
-                                                   
-                                                  
-                                                   <div className="inline-block min-w-[20px] text-center">
-                                                       <span className={`${period.exitIsMod == "true" ? 'opacity-100' : 'opacity-0'}`}>✏️</span>
-                                                   </div>
-                                       
-                                                   <div className={`font-medium inline-block`}>
-                                                       {period.exit}
-                                                   </div>
-                                                   <div className="text-sm text-gray-500 inline-block ml-2">
-                                                       ({formatMillisecondsToTime(period.durationMs)})
-                                                   </div>
-                                               </>
-                                           ) : (
-                                               <div className="ml-2 text-sm inline-block">(Falta salida)</div>
-                                           )}
-                                       </div>
-                                       
-                                        
+                                            <div
+                                                key={i}
+                                                className={`mb-2 last:mb-0 ${!period.isComplete ? 'text-amber-600' : ''}`}
+                                            >
+                                                <span className="flex items-center gap-1 text-sm flex-wrap">
+                                                    <span className="inline-flex">
+                                                        <span
+                                                            className={`font-medium px-1 rounded ${period.entryIsMod === "true"
+                                                                    ? 'border border-red-500 text-red-700'
+                                                                    : ''
+                                                                }`}
+                                                        >
+                                                            {period.entry}
+                                                        </span>
+                                                    </span>
+
+                                                    {period.exit ? (
+                                                        <>
+                                                            <span className="text-gray-500 mx-1 ">→</span>
+
+                                                        
+                                                            <span className="inline-flex">
+                                                                <span
+                                                                    className={`font-medium px-1 rounded ${period.exitIsMod === "true"
+                                                                            ? 'border border-red-500 text-red-700'
+                                                                            : ''
+                                                                        }`}
+                                                                >
+                                                                    {period.exit}
+                                                                </span>
+                                                            </span>
+
+                                                            <span className="text-gray-500 ml-1 whitespace-nowrap">
+                                                                ({formatMillisecondsToTime(period.durationMs)})
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <span className="text-amber-600 font-bold ml-2">(Falta salida)</span>
+                                                    )}
+                                                </span>
+                                            </div>
                                         ))}
                                     </td>
+
+
+
                                     <td className="py-3 px-4 text-center font-medium">
                                         {record.data.totalWorked}
                                     </td>
