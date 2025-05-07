@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useEmployees } from '../context/EmployeesContext'
 
-const initialValues = { name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '' }
+const initialValues = { name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '', role: 'USER' }
 
 
-export default function UserForm({setActiveTab}) {
+export default function UserForm({ setActiveTab }) {
   const [formData, setFormData] = useState(initialValues)
-  
-  const {editedEmployee, setEditedEmployee, fetchEmployees } = useEmployees();
+
+  const { editedEmployee, setEditedEmployee, fetchEmployees } = useEmployees();
 
   const resetForm = () => {
     setFormData(initialValues);
@@ -16,10 +16,10 @@ export default function UserForm({setActiveTab}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const method = editedEmployee ? 'PUT' : 'POST'; 
+      const method = editedEmployee ? 'PUT' : 'POST';
       const url = editedEmployee
-        ? `http://localhost:8080/api/user/${editedEmployee.id}` 
-        : 'http://localhost:8080/api/user'; 
+        ? `http://localhost:8080/api/user/${editedEmployee.id}`
+        : 'http://localhost:8080/api/user';
 
       const response = await fetch(url, {
         method: method,
@@ -32,8 +32,9 @@ export default function UserForm({setActiveTab}) {
           secondLastName: formData.secondLastName,
           email: formData.email,
           dni: formData.dni,
-          password: formData.password, 
-          accessLevel: formData.accesLevel,
+          password: formData.password,
+          accessLevel: "",
+          role: formData.role
         }),
       });
 
@@ -43,9 +44,9 @@ export default function UserForm({setActiveTab}) {
       const data = await response.json();
       alert(editedEmployee ? 'Usuario actualizado con éxito' : 'Usuario guardado con éxito');
       fetchEmployees();
-      setActiveTab("list") 
+      setActiveTab("list")
 
-     
+
       setFormData({
         name: '',
         lastName: '',
@@ -54,10 +55,11 @@ export default function UserForm({setActiveTab}) {
         dni: '',
         password: '',
         accesLevel: '',
+        role: 'USER'
       });
 
-     
-      
+
+
       setEditedEmployee(null);
     } catch (error) {
       console.error('Error:', error);
@@ -74,11 +76,12 @@ export default function UserForm({setActiveTab}) {
         email: editedEmployee.email || '',
         dni: editedEmployee.dni || '',
         password: editedEmployee.password || '',
-        accesLevel: editedEmployee.accesLevel || ''
+        accesLevel: editedEmployee.accesLevel || '',
+        role: editedEmployee.role || ''
       });
     }
   }, [editedEmployee]);
-  
+
 
   return (
     <div className="flex flex-col justify-center items-center mb-4" >
@@ -170,7 +173,7 @@ export default function UserForm({setActiveTab}) {
               />
             </div>
           </div>
-          
+
           <div className="">
             <label htmlFor="email" className="block text-sm font-semibold text-gray-900">
               Contraseña
@@ -186,28 +189,29 @@ export default function UserForm({setActiveTab}) {
                 className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
             </div>
-            
+
           </div>
 
           <div className="">
-            <label htmlFor="accesLevel" className="block text-sm font-semibold text-gray-900">
-              Nivel de Acceso
+            <label htmlFor="role" className="block text-sm font-semibold text-gray-900">
+              Rol de Usuario
             </label>
             <div className="mt-2.5">
-              <input
-                id="accesLevel"
-                name="accesLevel"
-                type="number"
-                autoComplete="accesLevel"
-                value={formData.accesLevel}
-                onChange={(e) => setFormData({ ...formData, accesLevel: e.target.value })}
+              <select
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                 className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-              />
+              >
+                <option value="USER">Usuario</option>
+                <option value="ADMIN">Administrador</option>
+                <option value="GUEST">Invitado</option>
+              </select>
             </div>
-            
           </div>
-        
- 
+
+
 
         </div>
         <div className="flex flex-col gap-2 w-1/2     mt-10">
