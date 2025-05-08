@@ -5,17 +5,20 @@ export const AppProvider = ({children})=> {
 
     const [selectedOption, setSelectedOption] = useState('todos');
     const [count, setCount] = useState(0)
+    const [authUser, setAuthUser] = useState(null)
 
     return(
         <AppContext.Provider value={{
             
             selectedOption, 
             count,
+            authUser,
           
             
        
             setSelectedOption,
-            setCount
+            setCount,
+            setAuthUser
        
         }}>
             {children}

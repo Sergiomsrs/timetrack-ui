@@ -34,9 +34,10 @@ export default function UserForm({ setActiveTab }) {
           dni: formData.dni,
           password: formData.password,
           accessLevel: "",
-          role: formData.role
+          role: formData.role || 'USER',
         }),
       });
+      console.log("body", formData)
 
       if (!response.ok) {
         throw new Error('Error al guardar el usuario');
