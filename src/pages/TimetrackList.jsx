@@ -33,6 +33,9 @@ export const TimetrackList = ({
     const { auth } = useContext(AuthContext);
 
 
+    console.log("auth desde userlist", auth);
+
+
 
 
 
@@ -58,7 +61,7 @@ export const TimetrackList = ({
 
     // Procesar los registros para el renderizado
     const processedRecords = processTimeStamps(records, selectedEmployeeId);
-    
+
     // Manejar el cambio en el dropdown de empleados
     const handleDropdownChange = (e) => {
         setSelectedEmployeeId(e.target.value);
@@ -86,7 +89,7 @@ export const TimetrackList = ({
                     setRecords={setRecords} />}
 
             {/* Dropdown de empleados */}
-            <div className="mb-6 w-2/4">
+            {auth.role == "ADMIN" && <div className="mb-6 w-2/4">
                 <label htmlFor="employee-select" className="block text-sm font-medium text-gray-700 mb-2">
                     Seleccionar Empleado
                 </label>
@@ -104,7 +107,7 @@ export const TimetrackList = ({
                         </option>
                     ))}
                 </select>
-            </div>
+            </div>}
 
             {/* Estado de carga */}
             {isLoading && <div className="text-center py-4 text-blue-500">Cargando registros...</div>}
@@ -148,8 +151,8 @@ export const TimetrackList = ({
                                                     <span className="inline-flex">
                                                         <span
                                                             className={`font-medium px-1 rounded ${period.entryIsMod === "true"
-                                                                    ? 'border border-red-500 text-red-700'
-                                                                    : ''
+                                                                ? 'border border-red-500 text-red-700'
+                                                                : ''
                                                                 }`}
                                                         >
                                                             {period.entry}
@@ -160,12 +163,12 @@ export const TimetrackList = ({
                                                         <>
                                                             <span className="text-gray-500 mx-1 ">→</span>
 
-                                                        
+
                                                             <span className="inline-flex">
                                                                 <span
                                                                     className={`font-medium px-1 rounded ${period.exitIsMod === "true"
-                                                                            ? 'border border-red-500 text-red-700'
-                                                                            : ''
+                                                                        ? 'border border-red-500 text-red-700'
+                                                                        : ''
                                                                         }`}
                                                                 >
                                                                     {period.exit}

@@ -1,5 +1,6 @@
 // src/context/EmployeesContext.jsx
 import { createContext, useContext, useEffect, useState } from 'react';
+import { AuthContext } from './AuthContext ';
 
 const EmployeesContext = createContext();
 
@@ -10,16 +11,29 @@ export const EmployeesProvider = ({ children }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const {auth} = useContext(AuthContext);
   
 
   const fetchEmployees = async (search = "") => {
     try {
       setLoading(true);
+      console.log(auth);
       const url = search
         ? `http://localhost:8080/api/user/search?name=${search}&page=${page}&size=10`
         : `http://localhost:8080/api/user/pag?page=${page}&size=10`;
 
-      const res = await fetch(url);
+        const res = await fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${auth.token}` // ← Aquí va el token
+          }
+        });
+
+    
+        if (!res.ok) {
+          throw new Error("Fallo al obtener empleados");
+        }
       const data = await res.json();
       setEmployees(data.content);
       setTotalPages(data.totalPages);

@@ -1,11 +1,15 @@
 
+import { useContext } from 'react';
 import { useEmployees } from '../context/EmployeesContext';
 import { Pageable } from './Pageable';
+import { AuthContext } from '../context/AuthContext ';
 
 export const UserList = ({ setActiveTab }) => {
 
     const { employees, loading, fetchEmployees, setEditedEmployee, page, totalPages, setPage, searchTerm,
         setSearchTerm, } = useEmployees();
+    const { auth } = useContext(AuthContext);
+
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -28,6 +32,10 @@ export const UserList = ({ setActiveTab }) => {
         try {
             const response = await fetch(`http://localhost:8080/api/user/${employeeId}`, {
                 method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${auth.token}`,
+                    'Content-Type': 'application/json',
+                  },
             });
 
             if (!response.ok) {

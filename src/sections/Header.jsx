@@ -13,7 +13,7 @@ export const Header = () => {
     logout();
     navigate('/login'); // Redirigir a la página de login después de cerrar sesión
   };
-
+  console.log(auth);
   return (
     <header className="bg-white">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">

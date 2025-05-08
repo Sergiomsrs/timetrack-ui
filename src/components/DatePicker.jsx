@@ -41,6 +41,7 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
           method: 'GET',
           headers: {
             Accept: 'application/pdf',
+            Authorization: `Bearer ${auth.token}`
           },
         }
       );
