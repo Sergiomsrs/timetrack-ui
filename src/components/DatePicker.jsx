@@ -1,9 +1,15 @@
+import { useContext } from 'react';
 import { useRecord } from '../Hooks/useRecord';
+import { AuthContext } from '../context/AuthContext ';
 
 export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selectedEmployeeId, employees }) => {
+  
+  const { auth } = useContext(AuthContext);
+  
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth(); // 0-11
   const currentYear = currentDate.getFullYear();
+
 
   
 
@@ -84,7 +90,7 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
         ))}
       </select>
 
-
+{auth.role == "ADMIN" &&  <>
       <button
       className="text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
       onClick={() => setIsModalAddOpen(true)}
@@ -94,11 +100,12 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
 
       <button
        className="text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
-        onClick={() => downloadMonthlyReportPdf(selectedEmployeeId, activeTab.year, activeTab.month)}
-      >
+       onClick={() => downloadMonthlyReportPdf(selectedEmployeeId, activeTab.year, activeTab.month)}
+       >
       Descargar PDF
       </button>
-      
+        </>
+      }
     </div>
   );
 };
