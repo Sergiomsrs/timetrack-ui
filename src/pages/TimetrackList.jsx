@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { formatMillisecondsToTime, processTimeStamps } from '../utilities/timeManagement';
 import { Modal } from '../components/Modal';
 import { ModalAdd } from '../components/ModalAdd';
 import { useRecord } from '../Hooks/useRecord';
+import { AuthContext } from '../context/AuthContext ';
 
 
 export const TimetrackList = ({
@@ -29,7 +30,7 @@ export const TimetrackList = ({
     setSelectedEmployeeId
 }) => {
 
-    console.log(records)
+    const { auth } = useContext(AuthContext);
 
 
 
@@ -57,7 +58,7 @@ export const TimetrackList = ({
 
     // Procesar los registros para el renderizado
     const processedRecords = processTimeStamps(records, selectedEmployeeId);
-    console.log(processedRecords)
+    
     // Manejar el cambio en el dropdown de empleados
     const handleDropdownChange = (e) => {
         setSelectedEmployeeId(e.target.value);
@@ -125,7 +126,7 @@ export const TimetrackList = ({
                                 <th className="py-3 px-4 text-left">Turnos</th>
                                 <th className="py-3 px-4 text-center">Horas Totales</th>
                                 <th className="py-3 px-4 text-center">Registros</th>
-                                <th className="py-3 px-4 text-center"></th>
+                                {auth.role == "ADMIN" && <th className="py-3 px-4 text-center"></th>}
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -191,14 +192,14 @@ export const TimetrackList = ({
                                     <td className="py-3 px-4 text-center text-sm text-gray-500">
                                         {record.data.recordsCount}
                                     </td>
-                                    <td className="py-3 px-4 text-center">
+                                    {auth.role == "ADMIN" && <td className="py-3 px-4 text-center">
                                         <button
                                             onClick={() => handleOpenModal(record)}
                                             className="rounded-md cursor-pointer bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                                         >
                                             Ver Detalles
                                         </button>
-                                    </td>
+                                    </td>}
                                 </tr>
                             ))}
                         </tbody>

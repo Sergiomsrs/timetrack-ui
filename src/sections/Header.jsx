@@ -8,7 +8,6 @@ export const Header = () => {
   const { auth, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  console.log(auth.isAuthenticated)
 
   const handleLogout = () => {
     logout();
@@ -46,7 +45,7 @@ export const Header = () => {
           <>
           <Link to="/" className="text-sm font-semibold text-gray-900">Inicio</Link>
           {auth.role == "ADMIN" && <Link to="/usuarios" className="text-sm font-semibold text-gray-900">Usuarios</Link>}
-          <Link to="/fichajes" className="text-sm font-semibold text-gray-900">Registro</Link>
+          <Link to="/fichajes" className="text-sm font-semibold text-gray-900">Registros</Link>
           </>
         </div>
           }
@@ -79,7 +78,7 @@ export const Header = () => {
           <nav className="mt-6 space-y-4">
             <Link to="/" className="block text-lg font-semibold text-gray-900">Inicio</Link>
             <Link to="/usuarios" className="block text-lg font-semibold text-gray-900">Usuarios</Link>
-            <Link to="/fichajes" className="block text-lg font-semibold text-gray-900">Fichajes</Link>
+            <Link to="/fichajes" className="block text-lg font-semibold text-gray-900">Registros</Link>
             {auth.isAuthenticated ? (
               <>
                 <span className="block text-lg font-semibold text-gray-900">
