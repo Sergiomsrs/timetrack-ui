@@ -14,6 +14,7 @@ export default function UserForm({ setActiveTab }) {
 
   const resetForm = () => {
     setFormData(initialValues);
+    setEditedEmployee(null);
   }
 
   const handleSubmit = async (e) => {
@@ -224,7 +225,7 @@ export default function UserForm({ setActiveTab }) {
             type="submit"
             className="w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
           >
-            {formData == initialValues ? 'Registrar Usuario' : 'Actualizar Usuario'}
+            {editedEmployee ? 'Actualizar Usuario' :'Registrar Usuario'}
           </button>
           <button
             onClick={() => resetForm()}

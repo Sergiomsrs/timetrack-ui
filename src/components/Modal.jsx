@@ -176,7 +176,9 @@ const handleSaveRecord = async (recordId) => {
     try {
       const res = await fetch(`http://localhost:8080/api/timestamp/${recordId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
+         },
       });
 
       if (!res.ok) {

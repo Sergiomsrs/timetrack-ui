@@ -1,9 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-
+import { useContext, useEffect, useState } from 'react';
 import { formatMillisecondsToTime, processTimeStamps } from '../utilities/timeManagement';
 import { Modal } from '../components/Modal';
 import { ModalAdd } from '../components/ModalAdd';
-import { useRecord } from '../Hooks/useRecord';
 import { AuthContext } from '../context/AuthContext ';
 
 
@@ -21,27 +19,13 @@ export const TimetrackList = ({
     selectedEmployeeId,
     selectedDayRecords,
 
-
     setRecords,
-    setEmployees,
-    setError,
-    setIsLoading,
     setSelectedDayRecords,
     setSelectedEmployeeId
 }) => {
 
     const { auth } = useContext(AuthContext);
-
-
-
-
-
-
-
     const [isOpen, setIsOpen] = useState(false);
-
-
-
 
 
     // Cargar lista de empleados al montar el componente

@@ -10,6 +10,7 @@ export const useRecord = () => {
   const [employees, setEmployees] = useState([]);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(1);
   const [selectedDayRecords, setSelectedDayRecords] = useState(null);
+  const [lastThree, setLastThree] = useState([]);
 
   const { auth } = useContext(AuthContext);
 
@@ -72,11 +73,22 @@ export const useRecord = () => {
     }
   };
 
+  const fetchLastThree = async () => {
+  try {
+    const res = await fetch("http://localhost:8080/api/timestamp/last3"); // ajusta la URL si usas proxy o variable
+    const data = await res.json();
+    setLastThree(data);
+  } catch (err) {
+    console.error("Error al cargar los últimos registros:", err);
+  }
+};
+
 
   return {
 
     fetchEmployees,
     fetchRecords,
+    fetchLastThree,
 
     records,
     error,
@@ -84,13 +96,15 @@ export const useRecord = () => {
     isLoading,
     selectedEmployeeId,
     selectedDayRecords,
+    lastThree,
 
     setRecords,
     setError,
     setEmployees,
     setIsLoading,
     setSelectedEmployeeId,
-    setSelectedDayRecords
+    setSelectedDayRecords,
+    setLastThree
   };
 
 
