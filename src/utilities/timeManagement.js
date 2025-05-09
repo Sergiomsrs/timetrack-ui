@@ -107,3 +107,14 @@ export const formatMillisecondsToTime = (ms, emptySymbol = "--") => {
       return { ...r, time, dateStr };
     });
   };
+
+  export const saludo = () => {
+    const hour = new Date().getHours();
+    if (hour < 14) {
+      return "Buenos días";
+    } else if (hour < 21) {
+      return "Buenas tardes";
+    } else {
+      return "Buenas noches";
+    }
+  };

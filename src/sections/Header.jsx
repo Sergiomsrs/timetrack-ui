@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext ';
+import { saludo } from '../utilities/timeManagement';
 
 
 export const Header = () => {
@@ -11,9 +12,9 @@ export const Header = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login'); // Redirigir a la página de login después de cerrar sesión
+    navigate('/'); // Redirigir a la página de login después de cerrar sesión
   };
-  console.log(auth);
+ 
   return (
     <header className="bg-white">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
@@ -41,27 +42,27 @@ export const Header = () => {
 
         {/* Menú en pantallas grandes */}
         {auth.isAuthenticated &&
-        <div className="hidden lg:flex lg:gap-x-12">
-          <>
-          <Link to="/" className="text-sm font-semibold text-gray-900">Inicio</Link>
-          {auth.role == "ADMIN" && <Link to="/usuarios" className="text-sm font-semibold text-gray-900">Usuarios</Link>}
-          <Link to="/fichajes" className="text-sm font-semibold text-gray-900">Registros</Link>
-          </>
-        </div>
-          }
+          <div className="hidden lg:flex lg:gap-x-12">
+            <>
+              <Link to="/" className="text-sm font-semibold text-gray-900">Inicio</Link>
+              {auth.role == "ADMIN" && <Link to="/usuarios" className="text-sm font-semibold text-gray-900">Usuarios</Link>}
+              <Link to="/fichajes" className="text-sm font-semibold text-gray-900">Registros</Link>
+            </>
+          </div>
+        }
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center gap-x-4">
           {auth.isAuthenticated ? (
             <>
-              <span className="text-sm font-semibold text-gray-900">
-                Bienvenido, {auth.user && auth.user.name} {/* Ajusta 'name' según la estructura de tu objeto usuario */}
+              <span className="text-sm font-semibold text-gray-900 bg-gray-100 px-3 py-1 rounded shadow-sm">
+                {saludo()}, {auth.user && auth.user.name}
               </span>
-              <button onClick={handleLogout} className="text-sm font-semibold text-gray-900">
+              <button onClick={handleLogout} className="text-sm font-semibold text-gray-900 cursor-pointer transition duration-200 ease-in-out hover:text-white hover:bg-gray-900 hover:shadow-md px-3 py-1 rounded">
                 Log out <span aria-hidden="true">&rarr;</span>
               </button>
             </>
           ) : (
-            <Link to="/login" className="text-sm font-semibold text-gray-900">
+            <Link to="/login" className="text-sm font-semibold text-gray-900 cursor-pointer transition duration-200 ease-in-out hover:text-white hover:bg-gray-900 hover:shadow-md px-3 py-1 rounded">
               Log in <span aria-hidden="true">&rarr;</span>
             </Link>
           )}
@@ -82,7 +83,7 @@ export const Header = () => {
             {auth.isAuthenticated ? (
               <>
                 <span className="block text-lg font-semibold text-gray-900">
-                  Bienvenido, {auth.user && auth.name} 
+                  {saludo()}, {auth.user && auth.name}
                 </span>
                 <button onClick={handleLogout} className="block text-lg font-semibold text-gray-900 cursor-pointer">
                   Log out

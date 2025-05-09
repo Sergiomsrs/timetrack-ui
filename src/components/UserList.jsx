@@ -35,7 +35,7 @@ export const UserList = ({ setActiveTab }) => {
                 headers: {
                     Authorization: `Bearer ${auth.token}`,
                     'Content-Type': 'application/json',
-                  },
+                },
             });
 
             if (!response.ok) {
@@ -47,7 +47,7 @@ export const UserList = ({ setActiveTab }) => {
 
             // Si era el último, retroceder de página antes de recargar
             if (isLastItemInPage) {
-                setPage(prevPage => prevPage - 1); 
+                setPage(prevPage => prevPage - 1);
             } else {
                 fetchEmployees();
             }
@@ -65,28 +65,28 @@ export const UserList = ({ setActiveTab }) => {
 
             {/* Input de búsqueda por Nombre */}
             <form onSubmit={handleSearch} className="flex flex-row gap-4 mb-6">  {/* ✅ */}
-  <div className="w-2/4">
-    <label htmlFor="name-search" className="block text-sm font-medium leading-6 mb-2 text-gray-900">
-      Buscar por Nombre
-    </label>
-    <div className='flex flex-row gap-2 rounded-md font-sm'>
-      <input
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        type="text"
-        name="email"
-        id="name-search"
-        className="block w-full pl-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-      />
-      <button
-        type="submit"  
-        className="rounded-md bg-violet-600 hover:bg-violet-500 text-white font-bold px-2 cursor-pointer"
-      >
-        Buscar
-      </button>
-    </div>
-  </div>
-</form>
+                <div className="w-2/4">
+                    <label htmlFor="name-search" className="block text-sm font-medium leading-6 mb-2 text-gray-900">
+                        Buscar por Nombre
+                    </label>
+                    <div className='flex flex-row gap-2 rounded-md font-sm'>
+                        <input
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            type="text"
+                            name="email"
+                            id="name-search"
+                            className="block w-full pl-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                        <button
+                            type="submit"
+                            className="rounded-md bg-violet-600 hover:bg-violet-500 text-white font-bold px-2 cursor-pointer"
+                        >
+                            Buscar
+                        </button>
+                    </div>
+                </div>
+            </form>
 
 
             {/* Tabla de jornadas */}

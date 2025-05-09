@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useEmployees } from '../context/EmployeesContext'
+import { AuthContext } from '../context/AuthContext ';
 
 const initialValues = { name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '', role: 'USER' }
 
@@ -8,6 +9,8 @@ export default function UserForm({ setActiveTab }) {
   const [formData, setFormData] = useState(initialValues)
 
   const { editedEmployee, setEditedEmployee, fetchEmployees } = useEmployees();
+
+  const { auth, logout } = useContext(AuthContext);
 
   const resetForm = () => {
     setFormData(initialValues);
@@ -25,6 +28,7 @@ export default function UserForm({ setActiveTab }) {
         method: method,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
         },
         body: JSON.stringify({
           name: formData.name,

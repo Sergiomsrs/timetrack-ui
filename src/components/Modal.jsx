@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { filterAndMapRecords } from '../utilities/timeManagement';
+import { AuthContext } from '../context/AuthContext ';
 
 export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, records, setRecords }) => {
+
+  const { auth } = useContext(AuthContext);
 
   const [editableRecords, setEditableRecords] = useState([]);
   const [dayRecords, setDayRecords] = useState({
@@ -98,13 +101,18 @@ const handleSaveRecord = async (recordId) => {
 
       const response = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
+         },
         body: JSON.stringify({
           employeeId: isNew ? recordToSave.employeeId : "",
           timestamp: recordToSave.timestamp,
           isMod: "true", // Cambiar a false si no es un nuevo registro
         }),
       });
+
+      
+
 
       // Lanzamos mensaje de error en caso de fallo en la consulta
       if (!response.ok) {
@@ -132,6 +140,7 @@ const handleSaveRecord = async (recordId) => {
       }
 
     } catch (err) {
+      console.log("TOKEN ENVIADO:", auth.token);
       console.error("Error al guardar:", err);
       alert(err.message);
     }

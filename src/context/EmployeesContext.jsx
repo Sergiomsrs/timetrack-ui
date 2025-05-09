@@ -18,7 +18,7 @@ export const EmployeesProvider = ({ children }) => {
   const fetchEmployees = async (search = "") => {
     try {
       setLoading(true);
-      console.log(auth);
+      
       const url = search
         ? `http://localhost:8080/api/user/search?name=${search}&page=${page}&size=10`
         : `http://localhost:8080/api/user/pag?page=${page}&size=10`;

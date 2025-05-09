@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../context/AuthContext ';
 
 
 export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, setRecords, activeTab }) => {
 
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
+
+  const { auth } = useContext(AuthContext);
 
 
 
@@ -52,6 +55,7 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
         },
         body: JSON.stringify({
           employeeId: selectedEmployeeId,
@@ -65,7 +69,14 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
       }
 
       // Recargar los registros del empleado tras el POST
-      const updatedRecordsResponse = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}/month?year=${activeTab.year}&month=${activeTab.month + 1}`);
+      const updatedRecordsResponse = await fetch(`http://localhost:8080/api/timestamp/employee/${selectedEmployeeId}/month?year=${activeTab.year}&month=${activeTab.month + 1}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
       const updatedRecords = await updatedRecordsResponse.json();
 
       setRecords(updatedRecords); // Esto actualizará los datos en TimeTrackList

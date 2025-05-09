@@ -33,7 +33,6 @@ export const TimetrackList = ({
     const { auth } = useContext(AuthContext);
 
 
-    console.log("auth desde userlist", auth);
 
 
 
@@ -107,17 +106,18 @@ export const TimetrackList = ({
                         </option>
                     ))}
                 </select>
-            </div>}
-
-            {/* Estado de carga */}
-            {isLoading && <div className="text-center py-4 text-blue-500">Cargando registros...</div>}
-
-            {/* Mensaje de error */}
             {error && (
+                
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                     {error}
                 </div>
             )}
+            </div>}
+
+            {/* Estado de carga */}
+            {isLoading && <div className="text-center py-4 text-blue-500">Cargando registros...</div>}
+            
+            {/* Mensaje de error */}
 
             {/* Tabla de resultados */}
             {processedRecords && processedRecords.length > 0 ? (
