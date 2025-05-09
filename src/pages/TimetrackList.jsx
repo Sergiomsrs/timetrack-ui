@@ -72,7 +72,7 @@ export const TimetrackList = ({
                     setRecords={setRecords} />}
 
             {/* Dropdown de empleados */}
-            {auth.role == "ADMIN" && <div className="mb-6 w-2/4">
+            {auth.role == "ADMIN" || auth.role == "GUEST" && <div className="mb-6 w-2/4">
                 <label htmlFor="employee-select" className="block text-sm font-medium text-gray-700 mb-2">
                     Seleccionar Empleado
                 </label>
