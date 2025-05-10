@@ -13,17 +13,13 @@ export default function UserForm({ setActiveTab }) {
 
   const { auth } = useContext(AuthContext);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  
    
 
   const resetForm = () => {
     setFormData(initialValues);
     setEditedEmployee(null);
   }
-
-  const handleConfirmSubmit = async () => {
-    setShowConfirmModal(false); // Cierra el modal
-    await submitForm() // Llama al submit real
-  };
 
 
   const submitForm = async () => {
@@ -77,7 +73,7 @@ export default function UserForm({ setActiveTab }) {
         secondLastName: editedEmployee.secondLastName || '',
         email: editedEmployee.email || '',
         dni: editedEmployee.dni || '',
-        password: editedEmployee.password || '',
+        password:  '',
         accesLevel: editedEmployee.accesLevel || '',
         role: editedEmployee.role || ''
       });

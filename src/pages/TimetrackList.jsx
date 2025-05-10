@@ -30,13 +30,12 @@ export const TimetrackList = ({
 
     // Cargar lista de empleados al montar el componente
     useEffect(() => {
-        fetchEmployees();
+        if (auth.role == "ADMIN" || auth.role == "GUEST") fetchEmployees();
     }, []);
 
 
     // Cargar registros del empleado seleccionado en records
     useEffect(() => {
-
         fetchRecords(activeTab);
     }, [selectedEmployeeId, activeTab]);
 

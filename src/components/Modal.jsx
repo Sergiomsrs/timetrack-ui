@@ -1,10 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { filterAndMapRecords } from '../utilities/timeManagement';
 import { AuthContext } from '../context/AuthContext ';
+import { ConfirmModal } from './ConfirmationModal';
 
 export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, records, setRecords }) => {
 
   const { auth } = useContext(AuthContext);
+
+  const [isConOpen, setIsConOpenModal] = useState(false);
+  const [recordToOperate, setRecordToOperate] = useState(null);
+  const [action, setAction] = useState(null);
+  const [message, setMessage] = useState(null);
+  
+  
 
   const [editableRecords, setEditableRecords] = useState([]);
   const [dayRecords, setDayRecords] = useState({
@@ -83,9 +91,6 @@ export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, recor
   // Funcion para guardar o actualizar un registro
 const handleSaveRecord = async (recordId) => {
 
-    // Confirmacion antes de guardar
-    const userConfirmed = window.confirm("¿Estás seguro de que deseas guardar este registro?");
-    if (!userConfirmed) return;
     
     // Buscamos en editable records el recor que coincida en id con la que le estamos pasando al metodo
     const recordToSave = editableRecords.find(r => r.id === recordId);
@@ -148,16 +153,34 @@ const handleSaveRecord = async (recordId) => {
     setIsOpen(false);
 };
 
+  const onOpenModal = (id, action) => {
+    
+    setRecordToOperate(id);
+    setIsConOpenModal(true);
+    setAction(action);
+    setMessage(action == "delete"? "¿Estás seguro de que deseas eliminar este registro?" : "¿Estás seguro de que deseas guardar este registro?");
+   }
+
+   const onConfirmDelete = () => {
+    handleDeleteRecord(recordToOperate); 
+    setRecordToOperate(null);
+    setIsConOpenModal(false); 
+  }
+  const onCancel = () => {
+    setRecordToOperate(null);
+    setIsConOpenModal(false);
+  }
+
+    const onConfirmSave = () => {
+    handleSaveRecord(recordToOperate); 
+    setRecordToOperate(null);
+    setIsConOpenModal(false); 
+  }
+
 
   // Funcion para eliminar un registro de la base de datos
   const handleDeleteRecord = async (recordId) => {
-    // Confirmar con el usuario antes de eleminar
-    const userConfirmed = window.confirm("¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.");
-    if (!userConfirmed) return;
 
-    // Buscar el registro dentro de editable records
-    const record = editableRecords.find(r => r.id === recordId);
-    if (!record) return alert("Registro no encontrado.");
 
     // Si es nuevo (temporal), elimínalo directamente del estado
     // Crear un nuevo registro pero finalmente no lo guardas en la base de datos
@@ -190,7 +213,6 @@ const handleSaveRecord = async (recordId) => {
       setEditableRecords(prev => prev.filter(r => r.id !== recordId));
       setRecords(prev => prev.filter(r => r.id !== recordId));
 
-      alert("Registro eliminado.");
       setIsOpen(false);
     } catch (err) {
       console.error("Error al eliminar:", err);
@@ -198,12 +220,19 @@ const handleSaveRecord = async (recordId) => {
     }
   };
 
+  const methods = () => {
+    if (action === "save") onConfirmSave()
+    if (action === "delete") onConfirmDelete()
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-gray-900/50 dark:bg-gray-900/80"
         onClick={() => setIsOpen(false)}
       />
+
+      <ConfirmModal isOpen={isConOpen} onConfirm={methods} onCancel={onCancel} message={message} />
 
 
       <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-lg">
@@ -267,12 +296,12 @@ const handleSaveRecord = async (recordId) => {
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       />
                       <button
-                        onClick={() => handleSaveRecord(record.id)}
+                        onClick={() =>onOpenModal(record.id, "save")}
                         className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-full cursor-pointer"
                       >Guardar</button>
 
                       <button
-                        onClick={() => handleDeleteRecord(record.id)}
+                        onClick={() => onOpenModal(record.id, "delete")}
                         className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full cursor-pointer"
                       >Eliminar</button>
 
