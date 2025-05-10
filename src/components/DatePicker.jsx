@@ -91,13 +91,16 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
         ))}
       </select>
 
-{auth.role == "ADMIN" &&  <>
+{auth.role == "ADMIN" &&  
       <button
       className="text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
       onClick={() => setIsModalAddOpen(true)}
       >
         Añadir registro
       </button>
+}
+
+{(auth.role == "ADMIN" || auth.role == "GUEST")  &&  
 
       <button
        className="text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
@@ -105,8 +108,8 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
        >
       Descargar PDF
       </button>
-        </>
-      }
+        
+}
     </div>
   );
 };

@@ -55,7 +55,7 @@ export const useRecord = () => {
     try {
 
       const response = await fetch(
-        `http://localhost:8080/api/timestamp/employee/${auth.role == "ADMIN" ? selectedEmployeeId : auth.user.id}/month?year=${activeTab.year}&month=${activeTab.month + 1}`,
+        `http://localhost:8080/api/timestamp/employee/${(auth.role == "ADMIN" || auth.role == "GUEST") ? selectedEmployeeId : auth.user.id}/month?year=${activeTab.year}&month=${activeTab.month + 1}`,
         {
           headers: {
             "Content-Type": "application/json",
