@@ -1,10 +1,14 @@
 
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useEmployees } from '../context/EmployeesContext';
 import { Pageable } from './Pageable';
 import { AuthContext } from '../context/AuthContext ';
+import { ConfirmModal } from './ConfirmationModal';
 
 export const UserList = ({ setActiveTab }) => {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [employeeToDelete, setEmployeeToDelete] = useState(null);
 
     const { employees, loading, fetchEmployees, setEditedEmployee, page, totalPages, setPage, searchTerm,
         setSearchTerm, } = useEmployees();
@@ -25,12 +29,15 @@ export const UserList = ({ setActiveTab }) => {
 
     };
 
-    const handleDeleteClick = async (employeeId) => {
-        const confirmDelete = window.confirm('¿Estás seguro de que quieres eliminar este empleado?');
-        if (!confirmDelete) return;
+    const handleDeleteClick = (id) => {
+        setEmployeeToDelete(id);
+        setIsModalOpen(true);
+    };
 
+
+    const deleteEmployee = async (id) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/user/${employeeId}`, {
+            const response = await fetch(`http://localhost:8080/api/user/${id}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${auth.token}`,
@@ -42,23 +49,34 @@ export const UserList = ({ setActiveTab }) => {
                 throw new Error('Error al eliminar el empleado');
             }
 
-            // Verificar si era el último elemento de la página actual
             const isLastItemInPage = employees.length === 1 && page > 0;
 
-            // Si era el último, retroceder de página antes de recargar
             if (isLastItemInPage) {
-                setPage(prevPage => prevPage - 1);
+                setPage(prev => prev - 1);
             } else {
                 fetchEmployees();
             }
 
         } catch (error) {
-            console.error("Error al eliminar el empleado:", error);
+            console.error("Error al eliminar:", error);
+        } finally {
+            setIsModalOpen(false);
+            setEmployeeToDelete(null);
         }
     };
 
 
+
     if (loading) return <p>Cargando empleados...</p>;
+
+    const onDelete = () => {
+        setIsOpen(false);
+    }
+
+
+    const onCancel = () => {
+        setIsOpen(false);
+    };
 
     return (
         <div className="mx-1 mb-4  ">
@@ -134,11 +152,17 @@ export const UserList = ({ setActiveTab }) => {
                     </div>
 
 
+
                 </div>
             )}
 
 
-
+            <ConfirmModal
+                isOpen={isModalOpen}
+                message="¿Estás seguro de que quieres eliminar este empleado?"
+                onCancel={() => setIsModalOpen(false)}
+                onConfirm={() => deleteEmployee(employeeToDelete)}
+            />
         </div>
     )
 }

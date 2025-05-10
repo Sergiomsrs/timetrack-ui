@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { useEmployees } from '../context/EmployeesContext'
 import { AuthContext } from '../context/AuthContext ';
+import { ConfirmModal } from './ConfirmationModal';
 
 const initialValues = { name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '', role: 'USER' }
 
@@ -10,15 +11,22 @@ export default function UserForm({ setActiveTab }) {
 
   const { editedEmployee, setEditedEmployee, fetchEmployees } = useEmployees();
 
-  const { auth, logout } = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+   
 
   const resetForm = () => {
     setFormData(initialValues);
     setEditedEmployee(null);
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleConfirmSubmit = async () => {
+    setShowConfirmModal(false); // Cierra el modal
+    await submitForm() // Llama al submit real
+  };
+
+
+  const submitForm = async () => {
     try {
       const method = editedEmployee ? 'PUT' : 'POST';
       const url = editedEmployee
@@ -26,7 +34,7 @@ export default function UserForm({ setActiveTab }) {
         : 'http://localhost:8080/api/user';
 
       const response = await fetch(url, {
-        method: method,
+        method,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${auth.token}`,
@@ -42,36 +50,24 @@ export default function UserForm({ setActiveTab }) {
           role: formData.role || 'USER',
         }),
       });
-      console.log("body", formData)
 
-      if (!response.ok) {
-        throw new Error('Error al guardar el usuario');
-      }
-      const data = await response.json();
-      alert(editedEmployee ? 'Usuario actualizado con éxito' : 'Usuario guardado con éxito');
+      if (!response.ok) throw new Error('Error al guardar el usuario');
+
+      
       fetchEmployees();
-      setActiveTab("list")
-
-
-      setFormData({
-        name: '',
-        lastName: '',
-        secondLastName: '',
-        email: '',
-        dni: '',
-        password: '',
-        accesLevel: '',
-        role: 'USER'
-      });
-
-
-
-      setEditedEmployee(null);
+      setActiveTab("list");
+      resetForm();
     } catch (error) {
       console.error('Error:', error);
       alert('Hubo un problema al guardar el usuario');
     }
   };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setShowConfirmModal(true); // Mostrar modal
+  };
+
 
   useEffect(() => {
     if (editedEmployee) {
@@ -95,7 +91,7 @@ export default function UserForm({ setActiveTab }) {
         <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">Registrar Nuevo Usuario</h2>
         <p className="mt-2 text-lg text-gray-600">Completar todos los campos</p>
       </div>
-      <form onSubmit={handleSubmit} className="mt-16 max-w-xl sm:mt-20">
+      <form onSubmit={handleFormSubmit} className="mt-16 max-w-xl sm:mt-20">
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div>
             <label htmlFor="first-name" className="block text-sm font-semibold text-gray-900">
@@ -225,7 +221,7 @@ export default function UserForm({ setActiveTab }) {
             type="submit"
             className="w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
           >
-            {editedEmployee ? 'Actualizar Usuario' :'Registrar Usuario'}
+            {editedEmployee ? 'Actualizar Usuario' : 'Registrar Usuario'}
           </button>
           <button
             onClick={() => resetForm()}
@@ -236,6 +232,12 @@ export default function UserForm({ setActiveTab }) {
           </button>
         </div>
       </form>
+      <ConfirmModal
+        isOpen={showConfirmModal}
+        message="¿Estás seguro de que deseas guardar este usuario?"
+        onConfirm={submitForm}
+        onCancel={() => setShowConfirmModal(false)}
+      />
     </div>
   )
 }

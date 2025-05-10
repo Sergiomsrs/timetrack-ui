@@ -5,6 +5,7 @@ import { ActiveTab } from '../components/ActiveTab';
 
 export const User = () => {
   const [activeTab, setActiveTab] = useState("list");
+  
 
   return (
     <div className="flex w-full">
