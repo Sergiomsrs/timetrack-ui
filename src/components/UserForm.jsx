@@ -9,10 +9,39 @@ const initialValues = { name: '', lastName: '', secondLastName: '', email: '', d
 export default function UserForm({ setActiveTab }) {
   const [formData, setFormData] = useState(initialValues)
 
-  const { editedEmployee, setEditedEmployee, fetchEmployees } = useEmployees();
+  const { editedEmployee, setEditedEmployee, fetchEmployees, employees } = useEmployees();
 
   const { auth } = useContext(AuthContext);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const [errors, setErrors] = useState({});
+
+  console.log(employees)
+
+
+  const validate = () => {
+  const newErrors = {};
+
+  if (!formData.name.trim()) newErrors.name = 'El nombre es obligatorio';
+  if (!formData.lastName.trim()) newErrors.lastName = 'El primer apellido es obligatorio';
+  if (!formData.email.trim()) {
+    newErrors.email = 'El correo electrónico es obligatorio';
+  } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email)) {
+    newErrors.email = 'Correo electrónico no válido';
+  }
+  if (!formData.dni.trim()) {
+    newErrors.dni = 'El DNI es obligatorio';
+  } else if (!editedEmployee && employees.some(emp => emp.dni === formData.dni.trim())) {
+    newErrors.dni = 'Este DNI ya está registrado';
+  }
+  if (!editedEmployee && !formData.password.trim()) {
+    newErrors.password = 'La contraseña es obligatoria';
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
   
    
 
@@ -62,10 +91,13 @@ export default function UserForm({ setActiveTab }) {
     }
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    setShowConfirmModal(true); // Mostrar modal
-  };
+const handleFormSubmit = (e) => {
+  e.preventDefault();
+  if (validate()) {
+    setShowConfirmModal(true);
+  }
+};
+
 
 
   useEffect(() => {
@@ -108,6 +140,7 @@ export default function UserForm({ setActiveTab }) {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
+              {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
           </div>
           <div>
@@ -124,6 +157,7 @@ export default function UserForm({ setActiveTab }) {
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
+              {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
             </div>
           </div>
           <div>
@@ -140,6 +174,7 @@ export default function UserForm({ setActiveTab }) {
                 onChange={(e) => setFormData({ ...formData, secondLastName: e.target.value })}
                 className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
+              {errors.secondLastName && <p className="text-red-500 text-sm mt-1">{errors.secondLastName}</p>}
             </div>
           </div>
 
@@ -157,6 +192,7 @@ export default function UserForm({ setActiveTab }) {
                 onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
                 className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
+              {errors.dni && <p className="text-red-500 text-sm mt-1">{errors.dni}</p>}
             </div>
           </div>
 
@@ -174,6 +210,7 @@ export default function UserForm({ setActiveTab }) {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
+              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
             </div>
           </div>
 
@@ -226,6 +263,7 @@ export default function UserForm({ setActiveTab }) {
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
+              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
             </div>
 
           </div>
