@@ -14,7 +14,6 @@ export const useRecord = () => {
 
   const { auth } = useContext(AuthContext);
 
-
   const fetchEmployees = async () => {
     setIsLoading(true);
     try {
@@ -38,10 +37,6 @@ export const useRecord = () => {
       setIsLoading(false);
     }
   };
-
-
-
-
 
   const fetchRecords = async (activeTab) => {
     if (!selectedEmployeeId) {
@@ -75,7 +70,7 @@ export const useRecord = () => {
 
   const fetchLastThree = async () => {
   try {
-    const res = await fetch("http://localhost:8080/api/timestamp/last3"); // ajusta la URL si usas proxy o variable
+    const res = await fetch("http://localhost:8080/api/timestamp/last3"); 
     const data = await res.json();
     setLastThree(data);
   } catch (err) {
