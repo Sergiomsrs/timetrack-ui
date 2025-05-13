@@ -17,7 +17,7 @@ export const useRecord = () => {
   const fetchEmployees = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/api/user', {
+      const response = await fetch('http://localhost:8080/api/user/active', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

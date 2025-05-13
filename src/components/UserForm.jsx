@@ -3,7 +3,7 @@ import { useEmployees } from '../context/EmployeesContext'
 import { AuthContext } from '../context/AuthContext ';
 import { ConfirmModal } from './ConfirmationModal';
 
-const initialValues = { name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '', role: 'USER' }
+const initialValues = { name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '', role: 'USER', fechaAlta: '', fechaBaja: '' };
 
 
 export default function UserForm({ setActiveTab }) {
@@ -44,6 +44,9 @@ export default function UserForm({ setActiveTab }) {
           password: formData.password,
           accessLevel: "",
           role: formData.role || 'USER',
+          fechaAlta: formData.fechaAlta,
+          fechaBaja: formData.fechaBaja,
+          
         }),
       });
 
@@ -75,7 +78,9 @@ export default function UserForm({ setActiveTab }) {
         dni: editedEmployee.dni || '',
         password:  '',
         accesLevel: editedEmployee.accesLevel || '',
-        role: editedEmployee.role || ''
+        role: editedEmployee.role || '',
+        fechaAlta: editedEmployee.fechaAlta || '',
+        fechaBaja: editedEmployee.fechaBaja || '',
       });
     }
   }, [editedEmployee]);
@@ -172,6 +177,41 @@ export default function UserForm({ setActiveTab }) {
             </div>
           </div>
 
+                    <div className="">
+            <label htmlFor="alta" className="block text-sm font-semibold text-gray-900">
+              Fecha de Alta
+            </label>
+            <div className="mt-2.5">
+              <input
+                id="alta"
+                name="alta"
+                type="date"
+                autoComplete="alta"
+                value={formData.fechaAlta}
+                onChange={(e) => setFormData({ ...formData, fechaAlta: e.target.value })}
+                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              />
+            </div>
+
+          </div>
+                    <div className="">
+            <label htmlFor="baja" className="block text-sm font-semibold text-gray-900">
+              Fecha de Baja
+            </label>
+            <div className="mt-2.5">
+              <input
+                id="baja"
+                name="baja"
+                type="date"
+                autoComplete="baja"
+                value={formData.fechaBaja}
+                onChange={(e) => setFormData({ ...formData, fechaBaja: e.target.value })}
+                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              />
+            </div>
+
+          </div>
+
           <div className="">
             <label htmlFor="email" className="block text-sm font-semibold text-gray-900">
               Contraseña
@@ -189,6 +229,7 @@ export default function UserForm({ setActiveTab }) {
             </div>
 
           </div>
+
 
           <div className="">
             <label htmlFor="role" className="block text-sm font-semibold text-gray-900">

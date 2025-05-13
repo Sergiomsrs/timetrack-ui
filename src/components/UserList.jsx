@@ -159,7 +159,7 @@ export const UserList = ({ setActiveTab }) => {
 
             <ConfirmModal
                 isOpen={isModalOpen}
-                message="¿Estás seguro de que quieres eliminar este empleado?"
+                message="¿Estás seguro de que quieres eliminar este empleado? Esta acción no se puede deshacer y conlleva la eliminacion de todos sus registros."
                 onCancel={() => setIsModalOpen(false)}
                 onConfirm={() => deleteEmployee(employeeToDelete)}
             />
