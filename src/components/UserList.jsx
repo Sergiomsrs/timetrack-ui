@@ -78,6 +78,8 @@ export const UserList = ({ setActiveTab }) => {
         setIsOpen(false);
     };
 
+    console.log("render desde UserList");
+
     return (
         <div className="mx-1 mb-4  ">
 

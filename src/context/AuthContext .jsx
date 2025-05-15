@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState } from 'react';
 
 
 export const AuthContext = createContext();
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
     const user = localStorage.getItem('user');
-  
+
     if (token && user && user !== "undefined") {
       try {
         return {
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('role');
       }
     }
-  
+
     return {
       isAuthenticated: false,
       token: null,
@@ -33,14 +33,14 @@ export const AuthProvider = ({ children }) => {
       role: null,
     };
   });
-  
+
 
   const login = (token, role, user) => {
     if (!token || !user) {
       console.error("Intento de login con datos incompletos:", { token, role, user });
       return;
     }
-  
+
     localStorage.setItem('token', token);
     localStorage.setItem('role', role);
     localStorage.setItem('user', JSON.stringify(user));
@@ -51,9 +51,9 @@ export const AuthProvider = ({ children }) => {
       user,
     });
 
-   
+
   };
-  
+
 
   const logout = () => {
     localStorage.clear();

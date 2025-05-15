@@ -26,7 +26,7 @@ export const EmployeesProvider = ({ children }) => {
         const res = await fetch(url, {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${auth.token}` // ← Aquí va el token
+            "Authorization": `Bearer ${auth.token}`
           }
         });
 
@@ -47,7 +47,7 @@ export const EmployeesProvider = ({ children }) => {
 
   useEffect(() => {
     fetchEmployees();
-  }, [page]);
+  }, [page, auth.token]);
 
   return (
     <EmployeesContext.Provider value={{
