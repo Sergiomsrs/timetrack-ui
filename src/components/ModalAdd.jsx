@@ -94,9 +94,9 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
       <ConfirmModal isOpen={isConOpen} onConfirm={onConfirmSave} onCancel={onCancel} message={message} />
 
       <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-lg">
-        <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
-          <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Entrada manual de fichaje</h3>
+        <div className="relative bg-white rounded-lg shadow">
+          <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+            <h3 className="text-xl font-semibold text-gray-900 ">Entrada manual de fichaje</h3>
             <button
               onClick={handleCloseModal}
               className="text-gray-400 hover:bg-red-500 hover:text-amber-50 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
@@ -151,7 +151,7 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
 
           <div className="flex items-center justify-between p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
             <button
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer"
               onClick={onOpenModal}
             >
               Enviar

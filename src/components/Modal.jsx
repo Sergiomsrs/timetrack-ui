@@ -236,12 +236,12 @@ const handleSaveRecord = async (recordId) => {
 
 
       <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-lg">
-        <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
-          <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Detalles del día</h3>
+        <div className="relative bg-white rounded-lg shadow">
+          <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+            <h3 className="text-xl font-semibold text-gray-900">Detalles del día</h3>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              className="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
             >
               <svg className="w-3 h-3" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7l-6 6" />
@@ -252,11 +252,11 @@ const handleSaveRecord = async (recordId) => {
           <div className="p-4 md:p-5 space-y-4">
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Fecha:</p>
+                <p className="text-sm font-medium text-gray-500">Fecha:</p>
                 <p className="text-base font-semibold">{dayRecords?.day}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total trabajado:</p>
+                <p className="text-sm font-medium text-gray-500">Total trabajado:</p>
                 <p className="text-base font-semibold">{dayRecords?.totalWorked}</p>
               </div>
             </div>
@@ -264,19 +264,19 @@ const handleSaveRecord = async (recordId) => {
             <h4 className="text-lg font-medium">Turnos:</h4>
             <div className="space-y-3">
               {dayRecords?.periods?.map((period, index) => (
-                <div key={index} className={`p-3 rounded-lg ${!period.isComplete ? 'bg-amber-50 dark:bg-amber-900/20' : 'bg-gray-50 dark:bg-gray-800'}`}>
+                <div key={index} className={`p-3 rounded-lg ${!period.isComplete ? 'bg-amber-50' : 'bg-gray-50'}`}>
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Turno {index + 1}</span>
                     {!period.isComplete && (
-                      <span className="text-xs bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 px-2 py-1 rounded">
+                      <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">
                         Falta salida
                       </span>
                     )}
                   </div>
                   <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
-                    <div><p className="text-gray-500 dark:text-gray-400">Entrada:</p><p>{period.entry}</p></div>
-                    <div><p className="text-gray-500 dark:text-gray-400">Salida:</p><p>{period.exit || '--'}</p></div>
-                    <div><p className="text-gray-500 dark:text-gray-400">Duración:</p><p>{period.durationMs > 0 ? `${Math.floor(period.durationMs / 3600000)}h ${Math.floor((period.durationMs % 3600000) / 60000)}m` : '--'}</p></div>
+                    <div><p className="text-gray-500">Entrada:</p><p>{period.entry}</p></div>
+                    <div><p className="text-gray-500">Salida:</p><p>{period.exit || '--'}</p></div>
+                    <div><p className="text-gray-500">Duración:</p><p>{period.durationMs > 0 ? `${Math.floor(period.durationMs / 3600000)}h ${Math.floor((period.durationMs % 3600000) / 60000)}m` : '--'}</p></div>
                   </div>
                 </div>
               ))}
@@ -285,15 +285,15 @@ const handleSaveRecord = async (recordId) => {
             <h4 className="text-lg font-medium mt-6">Registros del día:</h4>
             <div className="space-y-2">
               {editableRecords.map((record, index) => (
-                <div key={index} className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
                   <div className="w-full">
-                    <div className="text-sm text-gray-500 dark:text-gray-400">Fecha: {record.dateStr}</div>
+                    <div className="text-sm text-gray-500">Fecha: {record.dateStr}</div>
                     <div className="flex items-center gap-4 mt-1">
                       <input
                         type="time"
                         value={record.time}
                         onChange={e => handleTimeChange(index, e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-white  text-gray-900 "
                       />
                       <button
                         onClick={() =>onOpenModal(record.id, "save")}
@@ -318,10 +318,10 @@ const handleSaveRecord = async (recordId) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+          <div className="flex items-center justify-between p-4 md:p-5 border-t border-gray-200 rounded-b">
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer"
             >
               Cerrar
             </button>
