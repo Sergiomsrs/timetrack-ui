@@ -20,6 +20,13 @@ export const UserList = ({ setActiveTab }) => {
         fetchEmployees(searchTerm);
     };
 
+    const handleEditHour = (employee, e) => {
+        e.preventDefault();
+        setEmployeeToDelete(employee);
+        setActiveTab("hourly");
+
+    };
+
 
 
     const handleEditClick = (employee, e) => {
@@ -122,6 +129,7 @@ export const UserList = ({ setActiveTab }) => {
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700"></th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700"></th>
+                                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700"></th>
                             </tr>
                         </thead>
                         <tbody className="text-sm">
@@ -132,6 +140,13 @@ export const UserList = ({ setActiveTab }) => {
                                     <td className="px-4 py-2">{employee.lastName || "N/A"}</td>
                                     <td className="px-4 py-2">{employee.dni}</td>
                                     <td className="px-4 py-2">{employee.email}</td>
+                                    <td className="px-4 py-2">
+                                        <button
+                                            onClick={(e) => handleEditHour(employee, e)}
+
+                                            className="rounded-md bg-amber-600 hover:bg-amber-400 px-2 py-1 text-sm font-semibold text-white cursor-pointer"
+                                        >Horario</button>
+                                    </td>
                                     <td className="px-4 py-2">
                                         <button
                                             onClick={(e) => handleEditClick(employee, e)}

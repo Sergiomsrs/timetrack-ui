@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import UserForm from '../components/UserForm';
 import { UserList } from '../components/UserList';
 import { ActiveTab } from '../components/ActiveTab';
+import { HourlyForm } from '../components/HourlyForm';
 
 export const User = () => {
   const [activeTab, setActiveTab] = useState("list");
@@ -18,6 +19,7 @@ export const User = () => {
 
         {activeTab === "form" && (<UserForm setActiveTab={setActiveTab} />)}
         {activeTab === "list" && (<UserList setActiveTab={setActiveTab} />)}
+        {activeTab === "hourly" && (<HourlyForm setActiveTab={setActiveTab} />)}
 
       </div>
       <div className='w-1/8 flex justify-center'>
