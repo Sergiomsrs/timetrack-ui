@@ -108,6 +108,8 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
           </div>
 
           <div className="p-4 md:p-6 space-y-4 text-gray-800">
+            <div className="flex items-center justify-start gap-8">
+
             <div className="space-y-1">
               <h2 className="text-lg font-semibold">Empleado</h2>
               <p className="text-sm text-gray-600">{employee?.name} {employee?.lastName}</p>
@@ -122,15 +124,17 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
               <h2 className="text-lg font-semibold">Hora</h2>
               <p className="text-sm text-gray-600">{time || 'No seleccionada'}</p>
             </div>
+            </div>
+            <div className="flex items-center justify-start gap-6">
 
-            <div className="space-y-4 pt-4">
+           
               <div className="flex flex-col space-y-2">
                 <label className="text-sm font-medium text-gray-700">Fecha</label>
                 <input
                   type="date"
                   onChange={handleDateChange}
                   className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                  />
               </div>
 
               <div className="flex flex-col space-y-2">
@@ -139,8 +143,9 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
                   type="time"
                   onChange={handleTimeChange}
                   className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                  />
               </div>
+               
             </div>
           </div>
 

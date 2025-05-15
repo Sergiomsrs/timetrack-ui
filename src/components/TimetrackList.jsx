@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { formatMillisecondsToTime, processTimeStamps } from '../utilities/timeManagement';
-import { Modal } from '../components/Modal';
-import { ModalAdd } from '../components/ModalAdd';
+import { Modal } from './Modal';
+import { ModalAdd } from './ModalAdd';
 import { AuthContext } from '../context/AuthContext ';
 
 
