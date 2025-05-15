@@ -47,6 +47,7 @@ export const Header = () => {
               <Link to="/" className="text-sm font-semibold text-gray-900">Inicio</Link>
               {auth.role == "ADMIN" && <Link to="/usuarios" className="text-sm font-semibold text-gray-900">Usuarios</Link>}
               <Link to="/fichajes" className="text-sm font-semibold text-gray-900">Registros</Link>
+              {auth.role == "ADMIN" && <Link to="/log" className="text-sm font-semibold text-gray-900">Ausencias</Link>}
             </>
           </div>
         }

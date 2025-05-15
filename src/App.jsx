@@ -8,6 +8,7 @@ import { EmployeesProvider } from "./context/EmployeesContext"
 import { User } from "./pages/User"
 import { Login } from "./pages/Login"
 import { TimeTrackView } from "./pages/TimeTrackView"
+import { LogList } from "./components/LogList"
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
               } />
               <Route path="/fichajes" element={<TimeTrackView />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/log" element={<LogList />} />
             </Routes>
           </Body>
           <Footer />
