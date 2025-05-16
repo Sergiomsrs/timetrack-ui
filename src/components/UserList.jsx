@@ -5,10 +5,10 @@ import { Pageable } from './Pageable';
 import { AuthContext } from '../context/AuthContext ';
 import { ConfirmModal } from './ConfirmationModal';
 
-export const UserList = ({ setActiveTab }) => {
+export const UserList = ({ setActiveTab, employeeToDelete, setEmployeeToDelete }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [employeeToDelete, setEmployeeToDelete] = useState(null);
+
 
     const { employees, loading, fetchEmployees, setEditedEmployee, page, totalPages, setPage, searchTerm,
         setSearchTerm, } = useEmployees();
@@ -141,11 +141,15 @@ export const UserList = ({ setActiveTab }) => {
                                     <td className="px-4 py-2">{employee.dni}</td>
                                     <td className="px-4 py-2">{employee.email}</td>
                                     <td className="px-4 py-2">
-                                        <button
-                                            onClick={(e) => handleEditHour(employee, e)}
 
-                                            className="rounded-md bg-amber-600 hover:bg-amber-400 px-2 py-1 text-sm font-semibold text-white cursor-pointer"
-                                        >Horario</button>
+                                        <button 
+                                        onClick={(e) => handleEditHour(employee, e)}
+                                        class="relative inline-flex items-center justify-center p-0.5 mb-0 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                                            <span class="relative px-3 py-1.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
+                                                Horario
+                                            </span>
+                                        </button>
+                                     
                                     </td>
                                     <td className="px-4 py-2">
                                         <button

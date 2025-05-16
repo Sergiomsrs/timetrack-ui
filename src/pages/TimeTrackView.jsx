@@ -41,7 +41,7 @@ export const TimeTrackView = () => {
   
     return (
       <div className="flex w-full">
-        <div className="w-2/8 flex justify-center  mx-0 px-0">
+        <div className="w-1/8 flex justify-center  mx-4 px-0">
   
           <DatePicker 
           employees={employees}
@@ -52,7 +52,7 @@ export const TimeTrackView = () => {
           />
   
         </div>
-        <div className="w-5/8  mx-0 px-0 ">
+        <div className="w-6/8  ml-10 px-0 ">
 
           <TimetrackList 
           activeTab={activeTab}

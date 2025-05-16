@@ -1,7 +1,307 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../context/AuthContext ';
 
-export const HourlyForm = () => {
-  return (
-    <div>HourlyForm</div>
-  )
-}
+export const HourlyForm = ({ employeeToDelete }) => {
+
+  const { auth } = useContext(AuthContext);
+
+
+  const [schedules, setSchedules] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const [newSchedule, setNewSchedule] = useState({
+    dayNumber: 1, // Valor por defecto: Lunes
+    hora: ''
+  });
+
+  const dayNames = {
+    1: "Lunes",
+    2: "Martes",
+    3: "Miércoles",
+    4: "Jueves",
+    5: "Viernes",
+    6: "Sábado",
+    7: "Domingo"
+  };
+
+useEffect(() => {
+  if (employeeToDelete?.id) {
+    fetch(`http://localhost:8080/api/horarios/user/${employeeToDelete.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${auth.token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Error al obtener los horarios");
+        }
+        return res.json();
+      })
+      .then(setSchedules)
+      .catch((error) => console.error("Error cargando horarios:", error));
+  }
+}, [employeeToDelete]);
+
+
+  const grouped = schedules.reduce((acc, item, index) => {
+    const day = item.dayNumber;
+    if (!acc[day]) acc[day] = [];
+    acc[day].push({ ...item, index });
+    return acc;
+  }, {});
+
+  const sortedDays = Object.keys(grouped).sort((a, b) => a - b);
+
+  const handleChange = (index, newHora) => {
+    const updated = [...schedules];
+    updated[index] = { ...updated[index], hora: newHora };
+    setSchedules(updated);
+  };
+
+  const handleNewScheduleChange = (e) => {
+    const { name, value } = e.target;
+    setNewSchedule(prev => ({
+      ...prev,
+      [name]: name === 'dayNumber' ? parseInt(value) : value
+    }));
+  };
+
+const handleAddSchedule = async () => {
+  if (!newSchedule.hora) {
+    alert('Por favor selecciona una hora');
+    return;
+  }
+
+  // Mapeo de días en español a inglés
+  const dayNamesEnglish = {
+    1: "MONDAY",
+    2: "TUESDAY",
+    3: "WEDNESDAY",
+    4: "THURSDAY",
+    5: "FRIDAY",
+    6: "SATURDAY",
+    7: "SUNDAY"
+  };
+
+  // Formatear la hora a HH:MM:SS
+  const formattedTime = newSchedule.hora + ":00";
+
+  const newEntry = {
+    dni: employeeToDelete.dni,
+    hora: formattedTime,
+    dia: dayNamesEnglish[newSchedule.dayNumber]
+  };
+
+  try {
+    setIsSaving(true);
+    
+    const response = await fetch("http://localhost:8080/api/horarios", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newEntry)
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al guardar el horario");
+    }
+
+    const result = await response.text();
+    console.log(result);
+
+    // Actualizar el estado local con el formato interno de la app
+    setSchedules(prev => [...prev, {
+      ...newEntry,
+      dia: dayNames[newSchedule.dayNumber], // Mantener el nombre en español localmente
+      dayNumber: newSchedule.dayNumber
+    }]);
+    
+    // Resetear el formulario
+    setNewSchedule({
+      dayNumber: 1,
+      hora: ''
+    });
+
+    setSaveMessage("Horario añadido correctamente");
+    
+  } catch (error) {
+    console.error("Error:", error);
+    setSaveMessage("Error al añadir el horario");
+  } finally {
+    setIsSaving(false);
+  }
+};
+
+  const asignarHorarioPorDefecto = async () => {
+    await fetch(`http://localhost:8080/api/horarios/default/${employeeToDelete.dni}`, {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
+        },
+    });
+    // recargar horarios
+  };
+
+  const handleSave = () => {
+    console.log("Guardando horarios:", schedules);
+    setIsSaving(true);
+    setSaveMessage("");
+
+    fetch("http://localhost:8080/api/horarios/horarios/all", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(schedules)
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Error al guardar");
+        return res.text();
+      })
+      .then(() => {
+        setSaveMessage("Cambios guardados correctamente");
+      })
+      .catch((err) => {
+        console.error(err);
+        setSaveMessage("Error al guardar los registros");
+      })
+      .finally(() => {
+        setIsSaving(false);
+      });
+  };
+
+  const handleDeleteSchedule = async (id) => {
+  try {
+    const response = await fetch(`http://localhost:8080/api/horarios/${id}`, {
+      method: "DELETE",
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
+        },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el horario");
+    }
+
+    setSchedules(prev => prev.filter(schedule => schedule.id !== id));
+    setSaveMessage("Horario eliminado correctamente");
+  } catch (error) {
+    console.error("Error al eliminar el horario:", error);
+    setSaveMessage("Error al eliminar el horario");
+  }
+};
+
+return (
+  <div className="">
+    {schedules.length === 0 && (
+      <button
+        onClick={() => asignarHorarioPorDefecto()}
+        className="mb-6 w-full sm:w-auto px-4 py-2 text-sm font-semibold bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition"
+      >
+        Asignar horario por defecto
+      </button>
+    )}
+
+    <div className="mb-8 p-6 border border-gray-200 rounded-2xl shadow bg-white">
+      <h2 className="text-xl font-bold text-gray-800 mb-4">Añadir nuevo horario</h2>
+      <div className="grid sm:grid-cols-3 gap-4">
+        <div>
+          <label htmlFor="dayNumber" className="block text-sm font-medium text-gray-700 mb-1">
+            Día de la semana
+          </label>
+          <select
+            name="dayNumber"
+            value={newSchedule.dayNumber}
+            onChange={handleNewScheduleChange}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            {Object.entries(dayNames).map(([num, name]) => (
+              <option key={num} value={num}>{name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="hora" className="block text-sm font-medium text-gray-700 mb-1">
+            Hora
+          </label>
+          <input
+            type="time"
+            name="hora"
+            value={newSchedule.hora}
+            onChange={handleNewScheduleChange}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+
+        <div className="flex items-end">
+          <button
+            onClick={handleAddSchedule}
+            className="w-full sm:w-auto px-4 py-2 rounded-md bg-green-600 text-white font-semibold text-sm hover:bg-green-700 transition"
+            >
+            Añadir
+          </button>
+        </div>
+      </div>
+    </div>
+    <div>
+
+            <h1>Empleado: {employeeToDelete.name} {employeeToDelete.lastName}</h1>
+    </div>
+
+    <div className="flex flex-wrap gap-2   space-y-6 mb-8">
+      {sortedDays.map((dayNum) => (
+        <div
+          key={dayNum}
+          className="p-5 border border-gray-200 rounded-2xl shadow bg-white"
+        >
+          <h3 className="text-lg font-semibold text-gray-800 mb-3">
+            {dayNames[dayNum]}
+          </h3>
+          <div className="space-y-3">
+            {grouped[dayNum].map((schedule, idx) => (
+              <div key={idx} className="flex items-center gap-3">
+                <input
+                  type="time"
+                  value={schedule.hora || ""}
+                  onChange={(e) => handleChange(schedule.index, e.target.value)}
+                  className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-gray-900"
+                />
+                <button
+                  onClick={() => handleDeleteSchedule(schedule.id)}
+                  className="px-2 py-1 text-xs font-semibold bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+                >
+                  X
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <button
+      onClick={handleSave}
+      disabled={isSaving}
+      className={`w-full sm:w-auto px-4 py-2 rounded-md font-semibold text-sm transition ${
+        isSaving
+          ? "bg-gray-400 text-white cursor-not-allowed"
+          : "bg-indigo-600 hover:bg-indigo-700 text-white"
+      }`}
+    >
+      {isSaving ? "Guardando..." : "Guardar cambios"}
+    </button>
+
+    {saveMessage && (
+      <p className="mt-4 text-sm text-green-600">{saveMessage}</p>
+    )}
+  </div>
+);
+
+};
