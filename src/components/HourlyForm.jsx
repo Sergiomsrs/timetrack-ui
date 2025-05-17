@@ -135,16 +135,51 @@ const handleAddSchedule = async () => {
   }
 };
 
-  const asignarHorarioPorDefecto = async () => {
-    await fetch(`http://localhost:8080/api/horarios/default/${employeeToDelete.dni}`, {
-      method: "POST",
-      headers: {
-          'Content-Type': 'application/json',
+const asignarHorarioPorDefecto = async () => {
+  try {
+    setIsSaving(true);
+    const response = await fetch(
+      `http://localhost:8080/api/horarios/default/${employeeToDelete.dni}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${auth.token}`,
         },
-    });
-    // recargar horarios
-  };
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al asignar horario por defecto");
+    }
+
+    // Vuelve a cargar los horarios del empleado
+    const horariosResponse = await fetch(
+      `http://localhost:8080/api/horarios/user/${employeeToDelete.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
+      }
+    );
+
+    if (!horariosResponse.ok) {
+      throw new Error("Error al recargar horarios");
+    }
+
+    const horarios = await horariosResponse.json();
+    setSchedules(horarios); // Actualiza el estado con los nuevos horarios
+    setSaveMessage("Horario por defecto asignado correctamente");
+
+  } catch (error) {
+    console.error("Error:", error);
+    setSaveMessage("Error al asignar horario por defecto");
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   const handleSave = () => {
     console.log("Guardando horarios:", schedules);
@@ -197,7 +232,7 @@ const handleAddSchedule = async () => {
 };
 
 return (
-  <div className="">
+  <div className="border border-gray-200 rounded-2xl shadow bg-white p-4">
     {schedules.length === 0 && (
       <button
         onClick={() => asignarHorarioPorDefecto()}
@@ -243,19 +278,22 @@ return (
         <div className="flex items-end">
           <button
             onClick={handleAddSchedule}
-            className="w-full sm:w-auto px-4 py-2 rounded-md bg-green-600 text-white font-semibold text-sm hover:bg-green-700 transition"
+            className="rounded-md cursor-pointer bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
             Añadir
           </button>
         </div>
       </div>
     </div>
-    <div>
+    <div className="mb-6">
+      <span className="text- font-semibold text-gray-900 bg-gray-100 px-3 py-1 rounded shadow-sm">
+                 <strong>Empleado:  </strong> {employeeToDelete.name} {employeeToDelete.lastName}
+                  </span>
 
-            <h1>Empleado: {employeeToDelete.name} {employeeToDelete.lastName}</h1>
+            
     </div>
 
-    <div className="flex flex-wrap gap-2   space-y-6 mb-8">
+    <div className="flex flex-wrap gap-2 mb-8 w-full">
       {sortedDays.map((dayNum) => (
         <div
           key={dayNum}
@@ -264,7 +302,7 @@ return (
           <h3 className="text-lg font-semibold text-gray-800 mb-3">
             {dayNames[dayNum]}
           </h3>
-          <div className="space-y-3">
+          <div className="flex flex-col gap-3">
             {grouped[dayNum].map((schedule, idx) => (
               <div key={idx} className="flex items-center gap-3">
                 <input
@@ -275,7 +313,7 @@ return (
                 />
                 <button
                   onClick={() => handleDeleteSchedule(schedule.id)}
-                  className="px-2 py-1 text-xs font-semibold bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+                  className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300shadow-lg shadow-red-500/50 font-medium rounded-lg text-sm px-2 py-0.5 text-center me-0 mb-0 cursor-pointer"
                 >
                   X
                 </button>
@@ -289,7 +327,7 @@ return (
     <button
       onClick={handleSave}
       disabled={isSaving}
-      className={`w-full sm:w-auto px-4 py-2 rounded-md font-semibold text-sm transition ${
+      className={`w-full sm:w-auto px-4 py-2 rounded-md font-semibold text-sm transition cursor-pointer ${
         isSaving
           ? "bg-gray-400 text-white cursor-not-allowed"
           : "bg-indigo-600 hover:bg-indigo-700 text-white"

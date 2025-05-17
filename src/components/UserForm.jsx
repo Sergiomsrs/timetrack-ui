@@ -121,8 +121,7 @@ const handleFormSubmit = (e) => {
   return (
     <div className="flex flex-col justify-center items-center mb-4" >
       <div className=" flex flex-col justify-center items-center">
-        <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">Registrar Nuevo Usuario</h2>
-        <p className="mt-2 text-lg text-gray-600">Completar todos los campos</p>
+        <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">Registrar Nuevo Empleado</h2>
       </div>
       <form onSubmit={handleFormSubmit} className="mt-16 max-w-xl sm:mt-20">
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
@@ -296,7 +295,7 @@ const handleFormSubmit = (e) => {
             type="submit"
             className="w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
           >
-            {editedEmployee ? 'Actualizar Usuario' : 'Registrar Usuario'}
+            {editedEmployee ? 'Actualizar Empleado' : 'Registrar Empleado'}
           </button>
           <button
             onClick={() => resetForm()}
@@ -309,7 +308,7 @@ const handleFormSubmit = (e) => {
       </form>
       <ConfirmModal
         isOpen={showConfirmModal}
-        message="¿Estás seguro de que deseas guardar este usuario?"
+        message="¿Estás seguro de que deseas guardar este empleado?"
         onConfirm={submitForm}
         onCancel={() => setShowConfirmModal(false)}
       />

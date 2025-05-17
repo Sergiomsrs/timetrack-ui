@@ -44,26 +44,30 @@ export const LogList = () => {
     return (
         <div className="flex flex-col items-center justify-center w-full h-full p-4 mt-16">
             {/* Tabla de últimos registros */}
+            <div className='width-full'>
+
+            <h1 className='font-bold mb-4'>Ultimas Notificaciones</h1>
+            
             {lastRecords && lastRecords.length > 0 ? (
                 <div className="overflow-x-auto shadow-md rounded-lg">
                     <table className="min-w-full bg-white">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="py-3 px-4 text-left">Nombre</th>
-                                <th className="py-3 px-4 text-left">Apellido</th>
+                                <th className="py-3 px-4 text-left">Empleado</th>
+                             
                                 <th className="py-3 px-4 text-left">Fecha</th>
-                                <th className="py-3 px-4 text-left">Día</th>
+                             
                                 <th className="py-3 px-4 text-left">Hora</th>
-                                <th className="py-3 px-4 text-left">Registrado En</th>
+                                <th className="py-3 px-4 text-left">Fecha de Notificación</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                             {lastRecords.map((record, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
-                                    <td className="py-3 px-4 whitespace-nowrap">{record.nombre}</td>
-                                    <td className="py-3 px-4 whitespace-nowrap">{record.apellido}</td>
+                                    <td className="py-3 px-4 whitespace-nowrap">{record.nombre} {record.apellido} </td>
+                                    
                                     <td className="py-3 px-4 whitespace-nowrap">{record.fecha}</td>
-                                    <td className="py-3 px-4 whitespace-nowrap capitalize">{record.dia.toLowerCase()}</td>
+                                    
                                     <td className="py-3 px-4 whitespace-nowrap">{record.hora}</td>
                                     <td className="py-3 px-4 whitespace-nowrap text-sm text-gray-500">
                                         {new Date(record.enviadoEn).toLocaleString()}
@@ -87,6 +91,9 @@ export const LogList = () => {
                 </div>
             )}
         </div>
+        </div>
+        
+
 
 
     );

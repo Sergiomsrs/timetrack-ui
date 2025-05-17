@@ -45,9 +45,9 @@ export const Header = () => {
           <div className="hidden lg:flex lg:gap-x-12">
             <>
               <Link to="/" className="text-sm font-semibold text-gray-900">Inicio</Link>
-              {auth.role == "ADMIN" && <Link to="/usuarios" className="text-sm font-semibold text-gray-900">Usuarios</Link>}
+              {auth.role == "ADMIN" && <Link to="/usuarios" className="text-sm font-semibold text-gray-900">Empleados</Link>}
               <Link to="/fichajes" className="text-sm font-semibold text-gray-900">Registros</Link>
-              {auth.role == "ADMIN" && <Link to="/log" className="text-sm font-semibold text-gray-900">Ausencias</Link>}
+              {auth.role == "ADMIN" && <Link to="/log" className="text-sm font-semibold text-gray-900">Notificaciones</Link>}
             </>
           </div>
         }
@@ -79,7 +79,7 @@ export const Header = () => {
           </button>
           <nav className="mt-6 space-y-4">
             <Link to="/" className="block text-lg font-semibold text-gray-900">Inicio</Link>
-            <Link to="/usuarios" className="block text-lg font-semibold text-gray-900">Usuarios</Link>
+            <Link to="/usuarios" className="block text-lg font-semibold text-gray-900">Empleados</Link>
             <Link to="/fichajes" className="block text-lg font-semibold text-gray-900">Registros</Link>
             {auth.isAuthenticated ? (
               <>

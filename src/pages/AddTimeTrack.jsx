@@ -1,11 +1,14 @@
 
 import { useState } from 'react'
 import { Last3Record } from '../components/Last3Record'
+import { AlertModal } from '../components/AlertModal'
 
 export default function () {
 
     const [formData, setFormData] = useState({ dni: '', pin: '' })
     const [bandera, setBandera] = useState(false)   
+    const [message, setMessage] = useState({})
+    const [isOpen, setIsOpen] = useState(false)
     
 
     const handleSubmit = async (e) => {
@@ -30,13 +33,28 @@ export default function () {
           const data = await response.json()
           
           console.log('Fichaje exitoso:', data)
-          alert('Fichaje exitoso')
+         
           setFormData({ dni: '', pin: '' })
           setBandera(prev => !prev)
+            setMessage({
+                type: 'success',
+                text: 'Fichaje exitoso',
+            })
+            setIsOpen(true)
+            setTimeout(() => {
+                setIsOpen(false)
+            }, 1000)
           
         } catch (error) {
           console.error('Error:', error)
-          alert('Hubo un problema al fichar')
+          
+            setMessage({
+                type: 'error',
+                text: 'Se ha producido un error al fichar',})
+            setIsOpen(true)
+            setTimeout(() => {
+                setIsOpen(false)
+            }, 1000)
         }
       }
       
@@ -95,6 +113,7 @@ export default function () {
            <div className='mt-10 flex justify-center'>
             <Last3Record bandera = {bandera}/>
             </div>
+            <AlertModal message={message} isOpen={isOpen}/>
         </div>
     )
 }
