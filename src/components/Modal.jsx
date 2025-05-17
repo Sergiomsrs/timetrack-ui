@@ -283,27 +283,32 @@ const handleSaveRecord = async (recordId) => {
             </div>
 
             <h4 className="text-lg font-medium mt-6">Registros del día:</h4>
-            <div className="space-y-2">
+            <div className="space-y-2 w-2/4">
               {editableRecords.map((record, index) => (
                 <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
                   <div className="w-full">
-                    <div className="text-sm text-gray-500">Fecha: {record.dateStr}</div>
+                    <div className="text-sm text-gray-500  flex justify-between">
+                      <span>Fecha: {record.dateStr}</span>
+                      
+                      <button
+                        onClick={() => onOpenModal(record.id, "delete")}
+                        className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300shadow-lg shadow-red-500/50 font-medium rounded-lg text-sm px-2 py-1 text-center me-0 mb-0 cursor-pointer"
+                      >X</button>
+
+
+                    </div>
                     <div className="flex items-center gap-4 mt-1">
                       <input
                         type="time"
                         value={record.time}
                         onChange={e => handleTimeChange(index, e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-white  text-gray-900 "
+                        className="w-fit px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-white  text-gray-900 "
                       />
                       <button
                         onClick={() =>onOpenModal(record.id, "save")}
-                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-full cursor-pointer"
+                        className="w-full sm:w-auto px-4 py-2 rounded-md font-semibold text-sm transition bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer "
                       >Guardar</button>
 
-                      <button
-                        onClick={() => onOpenModal(record.id, "delete")}
-                        className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full cursor-pointer"
-                      >Eliminar</button>
 
                     </div>
                   </div>
