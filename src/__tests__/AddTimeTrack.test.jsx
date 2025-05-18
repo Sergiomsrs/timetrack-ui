@@ -22,7 +22,7 @@ vi.mock('../Hooks/useRecord', () => ({
 import { Last3Record } from '../components/Last3Record'; // Ajusta la ruta si es diferente
 
 describe('AddTimeTrack Component', () => {
-  it('renders without crashing', () => {
+  it('El componente AddTimeTrack se renderiza sin fallos', () => {
     const mockAuth = { auth: { user: { id: 1, name: 'Test User' } } };
 
     render(

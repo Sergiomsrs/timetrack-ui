@@ -8,7 +8,7 @@ import { EmployeesProvider } from "./context/EmployeesContext"
 import { User } from "./pages/User"
 import { Login } from "./pages/Login"
 import { TimeTrackView } from "./pages/TimeTrackView"
-import { LogList } from "./components/LogList"
+import { LogList } from "./pages/LogList"
 
 
 function App() {
