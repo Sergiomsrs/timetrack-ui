@@ -1,6 +1,6 @@
 // src/context/EmployeesContext.jsx
 import { createContext, useContext, useEffect, useState } from 'react';
-import { AuthContext } from './AuthContext ';
+import { AuthContext } from './AuthContext';
 
 const EmployeesContext = createContext();
 

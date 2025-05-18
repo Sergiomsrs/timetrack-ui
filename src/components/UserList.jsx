@@ -2,7 +2,7 @@
 import { useContext, useState } from 'react';
 import { useEmployees } from '../context/EmployeesContext';
 import { Pageable } from './Pageable';
-import { AuthContext } from '../context/AuthContext ';
+import { AuthContext } from '../context/AuthContext';
 import { ConfirmModal } from './ConfirmationModal';
 
 export const UserList = ({ setActiveTab, employeeToDelete, setEmployeeToDelete }) => {

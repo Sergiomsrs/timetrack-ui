@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { useEmployees } from '../context/EmployeesContext'
-import { AuthContext } from '../context/AuthContext ';
+import { AuthContext } from '../context/AuthContext';
 import { ConfirmModal } from './ConfirmationModal';
 
 const initialValues = { name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '', role: 'USER', fechaAlta: '', fechaBaja: '' };

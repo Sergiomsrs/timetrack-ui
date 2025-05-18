@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 
 import { ConfirmModal } from './ConfirmationModal';
-import { AuthContext } from '../context/AuthContext ';
+import { AuthContext } from '../context/AuthContext';
 
 export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, setRecords, activeTab }) => {
   const [date, setDate] = useState(null);

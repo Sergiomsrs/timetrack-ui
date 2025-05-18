@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { filterAndMapRecords } from '../utilities/timeManagement';
-import { AuthContext } from '../context/AuthContext ';
+import { AuthContext } from '../context/AuthContext';
 import { ConfirmModal } from './ConfirmationModal';
 
 export const Modal = ({ isOpen, setIsOpen, employeeId, selectedDayRecords, records, setRecords }) => {

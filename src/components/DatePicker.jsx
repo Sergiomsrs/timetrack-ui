@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useRecord } from '../Hooks/useRecord';
-import { AuthContext } from '../context/AuthContext ';
+import { AuthContext } from '../context/AuthContext';
 
 export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selectedEmployeeId, employees }) => {
   
