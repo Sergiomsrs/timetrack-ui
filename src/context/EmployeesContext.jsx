@@ -46,7 +46,9 @@ export const EmployeesProvider = ({ children }) => {
 
 
   useEffect(() => {
+    if (auth.token) {
     fetchEmployees();
+  }
   }, [page, auth.token]);
 
   return (
