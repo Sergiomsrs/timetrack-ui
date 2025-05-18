@@ -142,9 +142,9 @@ export const TimetrackList = ({
                                                         </span>
                                                     </span>
 
+                                                    <span className="text-gray-500 mx-1 ">→</span>
                                                     {period.exit ? (
                                                         <>
-                                                            <span className="text-gray-500 mx-1 ">→</span>
 
 
                                                             <span className="inline-flex">
@@ -163,7 +163,7 @@ export const TimetrackList = ({
                                                             </span>
                                                         </>
                                                     ) : (
-                                                        <span className="text-amber-600 font-bold ml-2">(Falta salida)</span>
+                                                        <span className="text-amber-600 font-bold ml-2">(Falta Registro)</span>
                                                     )}
                                                 </span>
                                             </div>
@@ -197,7 +197,7 @@ export const TimetrackList = ({
                         <p className="text-gray-500">
                             {employees.length > 0
                                 ? "Seleccione un empleado para ver sus registros"
-                                : "No hay empleados disponibles"}
+                                : "No hay registros disponibles"}
                         </p>
                     </div>
                 )

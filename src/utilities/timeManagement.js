@@ -37,7 +37,7 @@ export const processTimeStamps = (timestamps, id) => {
             } else {
                 exit = null;
                 periodMs = 0;
-                warning = "⚠ Falta registro de salida";
+                warning = "⚠ Pendiente de revisión";
             }
 
             periods.push({
