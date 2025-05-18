@@ -1,10 +1,13 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { AlertMessage } from '../components/AlertMessage';
 
 export const Login = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState({text: '', type: ''});
 
   const [formData, setFormData] = useState({
     dni: '',
@@ -51,8 +54,18 @@ export const Login = () => {
       setFormData({ dni: '', password: '' });
 
     } catch (error) {
-      console.error(error);
-      alert('Fallo en el login o al obtener los datos del usuario');
+      setError(true);
+
+      let err = error.message === 'Failed to fetch' ? 'Error de conexión' : error.message;
+
+
+      setErrorMessage({
+        text: err,
+        type: 'error'
+      });
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
     }
   };
 
@@ -103,6 +116,11 @@ export const Login = () => {
           </div>
         </form>
       </div>
+      {error && (
+        <div className="mt-4 text-red-600 flex justify-center">
+          <AlertMessage isOpen={error} message={errorMessage} />
+        </div>
+      )}
     </div>
   );
 };
