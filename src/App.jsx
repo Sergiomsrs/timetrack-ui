@@ -19,7 +19,7 @@ function App() {
       <EmployeesProvider>
         <div className="flex flex-col min-h-screen  relative  ">
           <div className="absolute top-0 -z-10 h-full w-full bg-white">
-            <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(200%_150%_at_50%_10%,#fff_40%,#63e_100%)]"></div>
+            <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(200%_150%_at_50%_10%,#f5f5f5_30%,#63e_100%)]"></div>
           </div>
 
           <Header />

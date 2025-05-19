@@ -104,7 +104,7 @@ export default function () {
                 <div className="mt-10">
                     <button
                         type="submit"
-                        className="w-full rounded-md cursor-pointer bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                        className="w-full rounded-md cursor-pointer bg-violet-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-600"
                     >
                         Enviar
                     </button>

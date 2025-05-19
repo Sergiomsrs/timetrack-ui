@@ -1,4 +1,3 @@
-import React from 'react'
 
 export const Pageable = ({ page, totalPages, setPage }) => {
   return (
@@ -26,7 +25,7 @@ export const Pageable = ({ page, totalPages, setPage }) => {
       <button
         disabled={page + 1 >= totalPages}
         onClick={() => setPage((prev) => prev + 1)}
-        className="flex items-center justify-center px-2 py-1 bg-indigo-500 hover:bg-indigo-600 text-white rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center justify-center px-2 py-1 bg-violet-500 hover:bg-violet-600 text-white rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -70,57 +70,58 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
-          Inicia sesión
-        </h2>
+<div className="flex  items-center justify-center bg-gradient-to-br mt-36 px-4">
+  <div className="w-full max-w-sm rounded-2xl shadow-2xl p-8">
+    <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+      Acceso al sistema
+    </h2>
+
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div>
+        <label htmlFor="dni" className="block text-sm font-medium text-gray-700 mb-1">
+          DNI
+        </label>
+        <input
+          onChange={handleInputChange}
+          value={formData.dni}
+          type="text"
+          name="dni"
+          id="dni"
+          required
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+        />
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="dni" className="block text-sm font-medium text-gray-900">DNI</label>
-            <div className="mt-2">
-              <input
-                onChange={handleInputChange}
-                value={formData.dni}
-                type="text"
-                name="dni"
-                id="dni"
-                required
-                className="block w-full rounded-md border border-gray-300 px-3 py-2"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-900">Contraseña</label>
-            <div className="mt-2">
-              <input
-                onChange={handleInputChange}
-                value={formData.password}
-                type="password"
-                name="password"
-                id="password"
-                required
-                className="block w-full rounded-md border border-gray-300 px-3 py-2"
-              />
-            </div>
-          </div>
-
-          <div>
-            <button type="submit" className="w-full rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-500">
-              Iniciar sesión
-            </button>
-          </div>
-        </form>
+      <div>
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+          Contraseña
+        </label>
+        <input
+          onChange={handleInputChange}
+          value={formData.password}
+          type="password"
+          name="password"
+          id="password"
+          required
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+        />
       </div>
-      {error && (
-        <div className="mt-4 text-red-600 flex justify-center">
-          <AlertMessage isOpen={error} message={errorMessage} />
-        </div>
-      )}
-    </div>
+
+      <button
+        type="submit"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition"
+      >
+        Iniciar sesión
+      </button>
+    </form>
+
+    {error && (
+      <div className="mt-5">
+        <AlertMessage isOpen={error} message={errorMessage} />
+      </div>
+    )}
+  </div>
+</div>
+
   );
 };

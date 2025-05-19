@@ -278,7 +278,7 @@ const handleFormSubmit = (e) => {
                 name="role"
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600"
               >
                 <option value="USER">Usuario</option>
                 <option value="ADMIN">Administrador</option>
@@ -290,10 +290,10 @@ const handleFormSubmit = (e) => {
 
 
         </div>
-        <div className="flex flex-col gap-2 w-1/2     mt-10">
+        <div className="flex flex-col gap-2 w-1/2  mt-10">
           <button
             type="submit"
-            className="w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            className="w-full rounded-md bg-violet-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-600"
           >
             {editedEmployee ? 'Actualizar Empleado' : 'Registrar Empleado'}
           </button>
