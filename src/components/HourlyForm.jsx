@@ -100,8 +100,9 @@ const handleAddSchedule = async () => {
     const response = await fetch("http://localhost:8080/api/horarios", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
-      },
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
       body: JSON.stringify(newEntry)
     });
 
@@ -126,6 +127,23 @@ const handleAddSchedule = async () => {
     });
 
     setSaveMessage("Horario añadido correctamente");
+
+     fetch(`http://localhost:8080/api/horarios/user/${employeeToDelete.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${auth.token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Error al obtener los horarios");
+        }
+        return res.json();
+      })
+      .then(setSchedules)
+      .catch((error) => console.error("Error cargando horarios:", error));
+    
     
   } catch (error) {
     console.error("Error:", error);
@@ -182,7 +200,9 @@ const asignarHorarioPorDefecto = async () => {
 };
 
   const handleSave = () => {
-    console.log("Guardando horarios:", schedules);
+
+    const existingSchedules = schedules.filter(s => s.id);
+
     setIsSaving(true);
     setSaveMessage("");
 
@@ -192,7 +212,7 @@ const asignarHorarioPorDefecto = async () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${auth.token}`,
       },
-      body: JSON.stringify(schedules)
+      body: JSON.stringify(existingSchedules)
     })
       .then((res) => {
         if (!res.ok) throw new Error("Error al guardar");
