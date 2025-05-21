@@ -135,7 +135,7 @@ const handleFormSubmit = (e) => {
                 name="name"
                 type="text"
                 autoComplete="given-name"
-                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="block w-full rounded-md border bg-gray-100 border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
@@ -154,7 +154,7 @@ const handleFormSubmit = (e) => {
                 autoComplete="family-name"
                 value={formData.lastName}
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="block w-full rounded-md border bg-gray-100 border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
               {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
             </div>
@@ -171,7 +171,7 @@ const handleFormSubmit = (e) => {
                 autoComplete="family-name"
                 value={formData.secondLastName}
                 onChange={(e) => setFormData({ ...formData, secondLastName: e.target.value })}
-                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="block w-full rounded-md border bg-gray-100 border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
               {errors.secondLastName && <p className="text-red-500 text-sm mt-1">{errors.secondLastName}</p>}
             </div>
@@ -189,7 +189,7 @@ const handleFormSubmit = (e) => {
                 autoComplete="organization"
                 value={formData.dni}
                 onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
-                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="block w-full rounded-md border bg-gray-100 border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
               {errors.dni && <p className="text-red-500 text-sm mt-1">{errors.dni}</p>}
             </div>
@@ -207,7 +207,7 @@ const handleFormSubmit = (e) => {
                 autoComplete="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="block w-full rounded-md border bg-gray-100 border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
               {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
             </div>
@@ -225,7 +225,7 @@ const handleFormSubmit = (e) => {
                 autoComplete="alta"
                 value={formData.fechaAlta}
                 onChange={(e) => setFormData({ ...formData, fechaAlta: e.target.value })}
-                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="block w-full rounded-md border bg-gray-100 border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
             </div>
 
@@ -242,7 +242,7 @@ const handleFormSubmit = (e) => {
                 autoComplete="baja"
                 value={formData.fechaBaja}
                 onChange={(e) => setFormData({ ...formData, fechaBaja: e.target.value })}
-                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="block w-full rounded-md border bg-gray-100 border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
             </div>
 
@@ -260,7 +260,7 @@ const handleFormSubmit = (e) => {
                 autoComplete="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                className="block w-full rounded-md border bg-gray-100 border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
               />
               {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
             </div>
@@ -278,7 +278,7 @@ const handleFormSubmit = (e) => {
                 name="role"
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600"
+                className="block w-full rounded-md border bg-gray-100 border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-white focus:outline-none focus:ring-2 focus:ring-violet-600"
               >
                 <option value="USER">Usuario</option>
                 <option value="ADMIN">Administrador</option>
