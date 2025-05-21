@@ -112,14 +112,14 @@ const handleAddSchedule = async () => {
     const result = await response.text();
     console.log(result);
 
-    // Actualizar el estado local con el formato interno de la app
+    
     setSchedules(prev => [...prev, {
       ...newEntry,
-      dia: dayNames[newSchedule.dayNumber], // Mantener el nombre en español localmente
+      dia: dayNames[newSchedule.dayNumber], 
       dayNumber: newSchedule.dayNumber
     }]);
     
-    // Resetear el formulario
+    
     setNewSchedule({
       dayNumber: 1,
       hora: ''
@@ -186,10 +186,11 @@ const asignarHorarioPorDefecto = async () => {
     setIsSaving(true);
     setSaveMessage("");
 
-    fetch("http://localhost:8080/api/horarios/horarios/all", {
+    fetch("http://localhost:8080/api/horarios/all", {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${auth.token}`,
       },
       body: JSON.stringify(schedules)
     })

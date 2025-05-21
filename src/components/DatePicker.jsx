@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { useRecord } from '../Hooks/useRecord';
 import { AuthContext } from '../context/AuthContext';
 
 export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selectedEmployeeId, employees }) => {
@@ -13,15 +12,13 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
 
   
 
-  
-
 
   const months = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
 
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i); // Rango de años: 5 atrás y 4 adelante
+  const years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i); 
 
   const handleMonthChange = (e) => {
     setActiveTab({ ...activeTab, month: parseInt(e.target.value) });

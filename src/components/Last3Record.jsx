@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRecord } from '../Hooks/useRecord';
 
 export const Last3Record = ({ bandera }) => {

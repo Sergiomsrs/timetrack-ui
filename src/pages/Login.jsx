@@ -35,7 +35,7 @@ export const Login = () => {
 
       const loginData = await loginResponse.json();
       const token = loginData.token;
-      const role = loginData.role; // <---- Obtenemos el role de la primera respuesta
+      const role = loginData.role; // Se obtiene el role de la primera respuesta
 
       const meResponse = await fetch('http://localhost:8080/api/user/me', {
         method: 'GET',
@@ -49,7 +49,7 @@ export const Login = () => {
 
       const userData = await meResponse.json();
 
-      login(token, role, userData); // <---- Pasamos el token, el role y los datos del usuario
+      login(token, role, userData); // Pasamos el token, el role y los datos del usuario
       navigate("/fichajes")      
       setFormData({ dni: '', password: '' });
 

@@ -1,4 +1,3 @@
-import React from 'react'
 
 export const ActiveTab = ({activeTab, setActiveTab}) => {
   

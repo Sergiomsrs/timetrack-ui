@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import AddTimeTrack from '../pages/AddTimeTrack';
 import { AuthContext } from '../context/AuthContext';
 
-// Mock para useRecord (debe ir fuera del describe)
+
 vi.mock('../Hooks/useRecord', () => ({
   useRecord: () => ({
     fetchLastThree: vi.fn(),
@@ -19,8 +19,7 @@ vi.mock('../Hooks/useRecord', () => ({
   }),
 }));
 
-import { Last3Record } from '../components/Last3Record'; // Ajusta la ruta si es diferente
-
+import { Last3Record } from '../components/Last3Record';
 describe('AddTimeTrack Component', () => {
   it('El componente AddTimeTrack se renderiza sin fallos', () => {
     const mockAuth = { auth: { user: { id: 1, name: 'Test User' } } };

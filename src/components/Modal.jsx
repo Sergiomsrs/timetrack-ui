@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { filterAndMapRecords } from '../utilities/timeManagement';
 import { AuthContext } from '../context/AuthContext';
 import { ConfirmModal } from './ConfirmationModal';
@@ -129,7 +129,7 @@ const handleSaveRecord = async (recordId) => {
       const updatedRecord = {
         employeeId: recordToSave.employeeId,
         timestamp: recordToSave.timestamp,
-        id: recordId, // Usar el ID del servidor, si es necesario
+        id: recordId, 
         isMod: "true",
       };
 

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TimeTrackView } from '../pages/TimeTrackView';
 
-// Como usas un hook personalizado useRecord y componentes hijos, hacemos mocks simples:
+
 vi.mock('../Hooks/useRecord', () => ({
   useRecord: () => ({
     fetchRecords: vi.fn(),

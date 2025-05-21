@@ -1,4 +1,3 @@
-import React from 'react';
 
 export const AlertMessage = ({ isOpen, message }) => {
   if (!isOpen || !message) return null;

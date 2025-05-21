@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { ConfirmModal } from './ConfirmationModal';
 import { AuthContext } from '../context/AuthContext';

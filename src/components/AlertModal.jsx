@@ -1,4 +1,3 @@
-import React from 'react';
 
 export const AlertModal = ({ isOpen, message }) => {
   if (!isOpen || !message) return null;
