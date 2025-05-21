@@ -6,7 +6,6 @@ import { AlertModal } from '../components/AlertModal'
 export default function () {
 
     const [formData, setFormData] = useState({ dni: '', pin: '' })
-    const [bandera, setBandera] = useState(false)   
     const [message, setMessage] = useState({})
     const [isOpen, setIsOpen] = useState(false)
     
@@ -35,7 +34,6 @@ export default function () {
           console.log('Fichaje exitoso:', data)
          
           setFormData({ dni: '', pin: '' })
-          setBandera(prev => !prev)
             setMessage({
                 type: 'success',
                 text: 'Fichaje exitoso',
@@ -110,9 +108,7 @@ export default function () {
                     </button>
                 </div>
             </form>
-           <div className='mt-10 flex justify-center'>
-            <Last3Record bandera = {bandera}/>
-            </div>
+
             <AlertModal message={message} isOpen={isOpen}/>
         </div>
     )

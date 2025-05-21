@@ -10,10 +10,10 @@ export const Last3Record = ({ bandera }) => {
         return `••${dni.slice(-4)}`
     };
 
-
     useEffect(() => {
         fetchLastThree();
     }, [bandera]);
+    
     return (
 
         lastThree.length > 0 && (
