@@ -17,6 +17,7 @@ export const UserList = ({ setActiveTab, employeeToDelete, setEmployeeToDelete }
 
     const handleSearch = (e) => {
         e.preventDefault();
+        setPage(0);
         fetchEmployees(searchTerm);
     };
 
