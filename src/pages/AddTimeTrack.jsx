@@ -60,7 +60,7 @@ export default function () {
 
 
     return (
-        <div className="isolate px-6 py-10 sm:py-14 lg:px-8">
+        <div className="isolate mt-16 px-6 py-10 sm:py-14 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
                 <h1 className="mb-4 text-3xl  md:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-indigo-600 to-blue-500">Time Track</h1>
                 <p className="mt-2 text-lg text-gray-600">Registra aquí tu jornada!</p>
