@@ -24,6 +24,7 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Se hace la peticion de login con los datos del formulario
     try {
       const loginResponse = await fetch('http://localhost:8080/api/auth/login', {
         method: 'POST',
@@ -36,7 +37,7 @@ export const Login = () => {
       const loginData = await loginResponse.json();
       const token = loginData.token;
       const role = loginData.role; // Se obtiene el role de la primera respuesta
-
+      // Si el login es exitoso, se hace una peticion para obtener los datos del usuario
       const meResponse = await fetch('http://localhost:8080/api/user/me', {
         method: 'GET',
         headers: {
@@ -48,7 +49,7 @@ export const Login = () => {
       if (!meResponse.ok) throw new Error('Error al obtener datos del usuario');
 
       const userData = await meResponse.json();
-
+      // Se pasan los datos obtenidos a la funcion login del contexto
       login(token, role, userData); // Se pasa el token, el role y los datos del usuario
       navigate("/fichajes")      
       setFormData({ dni: '', password: '' });
@@ -57,8 +58,6 @@ export const Login = () => {
       setError(true);
 
       let err = error.message === 'Failed to fetch' ? 'Error de conexión' : error.message;
-
-
       setErrorMessage({
         text: err,
         type: 'error'

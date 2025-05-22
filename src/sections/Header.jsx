@@ -31,14 +31,17 @@ export const Header = () => {
 
        <div className='w-2/4 flex justify-center'>
 
-        {/* Menú grande */}
+        {/* Navbar pantalla completa */}
         {auth.isAuthenticated && (
+          // Visible para todos los usuarios autenticados
           <div className="hidden lg:flex lg:items-center lg:gap-x-10">
             <Link to="/" className="text-sm font-medium text-gray-700 hover:text-violet-600 transition">Inicio</Link>
+            {/*Visible solo para administradores*/}
             {auth.role === 'ADMIN' && (
               <Link to="/usuarios" className="text-sm font-medium text-gray-700 hover:text-violet-600 transition">Empleados</Link>
             )}
             <Link to="/fichajes" className="text-sm font-medium text-gray-700 hover:text-violet-600 transition">Registros</Link>
+            {/*Visible solo para administradores*/}
             {auth.role === 'ADMIN' && (
               <Link to="/log" className="text-sm font-medium text-gray-700 hover:text-violet-600 transition">Notificaciones</Link>
             )}

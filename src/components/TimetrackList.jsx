@@ -43,6 +43,7 @@ export const TimetrackList = ({
 
     // Procesar los registros para el renderizado
     const processedRecords = processTimeStamps(records, selectedEmployeeId);
+    console.log("Processed Records: ", processedRecords);
 
     // Manejar el cambio en el dropdown de empleados
     const handleDropdownChange = (e) => {

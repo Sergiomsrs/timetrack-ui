@@ -1,7 +1,9 @@
 export const processTimeStamps = (timestamps, id) => {
+
+  console.log("Timestamps:", timestamps);
     const daysMap = new Map();
 
-    // 1. Agrupar registros por día y conservar isMod
+    // 1. Agrupar registros por día
     timestamps.forEach(stamp => {
         const date = new Date(stamp.timestamp);
         const enrichedStamp = {
@@ -21,11 +23,11 @@ export const processTimeStamps = (timestamps, id) => {
     // 2. Procesar cada día
     return Array.from(daysMap.entries()).map(([day, times]) => {
         times.sort((a, b) => a.timestamp - b.timestamp); // Ordenar cronológicamente
-
+        // Se inicializan las variables necesarias para el procesamiento
         let totalWorkedMs = 0;
         const periods = [];
         let warning = null;
-
+        // Se recorre el array de tiempos, tomando pares de entrada y salida
         for (let i = 0; i < times.length; i += 2) {
             const entry = times[i];
             let exit, periodMs;
@@ -39,7 +41,7 @@ export const processTimeStamps = (timestamps, id) => {
                 periodMs = 0;
                 warning = "⚠ Pendiente de revisión";
             }
-
+            // Se formatean las fechas y se añaden a la lista de periodos
             periods.push({
                 entry: entry.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
                 entryIsMod: entry.isMod,
@@ -51,7 +53,7 @@ export const processTimeStamps = (timestamps, id) => {
                 isComplete: exit !== null
             });
         }
-
+        // Se formatea el tiempo total trabajado
         const totalWorked = formatMillisecondsToTime(totalWorkedMs);
 
         return {
