@@ -17,7 +17,7 @@ function App() {
 
     <BrowserRouter>
       <EmployeesProvider>
-        <div className="flex flex-col min-h-screen  relative  ">
+        <div className="flex flex-col min-h-screen relative w-full  ">
           <div className="absolute top-0 -z-10 h-full w-full bg-white">
             <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(200%_150%_at_50%_10%,#f5f5f5_30%,#63e_100%)]"></div>
           </div>

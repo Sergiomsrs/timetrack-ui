@@ -88,11 +88,11 @@ export const UserList = ({ setActiveTab, employeeToDelete, setEmployeeToDelete }
 
 
     return (
-        <div className="mx-1 mb-4  ">
+        <div className="mb-4 w-full ">
 
             {/* Input de búsqueda por Nombre */}
             <form onSubmit={handleSearch} className="flex flex-row gap-4 mb-6"> 
-                <div className="w-2/4">
+                <div className="w-full md:w-2/4 ">
                     <label htmlFor="name-search" className="block text-sm font-medium leading-6 mb-2 text-gray-900">
                         Buscar por Nombre
                     </label>

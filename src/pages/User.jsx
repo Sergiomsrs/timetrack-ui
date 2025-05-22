@@ -10,7 +10,7 @@ export const User = () => {
   
 
   return (
-    <div className="flex w-full">
+    <div className="flex flex-col items-center md:flex-row md:items-start  w-full">
       <div className="w-1/8 flex justify-center mx-8 ">
 
         <ActiveTab setActiveTab={setActiveTab} activeTab={activeTab} />
