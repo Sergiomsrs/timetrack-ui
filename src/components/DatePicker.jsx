@@ -66,7 +66,7 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
 
 
   return (
-    <div className="rounded-lg border border-violet-200 bg-white p-4 w-fit mx-4 flex flex-col gap-4 h-fit">
+    <div className="rounded-lg border border-violet-200 bg-white p-4 w-fit mx-4 flex flex-col gap-4 h-fit mb-4">
       
       <select
         value={activeTab.year ?? currentYear}

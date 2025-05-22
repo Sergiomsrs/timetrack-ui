@@ -125,7 +125,7 @@ const handleSaveRecord = async (recordId) => {
         throw new Error(errorData.message || `Error HTTP: ${response.status}`);
       }
 
-      /* Actualizar la interfaz */
+      // Actualizar la interfaz 
       const updatedRecord = {
         employeeId: recordToSave.employeeId,
         timestamp: recordToSave.timestamp,
@@ -182,8 +182,6 @@ const handleSaveRecord = async (recordId) => {
   const handleDeleteRecord = async (recordId) => {
 
 
-    // Si es nuevo (temporal), elimínalo directamente del estado
-    // Crear un nuevo registro pero finalmente no lo guardas en la base de datos
     if (String(recordId).startsWith('temp')) {
       setEditableRecords(prev => {
         const updatedEditableRecords = prev.filter(r => r.id !== recordId);

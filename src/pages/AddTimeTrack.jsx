@@ -1,6 +1,5 @@
 
 import { useState } from 'react'
-import { Last3Record } from '../components/Last3Record'
 import { AlertModal } from '../components/AlertModal'
 
 export default function () {

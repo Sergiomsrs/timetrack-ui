@@ -69,18 +69,11 @@ export const processTimeStamps = (timestamps, id) => {
 
 
 
-
-/**
- * Convierte milisegundos a formato legible 00:00 o --:--.
- * @param {number} ms - Tiempo en milisegundos.
- * @param {string} [emptySymbol="--"] - Símbolo para mostrar cuando ms ≤ 0.
- * @returns {string} - Tiempo formateado (ej: "2h 30m" o "--").
- */
 export const formatMillisecondsToTime = (ms, emptySymbol = "--") => {
     if (ms <= 0) return emptySymbol;
   
-    const totalHours = Math.floor(ms / 3600000); // 1h = 3600000 ms
-    const totalMinutes = Math.floor((ms % 3600000) / 60000); // 1m = 60000 ms
+    const totalHours = Math.floor(ms / 3600000); 
+    const totalMinutes = Math.floor((ms % 3600000) / 60000); 
   
     return `${totalHours}h ${totalMinutes}m`;
   };
@@ -103,7 +96,7 @@ export const formatMillisecondsToTime = (ms, emptySymbol = "--") => {
     return filtered.map(r => {
       const date = new Date(r.timestamp);
       const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const dateStr = date.toISOString().slice(0, 10); // yyyy-mm-dd
+      const dateStr = date.toISOString().slice(0, 10); 
       return { ...r, time, dateStr };
     });
   };

@@ -40,8 +40,8 @@ export const TimeTrackView = () => {
 
   
     return (
-      <div className="flex flex-col md:flex-row w-full">
-        <div className="w-1/8 flex justify-center  mx-4 px-0">
+      <div className="flex flex-col md:flex-row w-full items-start">
+        <div className="w-full md:w-1/8 flex-col md:flex-row justify-center px-0 ml-6 ">
   
           <DatePicker 
           employees={employees}
@@ -52,7 +52,7 @@ export const TimeTrackView = () => {
           />
   
         </div>
-        <div className="w-6/8  ml-10 px-0 ">
+        <div className="w-full xl:w-6/8  px-0 overflow-hidden ">
 
           <TimetrackList 
           activeTab={activeTab}
@@ -78,7 +78,7 @@ export const TimeTrackView = () => {
           />
   
         </div>
-        <div className='w-1/8 flex justify-center mx-0 px-0'>
+        <div className='w-full md:w-1/8 flex justify-center mx-0 px-0'>
         </div>
       </div>
   

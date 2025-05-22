@@ -49,7 +49,7 @@ export const Login = () => {
 
       const userData = await meResponse.json();
 
-      login(token, role, userData); // Pasamos el token, el role y los datos del usuario
+      login(token, role, userData); // Se pasa el token, el role y los datos del usuario
       navigate("/fichajes")      
       setFormData({ dni: '', password: '' });
 

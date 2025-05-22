@@ -60,7 +60,7 @@ export const TimetrackList = ({
 
 
     return (
-        <div className="w-full ">
+        <div className="w-full px-4 ">
             {isModalAddOpen &&
                 <ModalAdd
                     activeTab={activeTab}
@@ -100,7 +100,6 @@ export const TimetrackList = ({
             {/* Estado de carga */}
             {isLoading && <div className="text-center py-4 text-blue-500">Cargando registros...</div>}
             
-            {/* Mensaje de error */}
 
             {/* Tabla de resultados */}
             {processedRecords && processedRecords.length > 0 ? (

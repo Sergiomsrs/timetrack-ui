@@ -81,10 +81,5 @@ export const LogList = () => {
     )}
   </div>
 </div>
-
-        
-
-
-
     );
 };

@@ -107,7 +107,7 @@ export const ModalAdd = ({ setIsModalAddOpen, selectedEmployeeId, employees, set
             </button>
           </div>
 
-          <div className="p-4 md:p-6 space-y-4 text-gray-800">
+          <div className="p-2 md:p-6 space-y-4 text-gray-800">
             <div className="flex items-center justify-start gap-8">
 
             <div className="space-y-1">
