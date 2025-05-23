@@ -1,6 +1,6 @@
 export const processTimeStamps = (timestamps, id) => {
 
-  console.log("Timestamps:", timestamps);
+  
     const daysMap = new Map();
 
     // 1. Agrupar registros por día
