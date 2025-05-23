@@ -11,28 +11,35 @@ export const EmployeesProvider = ({ children }) => {
   const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const {auth} = useContext(AuthContext);
-  
+  const { auth } = useContext(AuthContext);
+
 
   const fetchEmployees = async (search = "") => {
+
+    // Verifica si el usuario tiene el rol de ADMIN
+    if (!auth || auth.role !== "ADMIN") {
+      return;
+    }
+
+
     try {
       setLoading(true);
-      
+
       const url = search
         ? `http://localhost:8080/api/user/search?name=${search}&page=${page}&size=10`
         : `http://localhost:8080/api/user/pag?page=${page}&size=10`;
 
-        const res = await fetch(url, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${auth.token}`
-          }
-        });
-
-    
-        if (!res.ok) {
-          throw new Error("Fallo al obtener empleados");
+      const res = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${auth.token}`
         }
+      });
+
+
+      if (!res.ok) {
+        throw new Error("Fallo al obtener empleados");
+      }
       const data = await res.json();
       setEmployees(data.content);
       setTotalPages(data.totalPages);
@@ -46,8 +53,8 @@ export const EmployeesProvider = ({ children }) => {
 
   useEffect(() => {
     if (auth.token) {
-    fetchEmployees();
-  }
+      fetchEmployees();
+    }
   }, [page, auth.token]);
 
   return (
@@ -58,8 +65,8 @@ export const EmployeesProvider = ({ children }) => {
       totalPages,
       page,
       searchTerm,
-      
-    
+
+
       setSearchTerm,
       setPage,
       setEmployees,
