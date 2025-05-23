@@ -6,9 +6,9 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
 
   const [auth, setAuth] = useState(() => {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    const user = localStorage.getItem('user');
+    const token = sessionStorage.getItem('token');
+    const role = sessionStorage.getItem('role');
+    const user = sessionStorage.getItem('user');
 
     if (token && user && user !== "undefined") {
       try {
@@ -20,9 +20,9 @@ export const AuthProvider = ({ children }) => {
         };
       } catch (error) {
         console.error("Error al parsear el usuario:", error);
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        localStorage.removeItem('role');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('role');
       }
     }
 
@@ -41,9 +41,9 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('role', role);
-    localStorage.setItem('user', JSON.stringify(user));
+    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('role', role);
+    sessionStorage.setItem('user', JSON.stringify(user));
     setAuth({
       isAuthenticated: true,
       token,
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
 
   const logout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     setAuth({
       isAuthenticated: false,
       token: null,
