@@ -40,7 +40,7 @@ describe('LogList component', () => {
     );
 
     // Comprueba que el título está en el documento
-    expect(screen.getByText(/Ultimas Notificaciones/i)).toBeDefined();
+    expect(screen.getByText(/Últimas Notificaciones/i)).toBeDefined();
 
     // Espera a que aparezca el nombre del usuario mockeado
     await waitFor(() => {

@@ -110,9 +110,6 @@ const handleAddSchedule = async () => {
       throw new Error("Error al guardar el horario");
     }
 
-    const result = await response.text();
-    console.log(result);
-
     
     setSchedules(prev => [...prev, {
       ...newEntry,

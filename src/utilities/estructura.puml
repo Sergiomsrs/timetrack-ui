@@ -1,31 +1,21 @@
 @startuml
-skinparam shadowing false
-skinparam rectangle {
-  BackgroundColor White
-  BorderColor Black
-}
+actor Usuario
 
-rectangle "SPA" {
-  
-  rectangle "Header" {
-    
-      rectangle "Logo"
-      rectangle "Barra de Navegación" {
-        [Inicio]
-        [Usuarios]
-        [Fichajes]
-        [Login]
-     
-    }
-  }
+participant "UserController" as Controller
+participant "UserService" as Service
+participant "UserServiceImpl" as ServiceImpl
+participant "UserRepository" as Repository
+database "Base de Datos" as DB
 
-  rectangle "Body" {
-    rectangle "Página: / " {
-      rectangle "Título: Time Track"
-      rectangle "Renderizado condicional"
-    }
-  }
+Usuario -> Controller : HTTP Request (GET /users/1)
+Controller -> Service : getUserById(1)
+Service -> ServiceImpl : delega llamada
+ServiceImpl -> Repository : findById(1)
+Repository -> DB : SELECT * FROM users WHERE id = 1
+DB --> Repository : Resultado
+Repository --> ServiceImpl : User
+ServiceImpl --> Service : User
+Service --> Controller : User
+Controller --> Usuario : HTTP Response (JSON)
 
- rectangle "Footer\n© 2025 Proyecto Integrado"
-}
 @enduml

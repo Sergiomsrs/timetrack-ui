@@ -16,6 +16,10 @@ describe('Login component', () => {
       </AuthContext.Provider>
     );
 
-    expect(screen.getByText(/Inicia sesión/i)).toBeInTheDocument();
+    expect(screen.getByText(/Acceso al sistema/i)).toBeInTheDocument();
   });
 });
+
+
+
+

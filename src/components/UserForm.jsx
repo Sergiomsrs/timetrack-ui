@@ -16,8 +16,6 @@ export default function UserForm({ setActiveTab }) {
 
   const [errors, setErrors] = useState({});
 
-  console.log(employees)
-
 
   const validate = () => {
   const newErrors = {};

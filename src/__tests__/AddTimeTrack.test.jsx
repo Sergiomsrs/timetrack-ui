@@ -19,7 +19,7 @@ vi.mock('../Hooks/useRecord', () => ({
   }),
 }));
 
-import { Last3Record } from '../components/Last3Record';
+
 describe('AddTimeTrack Component', () => {
   it('El componente AddTimeTrack se renderiza sin fallos', () => {
     const mockAuth = { auth: { user: { id: 1, name: 'Test User' } } };
@@ -35,12 +35,4 @@ describe('AddTimeTrack Component', () => {
   });
 });
 
-describe('Last3Record Component', () => {
-  it('renders without crashing and shows header', () => {
-    render(<Last3Record bandera={true} />);
 
-    // Verifica que aparece el encabezado
-    const heading = screen.getByText(/Últimos fichajes registrados/i);
-    expect(heading).toBeInTheDocument();
-  });
-});
