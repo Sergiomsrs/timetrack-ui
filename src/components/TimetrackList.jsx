@@ -43,7 +43,7 @@ export const TimetrackList = ({
 
     // Procesar los registros para el renderizado
     const processedRecords = processTimeStamps(records, selectedEmployeeId);
-    
+
 
     // Manejar el cambio en el dropdown de empleados
     const handleDropdownChange = (e) => {
@@ -81,7 +81,7 @@ export const TimetrackList = ({
                     value={selectedEmployeeId}
                     onChange={handleDropdownChange}
                     disabled={isLoading}
-                    className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-violet-500 focus:border-violet-500"
                 >
                     <option value="">-- Seleccione un empleado --</option>
                     {employees.map(employee => (
@@ -90,17 +90,16 @@ export const TimetrackList = ({
                         </option>
                     ))}
                 </select>
-            {error && (
-                
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {error}
-                </div>
-            )}
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {error}
+                    </div>
+                )}
             </div>}
 
             {/* Estado de carga */}
             {isLoading && <div className="text-center py-4 text-blue-500">Cargando registros...</div>}
-            
+
 
             {/* Tabla de resultados */}
             {processedRecords && processedRecords.length > 0 ? (
@@ -181,7 +180,7 @@ export const TimetrackList = ({
                                     {auth.role == "ADMIN" && <td className="py-3 px-4 text-center">
                                         <button
                                             onClick={() => handleOpenModal(record)}
-                                            className="rounded-md cursor-pointer bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                                            className="rounded-md cursor-pointer bg-violet-600 px-3 py-1.5 text-sm font-semibold text-white shadow hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-600"
                                         >
                                             Ver Detalles
                                         </button>
