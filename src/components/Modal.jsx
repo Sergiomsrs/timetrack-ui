@@ -239,7 +239,7 @@ const handleSaveRecord = async (recordId) => {
             <h3 className="text-xl font-semibold text-gray-900">Detalles del día</h3>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+              className="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center cursor-pointer"
             >
               <svg className="w-3 h-3" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7l-6 6" />
@@ -281,7 +281,7 @@ const handleSaveRecord = async (recordId) => {
             </div>
 
             <h4 className="text-lg font-medium mt-6">Registros del día:</h4>
-            <div className="space-y-2 w-2/4">
+            <div className="space-y-2 w-fit">
               {editableRecords.map((record, index) => (
                 <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
                   <div className="w-full">
@@ -295,7 +295,7 @@ const handleSaveRecord = async (recordId) => {
 
 
                     </div>
-                    <div className="flex items-center gap-4 mt-1">
+                    <div className="flex items-center gap-6 mt-1">
                       <input
                         type="time"
                         value={record.time}
@@ -304,7 +304,7 @@ const handleSaveRecord = async (recordId) => {
                       />
                       <button
                         onClick={() =>onOpenModal(record.id, "save")}
-                        className="w-full sm:w-auto px-4 py-2 rounded-md font-semibold text-sm transition bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer "
+                        className="w-full  px-4 py-2 rounded-md font-semibold text-sm transition bg-violet-600 hover:bg-violet-700 text-white cursor-pointer "
                       >Guardar</button>
 
 
@@ -314,7 +314,7 @@ const handleSaveRecord = async (recordId) => {
               ))}
               <button
                 onClick={handleAddRecord}
-                className="mt-3 text-sm text-blue-600 hover:underline cursor-pointer"
+                className="mt-3 px-4 py-2 text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg shadow transition duration-150"
               >
                 + Añadir nuevo registro
               </button>
@@ -324,7 +324,7 @@ const handleSaveRecord = async (recordId) => {
           <div className="flex items-center justify-between p-4 md:p-5 border-t border-gray-200 rounded-b">
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+              className="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer"
             >
               Cerrar
             </button>

@@ -29,6 +29,7 @@ export default function () {
           }
           
           const data = await response.json()
+          console.log('Fichaje exitoso:', data)
           
          
           setFormData({ dni: '', pin: '' })

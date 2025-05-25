@@ -138,9 +138,11 @@ export const Header = () => {
         <div className="lg:hidden absolute top-16 left-0 right-0 bg-white border-t border-gray-200 shadow-md px-6 py-4 space-y-4 z-50">
           <Link to="/" className="block text-base font-medium text-gray-700" onClick={() => setMenuOpen(false)}>Inicio</Link>
           {auth.role === 'ADMIN' && (
+            <>
             <Link to="/usuarios" className="block text-base font-medium text-gray-700" onClick={() => setMenuOpen(false)}>Empleados</Link>
-          )}
           <Link to="/fichajes" className="block text-base font-medium text-gray-700" onClick={() => setMenuOpen(false)}>Registros</Link>
+            </>
+          )}
           {auth.role === 'ADMIN' && (
             <Link to="/log" className="block text-base font-medium text-gray-700" onClick={() => setMenuOpen(false)}>Notificaciones</Link>
           )}
