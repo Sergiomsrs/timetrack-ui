@@ -66,47 +66,60 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
 
 
   return (
-    <div className="rounded-lg border border-violet-200 bg-white p-4 w-fit mx-4 flex flex-col gap-4 h-fit mb-4">
-      
+    <div className="rounded-lg border border-violet-200 bg-white p-4 w-fit mx-1 flex flex-wrap gap-4 h-fit mb-4">
+      <div className='w-full'>
+
       <select
         value={activeTab.year ?? currentYear}
         onChange={handleYearChange}
-        className="cursor-pointer rounded-md px-4 py-2 text-xs sm:text-sm font-medium md:text-base lg:px-6 bg-violet-600 text-white shadow-md"
+        className="w-full cursor-pointer rounded-md px-4 py-2 text-xs sm:text-sm font-medium md:text-base  bg-violet-600 text-white shadow-md"
         >
         {years.map((year) => (
-            <option key={year} value={year}>{year}</option>
+          <option key={year} value={year}>{year}</option>
         ))}
       </select>
+        </div>
       
+        <div className='w-full'>
+
+
       <select
         value={activeTab.month ?? currentMonth}
         onChange={handleMonthChange}
-        className="rounded-md border px-4 py-2 text-sm md:text-base text-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
-      >
+        className="w-full rounded-md border px-4 py-2 text-sm md:text-base text-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
+        >
         {months.map((month, index) => (
           <option key={index} value={index}>{month}</option>
         ))}
       </select>
+        </div>
+
+<div className='w-full'>
 
 {auth.role == "ADMIN" &&  
       <button
-      className="text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
+      className="w-full text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
       onClick={() => setIsModalAddOpen(true)}
       >
         Añadir registro
       </button>
 }
+        </div>
+
+        <div className='w-full'>
+
 
 {(auth.role == "ADMIN" || auth.role == "GUEST")  &&  
 
-      <button
-       className="text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
+<button
+       className="w-full text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
        onClick={() => downloadMonthlyReportPdf(selectedEmployeeId, activeTab.year, activeTab.month)}
        >
       Descargar PDF
       </button>
         
 }
+        </div>
     </div>
   );
 };
