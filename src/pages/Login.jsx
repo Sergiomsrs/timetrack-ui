@@ -71,9 +71,10 @@ export const Login = () => {
   return (
 <div className="flex  items-center justify-center bg-gradient-to-br mt-36 px-4">
   <div className="w-full max-w-sm rounded-2xl shadow-2xl p-8">
-    <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+    <h2 className="text-2xl font-semibold text-center text-gray-800 mb-2">
       Acceso al sistema
     </h2>
+    <p className="mb-4 text-lg text-gray-600 text-center">Introduce tus credenciales</p>
 
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
@@ -108,7 +109,7 @@ export const Login = () => {
 
       <button
         type="submit"
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition"
+        className="w-full text-white bg-violet-600 hover:bg-violet-700 font-medium py-2 rounded-md transition"
       >
         Iniciar sesión
       </button>
