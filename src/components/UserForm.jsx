@@ -18,30 +18,32 @@ export default function UserForm({ setActiveTab }) {
 
 
   const validate = () => {
-  const newErrors = {};
+    const newErrors = {};
 
-  if (!formData.name.trim()) newErrors.name = 'El nombre es obligatorio';
-  if (!formData.lastName.trim()) newErrors.lastName = 'El primer apellido es obligatorio';
-  if (!formData.email.trim()) {
-    newErrors.email = 'El correo electrónico es obligatorio';
-  } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email)) {
-    newErrors.email = 'Correo electrónico no válido';
-  }
-  if (!formData.dni.trim()) {
-    newErrors.dni = 'El DNI es obligatorio';
-  } else if (!editedEmployee && employees.some(emp => emp.dni === formData.dni.trim())) {
-    newErrors.dni = 'Este DNI ya está registrado';
-  }
-  if (!editedEmployee && !formData.password.trim()) {
-    newErrors.password = 'La contraseña es obligatoria';
-  }
+    if (!formData.name.trim()) newErrors.name = 'El nombre es obligatorio';
+    if (!formData.lastName.trim()) newErrors.lastName = 'El primer apellido es obligatorio';
+    if (!formData.email.trim()) {
+      newErrors.email = 'El correo electrónico es obligatorio';
+    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email)) {
+      newErrors.email = 'Correo electrónico no válido';
+    }
+    if (!formData.dni.trim()) {
+      newErrors.dni = 'El DNI es obligatorio';
+    } else if (!editedEmployee && employees.some(emp => emp.dni === formData.dni.trim())) {
+      newErrors.dni = 'Este DNI ya está registrado';
+    }
+    if (!editedEmployee && !formData.password.trim()) {
+      newErrors.password = 'La contraseña es obligatoria';
+    } else if (formData.password.trim() && formData.password.trim().length < 4) {
+      newErrors.password = 'La contraseña debe tener al menos 4 caracteres';
+    }
 
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-  
-   
+
+
 
   const resetForm = () => {
     setFormData(initialValues);
@@ -73,13 +75,13 @@ export default function UserForm({ setActiveTab }) {
           role: formData.role || 'USER',
           fechaAlta: formData.fechaAlta,
           fechaBaja: formData.fechaBaja,
-          
+
         }),
       });
 
       if (!response.ok) throw new Error('Error al guardar el usuario');
 
-      
+
       fetchEmployees();
       setActiveTab("list");
       resetForm();
@@ -89,12 +91,12 @@ export default function UserForm({ setActiveTab }) {
     }
   };
 
-const handleFormSubmit = (e) => {
-  e.preventDefault();
-  if (validate()) {
-    setShowConfirmModal(true);
-  }
-};
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      setShowConfirmModal(true);
+    }
+  };
 
 
 
@@ -106,7 +108,7 @@ const handleFormSubmit = (e) => {
         secondLastName: editedEmployee.secondLastName || '',
         email: editedEmployee.email || '',
         dni: editedEmployee.dni || '',
-        password:  '',
+        password: '',
         accesLevel: editedEmployee.accesLevel || '',
         role: editedEmployee.role || '',
         fechaAlta: editedEmployee.fechaAlta || '',
@@ -211,7 +213,7 @@ const handleFormSubmit = (e) => {
             </div>
           </div>
 
-                    <div className="">
+          <div className="">
             <label htmlFor="alta" className="block text-sm font-semibold text-gray-900">
               Fecha de Alta
             </label>
@@ -228,7 +230,7 @@ const handleFormSubmit = (e) => {
             </div>
 
           </div>
-                    <div className="">
+          <div className="">
             <label htmlFor="baja" className="block text-sm font-semibold text-gray-900">
               Fecha de Baja
             </label>
