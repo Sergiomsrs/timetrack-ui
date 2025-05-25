@@ -40,8 +40,8 @@ export const TimeTrackView = () => {
 
   
     return (
-      <div className="flex flex-col md:flex-row w-full items-start">
-        <div className="w-full md:w-1/8 flex-col md:flex-row justify-center px-0 ml-6 ">
+      <div className="flex flex-col items-center md:flex-row md:items-start  w-full">
+        <div className="w-1/8 flex justify-center mx-8 ">
   
           <DatePicker 
           employees={employees}
