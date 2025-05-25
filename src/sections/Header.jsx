@@ -154,7 +154,7 @@ export const Header = () => {
                   handleLogout();
                   setMenuOpen(false);
                 }}
-                className="block w-full text-left text-base font-medium text-violet-700 hover:underline"
+                className="block w-full text-left text-base font-medium text-violet-700 hover:underline cursor-pointer"
               >
                 Log out
               </button>
