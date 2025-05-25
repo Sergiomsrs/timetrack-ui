@@ -5,7 +5,7 @@ export const Pageable = ({ page, totalPages, setPage }) => {
       <button
         disabled={page === 0}
         onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-        className="flex items-center justify-center px-2 py-1 bg-indigo-500 hover:bg-indigo-600 text-white rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center justify-center px-2 py-1 bg-violet-500 hover:bg-violet-600 text-white rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 disabled:opacity-50 disabled:cursor-not-allowed"
       > <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-5 w-5 mr-1"

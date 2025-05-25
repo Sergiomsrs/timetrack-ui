@@ -107,7 +107,7 @@ export const UserList = ({ setActiveTab, employeeToDelete, setEmployeeToDelete }
                         />
                         <button
                             type="submit"
-                            className="rounded-md bg-violet-600 hover:bg-violet-500 text-white font-bold px-2 cursor-pointer"
+                            className="rounded-md bg-violet-600 hover:bg-violet-500 text-white font-bold px-4 cursor-pointer"
                         >
                             Buscar
                         </button>
