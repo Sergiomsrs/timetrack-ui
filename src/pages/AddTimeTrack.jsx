@@ -82,13 +82,13 @@ export default function () {
                         </div>
                     </div>
                     <div>
-                        <label htmlFor="pin" className="block text-sm font-semibold text-gray-900">
+                        <label htmlFor="password" className="block text-sm font-semibold text-gray-900">
                             Contraseña
                         </label>
                         <div className="mt-2.5">
                             <input
-                                id="pin"
-                                name="pin"
+                                id="password"
+                                name="password"
                                 type="password"
                                 value={formData.password}
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
