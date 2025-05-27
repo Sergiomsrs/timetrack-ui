@@ -77,15 +77,6 @@ export const UserList = ({ setActiveTab, employeeToDelete, setEmployeeToDelete }
 
     if (loading) return <p>Cargando empleados...</p>;
 
-    const onDelete = () => {
-        setIsOpen(false);
-    }
-
-
-    const onCancel = () => {
-        setIsOpen(false);
-    };
-
 
     return (
         <div className="mb-4 w-full ">
@@ -127,6 +118,8 @@ export const UserList = ({ setActiveTab, employeeToDelete, setEmployeeToDelete }
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Apellido</th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Dni</th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>
+                                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">F.Alta</th>
+                                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">F.Baja</th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700"></th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700"></th>
                                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700"></th>
@@ -140,6 +133,8 @@ export const UserList = ({ setActiveTab, employeeToDelete, setEmployeeToDelete }
                                     <td className="px-4 py-2">{employee.lastName || "N/A"}</td>
                                     <td className="px-4 py-2">{employee.dni}</td>
                                     <td className="px-4 py-2">{employee.email}</td>
+                                    <td className="px-4 py-2">{employee.fechaAlta? employee.fechaAlta : "--"}</td>
+                                    <td className="px-4 py-2">{employee.fechaBaja? employee.fechaBaja : "--"}</td>
                                     <td className="px-4 py-2">
 
                                         <button 
