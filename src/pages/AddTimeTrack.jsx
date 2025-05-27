@@ -4,7 +4,7 @@ import { AlertModal } from '../components/AlertModal'
 
 export default function () {
 
-    const [formData, setFormData] = useState({ dni: '', pin: '' })
+    const [formData, setFormData] = useState({ dni: '', password: '' })
     const [message, setMessage] = useState({})
     const [isOpen, setIsOpen] = useState(false)
     
@@ -20,7 +20,7 @@ export default function () {
             },
             body: JSON.stringify({
               dni: formData.dni,
-              password: formData.pin,
+              password: formData.password,
             }),
           })
       
@@ -32,7 +32,7 @@ export default function () {
           console.log('Fichaje exitoso:', data)
           
          
-          setFormData({ dni: '', pin: '' })
+          setFormData({ dni: '', password: '' })
             setMessage({
                 type: 'success',
                 text: 'Fichaje exitoso',
@@ -83,15 +83,15 @@ export default function () {
                     </div>
                     <div>
                         <label htmlFor="pin" className="block text-sm font-semibold text-gray-900">
-                            PIN
+                            Contraseña
                         </label>
                         <div className="mt-2.5">
                             <input
                                 id="pin"
                                 name="pin"
                                 type="password"
-                                value={formData.pin}
-                                onChange={(e) => setFormData({ ...formData, pin: e.target.value })}
+                                value={formData.password}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 className="block w-full rounded-md border border-gray-300 px-3.5 py-2 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                             />
                         </div>
