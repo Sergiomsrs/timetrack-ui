@@ -6,7 +6,7 @@ import { ConfirmModal } from './ConfirmationModal';
 const initialValues = { name: '', lastName: '', secondLastName: '', email: '', dni: '', password: '', accesLevel: '', role: 'USER', fechaAlta: '', fechaBaja: '' };
 
 
-export default function UserForm({ setActiveTab }) {
+export const UserForm = ({ setActiveTab }) => {
   const [formData, setFormData] = useState(initialValues)
 
   const { editedEmployee, setEditedEmployee, fetchEmployees, employees } = useEmployees();

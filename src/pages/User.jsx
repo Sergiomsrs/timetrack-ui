@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import UserForm from '../components/UserForm';
+import { useState } from 'react';
+
 import { UserList } from '../components/UserList';
 import { ActiveTab } from '../components/ActiveTab';
 import { HourlyForm } from '../components/HourlyForm';
+import { UserForm } from '../components/UserForm';
 
 export const User = () => {
   const [activeTab, setActiveTab] = useState("list");

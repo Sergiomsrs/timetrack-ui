@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { AlertModal } from '../components/AlertModal'
 
-export default function () {
+export const AddTimeTrack = () => {
 
     const [formData, setFormData] = useState({ dni: '', password: '' })
     const [message, setMessage] = useState({})
