@@ -94,17 +94,17 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
         </select>
       </div>
 
+        {auth.role == "ADMIN" &&
       <div className='w-full'>
 
-        {auth.role == "ADMIN" &&
           <button
             className="w-full text-sm rounded-md border px-4 py-2 text-violet-600 hover:text-amber-50 hover:bg-violet-600 cursor-pointer"
             onClick={() => setIsModalAddOpen(true)}
           >
             Añadir registro
           </button>
-        }
       </div>
+        }
 
       <div className='w-full'>
 
