@@ -72,7 +72,7 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
         <select
           value={activeTab.year ?? currentYear}
           onChange={handleYearChange}
-          className="w-full cursor-pointer rounded-md px-4 py-2 text-center text-xs sm:text-sm font-medium md:text-base  bg-violet-600 text-white shadow-md"
+          className="w-full cursor-pointer rounded-md py-2 text-center text-xs sm:text-sm font-medium md:text-base  bg-violet-600 text-white shadow-md focus:outline-none focus:ring-2  focus:ring-violet-500"
         >
           {years.map((year) => (
             <option key={year} value={year}>{year}</option>
@@ -86,7 +86,7 @@ export const DatePicker = ({ activeTab, setActiveTab, setIsModalAddOpen, selecte
         <select
           value={activeTab.month ?? currentMonth}
           onChange={handleMonthChange}
-          className="w-full rounded-md border px-4 py-2 text-sm md:text-base text-center text-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
+          className="w-full rounded-md border py-2 text-sm md:text-base text-center text-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
         >
           {months.map((month, index) => (
             <option key={index} value={index}>{month}</option>

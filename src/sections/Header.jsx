@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { saludo } from '../utilities/timeManagement';
@@ -126,11 +126,7 @@ export const Header = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-        </div>
-
-       
-
-       
+        </div>      
       </nav>
 
       {/* Menú móvil */}
