@@ -17,7 +17,7 @@ export const ActiveTab = ({activeTab, setActiveTab}) => {
       : "bg-white text-violet-600 hover:bg-violet-50"
   }`}
 >
-  Lista de Usuarios
+  Lista de Empleados
 </div>
     <div
       onClick={() => setActiveTab("form")}
@@ -27,7 +27,7 @@ export const ActiveTab = ({activeTab, setActiveTab}) => {
           : "bg-white text-violet-600 hover:bg-violet-50"
       }`}
     >
-      Añadir Usuario
+      Añadir Empleado
     </div>
   </div>
   )
