@@ -55,7 +55,7 @@ export const Header = () => {
           {auth.isAuthenticated ? (
             <>
               <span className="text-sm text-gray-700 font-bold bg-gray-200 px-3 py-1 rounded">
-                <strong>{saludo()},</strong> {auth.user?.name} 
+                <strong>{saludo()},</strong> {auth.user?.name} {auth.user?.lastName} 
               </span>
               <button
                 onClick={handleLogout}
@@ -144,7 +144,7 @@ export const Header = () => {
           )}
           {auth.isAuthenticated ? (
             <>
-              <span className="block text-base text-gray-700">{saludo()}, {auth.user?.name}</span>
+              <span className="block text-base text-gray-700">{saludo()}, {auth.user?.name} {auth.user?.lastName}</span>
               <button
                 onClick={() => {
                   handleLogout();

@@ -44,14 +44,14 @@ export const AddTimeTrack = () => {
           
         } catch (error) {
           console.error('Error:', error)
-          
+          setFormData({ dni: '', password: '' })
             setMessage({
                 type: 'error',
                 text: 'Se ha producido un error al fichar',})
             setIsOpen(true)
             setTimeout(() => {
                 setIsOpen(false)
-            }, 1000)
+            }, 2000)
         }
       }
       

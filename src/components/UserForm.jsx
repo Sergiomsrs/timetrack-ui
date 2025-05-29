@@ -26,6 +26,8 @@ export const UserForm = ({ setActiveTab }) => {
       newErrors.email = 'El correo electrónico es obligatorio';
     } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email)) {
       newErrors.email = 'Correo electrónico no válido';
+    }else if (!editedEmployee && employees.some(emp => emp.email === formData.email.trim())) {
+      newErrors.email = 'Este Email ya está registrado';
     }
     if (!formData.dni.trim()) {
       newErrors.dni = 'El DNI es obligatorio';

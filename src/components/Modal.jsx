@@ -312,12 +312,14 @@ const handleSaveRecord = async (recordId) => {
                   </div>
                 </div>
               ))}
+              {/* 
               <button
                 onClick={handleAddRecord}
                 className="mt-3 px-4 py-2 text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg shadow transition duration-150"
               >
                 + Añadir nuevo registro
               </button>
+              */}
             </div>
           </div>
 
