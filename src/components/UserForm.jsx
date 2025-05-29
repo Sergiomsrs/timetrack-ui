@@ -123,7 +123,7 @@ export const UserForm = ({ setActiveTab }) => {
   return (
     <div className="flex flex-col justify-center items-center mb-4" >
       <div className=" flex flex-col justify-center items-center">
-        <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">Registrar Nuevo Empleado</h2>
+        <h2 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">{editedEmployee?"Editar Empleado":"Registrar Nuevo Empleado"}</h2>
       </div>
       <form onSubmit={handleFormSubmit} className="mt-16 max-w-xl sm:mt-20">
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
